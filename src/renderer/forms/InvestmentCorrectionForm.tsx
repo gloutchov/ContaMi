@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from "react";
 import type { FinanceCommand } from "../../domain/commands";
+import { normalizeOptionalIsin, validateOptionalIsin } from "../../domain/isin";
 import type { InvestmentCorrectionKind } from "../../domain/investments";
 import type { FinanceData, InvestmentEntry } from "../../domain/models";
 import { Field, Modal } from "../components/Modal";
+import { IsinField } from "../components/IsinField";
 import { useI18n } from "../i18n/I18nContext";
 import type { TranslationKey } from "../i18n/translations";
 import { todayIso } from "../utils/format";
@@ -25,7 +27,8 @@ export function InvestmentCorrectionForm({ data, investmentId, value, targetLabe
   const [amount, setAmount] = useState(value ? String(value.amount) : "");
   const [description, setDescription] = useState(value?.description ?? "");
   const [notes, setNotes] = useState(value?.notes ?? "");
-  const valid = Boolean(investment && date && description.trim() && Number(amount) > 0);
+  const [isin, setIsin] = useState(investment?.isin ?? "");
+  const valid = Boolean(investment && date && description.trim() && Number(amount) > 0 && !validateOptionalIsin(isin));
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,12 +47,16 @@ export function InvestmentCorrectionForm({ data, investmentId, value, targetLabe
       transactionId: undefined,
       notes,
     };
-    await saveAndClose(onSave, { type: value ? "updateInvestmentCorrection" : "addInvestmentCorrection", value: item }, onClose);
+    await saveAndClose(onSave, {
+      type: value ? "updateInvestmentCorrectionWithIsin" : "addInvestmentCorrectionWithIsin",
+      value: { correction: item, isin: normalizeOptionalIsin(isin) },
+    }, onClose);
   };
 
   return <Modal title={value ? t("editInvestmentCorrection") : t("investmentCorrection")} onClose={onClose} onSubmit={submit} submitDisabled={!valid}>
     <div className="notice wide" role="note">{t("investmentCorrectionHelp")}</div>
     <Field label={t(targetLabel)}><input value={investment?.name ?? ""} disabled /></Field>
+    <IsinField value={isin} onChange={setIsin} />
     <Field label={t("date")}><input required type="date" value={date} onChange={(event) => setDate(event.target.value)} /></Field>
     <Field label={t("correctionDirection")} wide><select value={kind} onChange={(event) => setKind(event.target.value as InvestmentCorrectionKind)}><option value="contribution_correction">{t("correctionContribution")}</option><option value="withdrawal_correction">{t("correctionWithdrawal")}</option></select></Field>
     <Field label={t("amount")}><input required type="number" min="0.01" step="0.01" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} /></Field>

@@ -58,7 +58,7 @@ describe("ExcelImportTemplateGenerator", () => {
       const metaValues = new Map<string, unknown>();
       meta.eachRow((row, index) => { if (index > 1) metaValues.set(String(row.getCell(1).value ?? ""), row.getCell(2).value); });
       expect(metaValues.get("signature")).toBe("ContaMi Import Template");
-      expect(Number(metaValues.get("templateVersion"))).toBe(2);
+      expect(Number(metaValues.get("templateVersion"))).toBe(3);
       expect(metaValues.get("templateType")).toBe(type);
       expect(metaValues.get("catalogMode")).toBe("workbook_snapshot");
 

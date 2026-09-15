@@ -115,7 +115,7 @@ test("supports IT/EN, light/dark and keyboard-safe dialogs at 1080 px", async ({
   await expect(taxCard.getByText("Tassa sintetica")).toBeVisible();
   const importCard = page.locator("article").filter({ has: page.getByRole("heading", { name: "Importazione dati", exact: true }) });
   await importCard.getByRole("button", { name: "Transazioni" }).click();
-  await expect(page.getByRole("status")).toContainText("Creato il template ContaMi-template-transactions-v2.xlsx.");
+  await expect(page.getByRole("status")).toContainText("Creato il template ContaMi-template-transactions-v3.xlsx.");
   await expectImportControlsAligned(importCard, "Importa file compilato");
   await importCard.getByRole("button", { name: "Importa file compilato" }).click();
   const importDialogIt = page.getByRole("dialog", { name: "Anteprima importazione" });

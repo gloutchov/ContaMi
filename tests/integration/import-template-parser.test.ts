@@ -10,7 +10,9 @@ import {
   IMPORT_TEMPLATE_CONTRACTS,
   IMPORT_TEMPLATE_DATA_SHEET,
   IMPORT_TEMPLATE_META_SHEET,
+  importTemplateContractForVersion,
   type ImportTemplateType,
+  type ImportTemplateVersion,
 } from "../../src/domain/importTemplates";
 
 function createEmptyFinanceData(year: number) {
@@ -55,7 +57,7 @@ function syntheticRows(type: ImportTemplateType, data: FinanceData): Array<Recor
   if (type === "investments") return [
     {
       record_type: "position | posizione", investment_key: "investment-1", name: "Synthetic fund",
-      investment_type: ref(investmentType.id), currency: "EUR", opened_at: "2025-01-01", ...common,
+      isin: "  zztestabcde7 ", investment_type: ref(investmentType.id), currency: "EUR", opened_at: "2025-01-01", ...common,
     },
     {
       record_type: "contribution | versamento", investment_key: "investment-1", date: "2026-03-01",
@@ -69,7 +71,7 @@ function syntheticRows(type: ImportTemplateType, data: FinanceData): Array<Recor
     },
     {
       record_type: "compartment | comparto", pension_key: "pension-1", compartment_key: "compartment-1",
-      name: "Synthetic compartment", currency: "EUR", opened_at: "2020-01-01", ...common,
+      name: "Synthetic compartment", isin: "zztestabcde7", currency: "EUR", opened_at: "2020-01-01", ...common,
     },
     {
       record_type: "contribution | versamento", pension_key: "pension-1", compartment_key: "compartment-1",
@@ -122,6 +124,19 @@ async function completedTemplate(
   return filePath;
 }
 
+async function changeTemplateVersion(filePath: string, type: ImportTemplateType, version: ImportTemplateVersion): Promise<void> {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(filePath);
+  const sheet = workbook.getWorksheet(IMPORT_TEMPLATE_DATA_SHEET)!;
+  const legacyKeys = new Set(importTemplateContractForVersion(type, version).fields.map((field) => field.key));
+  const currentFields = IMPORT_TEMPLATE_CONTRACTS[type].fields;
+  for (let index = currentFields.length - 1; index >= 0; index -= 1) {
+    if (!legacyKeys.has(currentFields[index]!.key)) sheet.spliceColumns(index + 1, 1);
+  }
+  workbook.getWorksheet(IMPORT_TEMPLATE_META_SHEET)!.getCell("B3").value = version;
+  await workbook.xlsx.writeFile(filePath);
+}
+
 describe("ExcelImportTemplateParser", () => {
   it("parses and applies all eight supported templates with linked records exactly once", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-import-parser-"));
@@ -143,11 +158,14 @@ describe("ExcelImportTemplateParser", () => {
       }
       if (type === "investments") {
         expect(next.investments).toHaveLength(1);
+        expect(next.investments[0]?.isin).toBe("ZZTESTABCDE7");
         expect(next.investmentEntries).toHaveLength(1);
         expect(next.transactions).toHaveLength(1);
       }
       if (type === "pension") {
         expect(next.investments).toHaveLength(2);
+        expect(next.investments.find((item) => item.parentInvestmentId)?.isin).toBe("ZZTESTABCDE7");
+        expect(next.investments.find((item) => !item.parentInvestmentId)?.isin).toBeUndefined();
         expect(next.investmentEntries).toHaveLength(2);
         expect(next.transactions).toHaveLength(1);
         expect(next.transactions[0]).toMatchObject({
@@ -172,6 +190,122 @@ describe("ExcelImportTemplateParser", () => {
       }
     }
   }, 60_000);
+
+  it("accepts legacy investment templates v1 and v2 without inventing ISIN values", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-import-legacy-investments-"));
+    directories.push(directory);
+    const parser = new ExcelImportTemplateParser();
+
+    for (const version of [1, 2] as const) {
+      const data = createEmptyFinanceData(2026);
+      const rows = syntheticRows("investments", data).map((row) => {
+        const legacy = { ...row };
+        delete legacy.isin;
+        if (version === 1) delete legacy.account;
+        return legacy;
+      });
+      const filePath = await completedTemplate(directory, "investments", data, rows);
+      await changeTemplateVersion(filePath, "investments", version);
+
+      const prepared = await parser.parse(filePath, data, "skip");
+      const imported = applyFinanceCommands(data, prepared.commands);
+
+      expect(prepared.preview.rejectedRows).toBe(0);
+      expect(imported.investments[0]?.isin).toBeUndefined();
+      expect(imported.investmentEntries[0]?.accountId).toBe(data.accounts[0]?.id);
+    }
+  });
+
+  it("preserves an existing ISIN when a version 1 or 2 template updates its investment", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-import-legacy-isin-preservation-"));
+    directories.push(directory);
+    const parser = new ExcelImportTemplateParser();
+
+    for (const version of [1, 2] as const) {
+      const data = createEmptyFinanceData(2026);
+      const investmentType = data.investmentTypes.find((item) => item.code !== "pension")!;
+      const investmentId = crypto.randomUUID();
+      data.investments.push({
+        id: investmentId,
+        name: "Synthetic fund",
+        isin: "ZZTESTABCDE7",
+        kind: "stock",
+        typeId: investmentType.id,
+        provider: "",
+        currency: "EUR",
+        active: true,
+        openedAt: "2025-01-01",
+        notes: "",
+      });
+      const rows = syntheticRows("investments", data).map((row) => {
+        const legacy = { ...row };
+        delete legacy.isin;
+        if (version === 1) delete legacy.account;
+        return legacy;
+      });
+      const filePath = await completedTemplate(directory, "investments", data, rows);
+      await changeTemplateVersion(filePath, "investments", version);
+
+      const prepared = await parser.parse(filePath, data, "update");
+      const imported = applyFinanceCommands(data, prepared.commands);
+
+      expect(imported.investments.find((item) => item.id === investmentId)?.isin).toBe("ZZTESTABCDE7");
+    }
+  });
+
+  it("accepts every version 2 template after the version 3 ISIN extension", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-import-v2-regression-"));
+    directories.push(directory);
+    const parser = new ExcelImportTemplateParser();
+
+    for (const type of Object.keys(IMPORT_TEMPLATE_CONTRACTS) as ImportTemplateType[]) {
+      const data = createEmptyFinanceData(2026);
+      const rows = syntheticRows(type, data).map((row) => {
+        const legacy = { ...row };
+        delete legacy.isin;
+        return legacy;
+      });
+      const filePath = await completedTemplate(directory, type, data, rows);
+      await changeTemplateVersion(filePath, type, 2);
+
+      const prepared = await parser.parse(filePath, data, "skip");
+      expect(prepared.preview.rejectedRows, type).toBe(0);
+      expect(() => applyFinanceCommands(data, prepared.commands), type).not.toThrow();
+    }
+  }, 60_000);
+
+  it("resolves the only compatible account for a version 1 transaction", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-import-v1-transaction-"));
+    directories.push(directory);
+    const data = createEmptyFinanceData(2026);
+    const rows = syntheticRows("transactions", data).map((row) => {
+      const legacy = { ...row };
+      delete legacy.account;
+      return legacy;
+    });
+    const filePath = await completedTemplate(directory, "transactions", data, rows);
+    await changeTemplateVersion(filePath, "transactions", 1);
+
+    const prepared = await new ExcelImportTemplateParser().parse(filePath, data, "skip");
+    const imported = applyFinanceCommands(data, prepared.commands);
+
+    expect(prepared.preview.rejectedRows).toBe(0);
+    expect(imported.transactions[0]?.accountId).toBe(data.accounts[0]?.id);
+  });
+
+  it("reports an invalid imported ISIN without preparing the position", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-import-invalid-isin-"));
+    directories.push(directory);
+    const data = createEmptyFinanceData(2026);
+    const rows = syntheticRows("investments", data);
+    rows[0]!.isin = "ZZTESTABCDE8";
+    const filePath = await completedTemplate(directory, "investments", data, rows);
+
+    const prepared = await new ExcelImportTemplateParser().parse(filePath, data, "skip");
+
+    expect(prepared.preview.errors).toContainEqual({ row: 6, column: "isin", code: "INVALID_ISIN" });
+    expect(prepared.commands).toEqual([]);
+  });
 
   it("imports one conservative vehicle installment and rejects a second active plan", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-import-vehicle-installment-"));

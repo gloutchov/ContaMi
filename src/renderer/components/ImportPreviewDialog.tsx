@@ -12,6 +12,7 @@ const errorKeys: Record<ImportErrorCode, TranslationKey> = {
   INVALID_DATE: "importErrorDate",
   INVALID_ENUM: "importErrorEnum",
   INVALID_HEADERS: "importErrorHeaders",
+  INVALID_ISIN: "importErrorIsin",
   INVALID_NUMBER: "importErrorNumber",
   INVALID_REFERENCE: "importErrorReference",
   INVALID_ROW: "importErrorRow",

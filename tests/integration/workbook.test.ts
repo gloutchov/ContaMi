@@ -83,16 +83,19 @@ describe("ExcelWorkbookRepository", () => {
       id: investmentId, name: "Synthetic inherited fund", kind: "fund", provider: "", currency: "EUR",
       active: true, openedAt: "2025-01-01", notes: "",
     });
-    data = applyFinanceCommand(data, { type: "addInvestmentCorrection", value: {
-      id: crypto.randomUUID(), investmentId, date: "2025-12-31", kind: "contribution_correction", amount: 42,
-      description: "Synthetic imported difference", notes: "No cash movement",
+    data = applyFinanceCommand(data, { type: "addInvestmentCorrectionWithIsin", value: {
+      correction: {
+        id: crypto.randomUUID(), investmentId, date: "2025-12-31", kind: "contribution_correction", amount: 42,
+        description: "Synthetic imported difference", notes: "No cash movement",
+      },
+      isin: "ZZTESTABCDE7",
     } });
 
     const repository = new ExcelWorkbookRepository();
     await repository.save(filePath, data);
     const loaded = await repository.load(filePath);
 
-    expect(loaded.meta.schemaVersion).toBe(11);
+    expect(loaded.meta.schemaVersion).toBe(12);
     expect(loaded.investmentEntries).toMatchObject([{
       investmentId, kind: "contribution_correction", amount: 42,
     }]);
@@ -100,6 +103,7 @@ describe("ExcelWorkbookRepository", () => {
     expect(loaded.investmentEntries[0]).not.toHaveProperty("paymentMethodId");
     expect(loaded.investmentEntries[0]).not.toHaveProperty("accountId");
     expect(loaded.investmentEntries[0]).not.toHaveProperty("transactionId");
+    expect(loaded.investments[0]?.isin).toBe("ZZTESTABCDE7");
     expect(loaded.transactions).toEqual([]);
   });
 
@@ -266,7 +270,7 @@ describe("ExcelWorkbookRepository", () => {
     const migrated = await repository.loadWithUuidRepair(filePath);
 
     expect(migrated.migratedSchema).toBe(true);
-    expect(migrated.data.meta.schemaVersion).toBe(11);
+    expect(migrated.data.meta.schemaVersion).toBe(12);
     expect(migrated.data.recurringRateChanges).toEqual([]);
     expect(migrated.data.recurringItems[0]).toMatchObject({ id: recurringId, amount: 75 });
     expect(migrated.data.transactions.find((item) => item.id === transactionId)).toMatchObject({ amount: 75, planned: true });
@@ -314,7 +318,7 @@ describe("ExcelWorkbookRepository", () => {
 
     const migrated = await repository.load(filePath);
 
-    expect(migrated.meta.schemaVersion).toBe(11);
+    expect(migrated.meta.schemaVersion).toBe(12);
     expect(migrated.transactions.find((item) => item.id === plannedTransactionId)?.dueDate).toBe("2026-08-15");
     expect(migrated.propertyEntries.find((item) => item.id === plannedEntryId)?.dueDate).toBe("2026-08-15");
     expect(migrated.transactions.find((item) => item.id === confirmedTransactionId)?.dueDate).toBeUndefined();
@@ -576,7 +580,7 @@ describe("ExcelWorkbookRepository", () => {
 
     const migrated = await repository.load(filePath);
     const imu = migrated.taxTypes.find((item) => item.name === "IMU")!;
-    expect(migrated.meta.schemaVersion).toBe(11);
+    expect(migrated.meta.schemaVersion).toBe(12);
     expect(migrated.propertyEntries[0]).toMatchObject({ taxTypeId: imu.id, taxInstallmentNumber: 2, amount: 350 });
   });
 
@@ -617,7 +621,7 @@ describe("ExcelWorkbookRepository", () => {
     await workbook.xlsx.writeFile(filePath);
 
     const migrated = await repository.load(filePath);
-    expect(migrated.meta.schemaVersion).toBe(11);
+    expect(migrated.meta.schemaVersion).toBe(12);
     expect(migrated.propertyAnnualSummaries[0]).toMatchObject({ phoneInternetCost: 0, condominiumCost: 0 });
   });
 });

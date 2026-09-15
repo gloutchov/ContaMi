@@ -168,8 +168,8 @@ export function migrateFinanceData(rawValue: unknown): FinanceData {
   const raw = structuredClone(rawValue) as RawRecord;
   const meta = raw.meta as RawRecord | undefined;
   const version = Number(meta?.schemaVersion);
-  if (version === 11) return financeDataSchema.parse(raw);
-  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10) || !meta) throw new Error("INVALID_WORKBOOK_SCHEMA");
+  if (version === 12) return financeDataSchema.parse(raw);
+  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11) || !meta) throw new Error("INVALID_WORKBOOK_SCHEMA");
 
   if (version === 1) {
     const categories = list(raw.categories);
@@ -243,6 +243,9 @@ export function migrateFinanceData(rawValue: unknown): FinanceData {
     migrateRecurringDueDates(raw);
   }
   if (version <= 8) raw.recurringRateChanges = [];
-  meta.schemaVersion = 11;
+  if (version <= 11) {
+    raw.investments = list(raw.investments).map((item) => ({ ...item, isin: undefined }));
+  }
+  meta.schemaVersion = 12;
   return financeDataSchema.parse(raw);
 }

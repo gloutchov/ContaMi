@@ -1,10 +1,10 @@
 # ContaMì — Contratti template di importazione / Import template contracts
 
-Versione formato / Format version: **2** · Applicazione / Application: **1.6.0**
+Versione formato / Format version: **3** · Applicazione / Application: **1.19.0**
 
-Questo documento specifica i file `.xlsx` v2 generati e importati da **Impostazioni → Importazione dati**. La v2 rende espliciti conto o Cassa su ogni registrazione monetaria e la destinazione dei trasferimenti interni.
+Questo documento specifica i file `.xlsx` v3 generati e importati da **Impostazioni → Importazione dati**. La v2 ha reso espliciti conto o Cassa su ogni registrazione monetaria e la destinazione dei trasferimenti interni; la v3 aggiunge l’ISIN facoltativo alle posizioni di investimento e ai comparti pensione.
 
-This document specifies the v2 `.xlsx` files generated and imported under **Settings → Data import**. Version 2 makes the account or cash register explicit on every monetary record and adds the destination of internal transfers.
+This document specifies the v3 `.xlsx` files generated and imported under **Settings → Data import**. Version 2 made the account or cash register explicit on every monetary record and added the destination of internal transfers; version 3 adds an optional ISIN to investment positions and pension compartments.
 
 ## Struttura comune / Common structure
 
@@ -29,13 +29,13 @@ When a workbook is open, active catalogs are copied into the template as a `work
 
 ## Token chiusi / Closed tokens
 
-I menu mostrano token bilingui stabili come `income | entrata`, `expense | uscita`, `true | vero` e `false | falso`. Il testo completo, incluso il separatore ` | `, appartiene al contratto v2.
+I menu mostrano token bilingui stabili come `income | entrata`, `expense | uscita`, `true | vero` e `false | falso`. Il testo completo, incluso il separatore ` | `, appartiene al contratto v3.
 
-Drop-downs show stable bilingual tokens such as `income | entrata`, `expense | uscita`, `true | vero`, and `false | falso`. The full text, including the ` | ` separator, is part of the v2 contract.
+Drop-downs show stable bilingual tokens such as `income | entrata`, `expense | uscita`, `true | vero`, and `false | falso`. The full text, including the ` | ` separator, is part of the v3 contract.
 
 ## 1. Immobile di residenza / Residence property
 
-File: `ContaMi-template-residence-v2.xlsx`
+File: `ContaMi-template-residence-v3.xlsx`
 
 `record_type`: `property`, `valuation`, `income`, `expense`, `utility`, `tax`.
 
@@ -50,7 +50,7 @@ File: `ContaMi-template-residence-v2.xlsx`
 
 ## 2. Immobili in affitto / Rental properties
 
-File: `ContaMi-template-rental-properties-v2.xlsx`
+File: `ContaMi-template-rental-properties-v3.xlsx`
 
 Stesse colonne e `record_type` della residenza, più `expected_monthly_rent` e `rent_due_day`. Più immobili possono convivere nello stesso file usando `property_key` distinte.
 
@@ -58,7 +58,7 @@ Same columns and `record_type` values as the residence template, plus `expected_
 
 ## 3. Transazioni / Transactions
 
-File: `ContaMi-template-transactions-v2.xlsx`
+File: `ContaMi-template-transactions-v3.xlsx`
 
 - Obbligatorie / Required: `date`, `description`, `kind`, `amount`, `currency`, `category`, `payment_method`, `account`, `planned`.
 - Facoltative o condizionali / Optional or conditional: `destination_account`, `cash_flow_direction`, `notes`.
@@ -69,39 +69,43 @@ File: `ContaMi-template-transactions-v2.xlsx`
 
 ## 4. Investimenti / Investments
 
-File: `ContaMi-template-investments-v2.xlsx`
+File: `ContaMi-template-investments-v3.xlsx`
 
 `record_type`: `position`, `contribution`, `withdrawal`, `valuation`.
 
 - Sempre obbligatorie / Always required: `record_type`, `investment_key`.
-- Posizione / Position: `name`, `investment_type`, `provider`, `currency`, `opened_at`, `active`, `closed_at`.
+- Posizione / Position: `name`, `isin`, `investment_type`, `provider`, `currency`, `opened_at`, `active`, `closed_at`.
 - Piano periodico / Recurring plan: `periodic_amount`, `periodic_frequency`, `periodic_next_due_date`, `periodic_category`, `periodic_payment_method`, `periodic_account`.
 - Movimenti / Movements: `date`, `description`, `amount`, `category`, `payment_method`, `account`.
-- Facoltativa / Optional: `notes`.
+- Facoltative / Optional: `isin`, `notes`.
 
 `investment_key` lega movimenti e valutazioni alla posizione senza richiedere un UUID ContaMì preesistente.
 
 `investment_key` links movements and valuations to the position without requiring an existing ContaMì UUID.
 
+`isin` è facoltativo e viene letto soltanto sulle righe `position`. Spazi esterni e minuscole vengono normalizzati; lunghezza, struttura ISO 6166 e cifra di controllo devono essere valide. Duplicati ammessi non determinano l’identità di importazione. / `isin` is optional and read only from `position` rows. Surrounding spaces and lowercase letters are normalized; length, ISO 6166 structure, and check digit must be valid. Allowed duplicates do not determine import identity.
+
 ## 5. Fondo pensione / Pension fund
 
-File: `ContaMi-template-pension-v2.xlsx`
+File: `ContaMi-template-pension-v3.xlsx`
 
 `record_type`: `pension`, `compartment`, `contribution`, `withdrawal`, `valuation`.
 
 - Sempre obbligatorie / Always required: `record_type`, `pension_key`.
-- Gerarchia / Hierarchy: `compartment_key`, `name`, `provider`, `currency`, `opened_at`, `active`, `closed_at`.
+- Gerarchia / Hierarchy: `compartment_key`, `name`, `isin`, `provider`, `currency`, `opened_at`, `active`, `closed_at`.
 - Piano periodico / Recurring plan: `periodic_amount`, `periodic_frequency`, `periodic_next_due_date`, `periodic_category`, `periodic_payment_method`, `periodic_account`.
 - Movimenti / Movements: `date`, `description`, `amount`, `category`, `payment_method`, `account`.
-- Facoltativa / Optional: `notes`.
+- Facoltative / Optional: `isin`, `notes`.
 
 `pension_key` identifica il raccoglitore; `compartment_key` identifica il comparto ed è ripetuta sui suoi movimenti.
 
 `pension_key` identifies the collector; `compartment_key` identifies the compartment and is repeated on its movements.
 
+`isin` è letto soltanto sulle righe `compartment`; resta vuoto per il raccoglitore `pension` e per i movimenti. / `isin` is read only from `compartment` rows; it remains blank for the `pension` collector and movement rows.
+
 ## 6. Spese condivise / Shared expenses
 
-File: `ContaMi-template-shared-expenses-v2.xlsx`
+File: `ContaMi-template-shared-expenses-v3.xlsx`
 
 - Obbligatorie / Required: `date`, `description`, `amount`, `owner_share`, `partner_share`, `paid_by`, `settled`, `category`, `payment_method`, `account`.
 - Facoltativa / Optional: `notes`.
@@ -112,7 +116,7 @@ File: `ContaMi-template-shared-expenses-v2.xlsx`
 
 ## 7. Spese ricorrenti / Recurring items
 
-File: `ContaMi-template-recurring-items-v2.xlsx`
+File: `ContaMi-template-recurring-items-v3.xlsx`
 
 - Obbligatorie / Required: `name`, `kind`, `direction`, `amount`, `frequency`, `category`, `payment_method`, `account`, `next_due_date`, `active`.
 - Facoltative / Optional: `end_date`, `remaining_installments`, `property`, `investment`, `vehicle`, `notes`.
@@ -127,7 +131,7 @@ When `vehicle` is set, `kind` must be `installment`, `direction` must be `expens
 
 ## 8. Automobile / Vehicles
 
-File: `ContaMi-template-vehicles-v2.xlsx`
+File: `ContaMi-template-vehicles-v3.xlsx`
 
 `record_type`: `vehicle`, `fuel`, `installment`, `tax`, `insurance`, `tires`, `maintenance`, `repair`, `valuation`, `other`.
 
@@ -144,8 +148,8 @@ File: `ContaMi-template-vehicles-v2.xlsx`
 
 I file sono `.xlsx` passivi e possono essere compilati in Excel, LibreOffice o Numbers per quanto ciascun programma conserva convalide, intervalli denominati e fogli `veryHidden`. Non rinominare il foglio visibile, le intestazioni o i fogli tecnici; non aggiungere macro, formule, collegamenti esterni o altri fogli.
 
-I template v1 restano documenti passivi ma non soddisfano il contratto v2: genera un nuovo template dall’app e trasferisci i dati, compilando i nuovi campi `account`, `periodic_account` e, quando necessario, `destination_account`.
+L’importatore riconosce i contratti v1, v2 e v3 tramite versione e intestazioni esatte. I template v1 non contengono `account`, `periodic_account` o `destination_account`: per le righe compatibili ContaMì assegna il conto soltanto quando ne esiste uno solo coerente con metodo, valuta e data; in caso contrario l’importazione viene rifiutata senza scritture. I template v1/v2 non contengono `isin` e non ne inventano alcuno. Per usufruire di tutti i campi genera un nuovo template v3 dall’app.
 
 Files are passive `.xlsx` workbooks and can be filled in Excel, LibreOffice, or Numbers to the extent each program preserves validations, named ranges, and `veryHidden` sheets. Do not rename the visible sheet, headers, or technical sheets; do not add macros, formulas, external links, or extra sheets.
 
-Version 1 templates remain passive documents but do not satisfy the v2 contract: generate a fresh template in the app and move the data into it, filling the new `account`, `periodic_account`, and, where applicable, `destination_account` fields.
+The importer recognizes v1, v2, and v3 contracts through exact version and header matching. Version 1 templates have no `account`, `periodic_account`, or `destination_account`: for compatible rows ContaMì assigns an account only when exactly one matches method, currency, and date; otherwise import is rejected without writes. Version 1/2 templates have no `isin` and do not invent one. Generate a new v3 template in the app to use every field.

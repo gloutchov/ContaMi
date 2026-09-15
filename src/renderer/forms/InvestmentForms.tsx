@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from "react";
 import type { FinanceCommand } from "../../domain/commands";
+import { normalizeOptionalIsin, validateOptionalIsin } from "../../domain/isin";
 import { regularInvestments, selectableFinancialPositions } from "../../domain/investments";
 import type { FinanceData, Investment, InvestmentEntry } from "../../domain/models";
 import { Field, Modal } from "../components/Modal";
+import { IsinField } from "../components/IsinField";
 import { PaymentAccountField } from "../components/PaymentAccountField";
 import { useI18n } from "../i18n/I18nContext";
 import type { TranslationKey } from "../i18n/translations";
@@ -18,6 +20,7 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
   const availableTypes = data.investmentTypes.filter((item) => item.code !== "pension");
   const defaultType = value?.typeId ?? availableTypes.find((item) => item.active)?.id ?? "";
   const [name, setName] = useState(value?.name ?? ""); const [provider, setProvider] = useState(value?.provider ?? ""); const [openedAt, setOpenedAt] = useState(value?.openedAt ?? todayIso()); const [notes, setNotes] = useState(value?.notes ?? "");
+  const [isin, setIsin] = useState(value?.isin ?? "");
   const [typeId, setTypeId] = useState(defaultType); const [parentInvestmentId, setParentInvestmentId] = useState(value?.parentInvestmentId ?? "");
   const [periodic, setPeriodic] = useState(Boolean(value?.periodicAmount)); const [periodicAmount, setPeriodicAmount] = useState(value?.periodicAmount ? String(value.periodicAmount) : "");
   const [periodicFrequency, setPeriodicFrequency] = useState<"monthly" | "yearly">(value?.periodicFrequency ?? "monthly");
@@ -31,7 +34,7 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
   const [initialPaymentMethodId, setInitialPaymentMethodId] = useState(data.paymentMethods.find((item) => item.active)?.id ?? "");
   const [initialAccountId, setInitialAccountId] = useState(data.accounts.find((item) => item.active)?.id ?? "");
   const hasInitialContribution = !value && Number(initialContribution) > 0;
-  const valid = Boolean(name.trim() && typeId
+  const valid = Boolean(name.trim() && typeId && !validateOptionalIsin(isin)
     && (!periodic || (Number(periodicAmount) > 0 && periodicCategoryId && periodicPaymentMethodId && periodicAccountId && periodicNextDueDate))
     && (!hasInitialContribution || (initialCategoryId && initialPaymentMethodId && initialAccountId)));
   const submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -39,7 +42,7 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
     const selectedType = data.investmentTypes.find((item) => item.id === typeId);
     const investmentId = value?.id ?? crypto.randomUUID();
     const item: Investment = {
-      ...value, id: investmentId, name, provider, typeId,
+      ...value, id: investmentId, name, isin: normalizeOptionalIsin(isin), provider, typeId,
       kind: legacyKind(selectedType?.code ?? "other"), parentInvestmentId: parentInvestmentId || undefined,
       currency: value?.currency ?? "EUR", active: value?.active ?? true, openedAt, closedAt: value?.closedAt,
       periodicAmount: periodic ? Number(periodicAmount) : undefined, periodicFrequency: periodic ? periodicFrequency : undefined,
@@ -67,6 +70,7 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
   return <Modal title={value ? t("editInvestment") : t("newInvestment")} onClose={onClose} onSubmit={submit} submitDisabled={!valid}>
     <Field label={t("name")} wide><input required value={name} maxLength={240} onChange={(event) => setName(event.target.value)} autoFocus /></Field>
     <Field label={t("type")}><select required value={typeId} onChange={(event) => setTypeId(event.target.value)}>{availableTypes.filter((item) => item.active || item.id === typeId).map((item) => <option value={item.id} key={item.id}>{language === "it" ? item.nameIt : item.nameEn}</option>)}</select></Field>
+    <IsinField value={isin} onChange={setIsin} />
     <Field label={t("investmentGroup")}><select value={parentInvestmentId} onChange={(event) => setParentInvestmentId(event.target.value)}><option value="">—</option>{regularInvestments(data).filter((item) => item.id !== value?.id && !item.parentInvestmentId).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field>
     <Field label={t("provider")}><input value={provider} maxLength={120} onChange={(event) => setProvider(event.target.value)} /></Field>
     <Field label={t("date")}><input required type="date" value={openedAt} onChange={(event) => setOpenedAt(event.target.value)} /></Field>

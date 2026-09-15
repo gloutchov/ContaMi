@@ -19,9 +19,9 @@ Le strategie non usano similarità, correzioni automatiche o nomi “quasi ugual
 
 Strategies never use fuzzy similarity, automatic correction, or near-matching names. Catalog references resolve through the embedded UUID or the exact unique name of an active item.
 
-Nei template v2, scegli una **Cassa** per le righe con metodo Contanti e un conto non-Cassa per gli altri metodi. Per un trasferimento interno neutro, `account` è la sorgente e `destination_account` la destinazione; devono essere distinti e nella stessa valuta.
+Nei template v2 e v3, scegli una **Cassa** per le righe con metodo Contanti e un conto non-Cassa per gli altri metodi. Per un trasferimento interno neutro, `account` è la sorgente e `destination_account` la destinazione; devono essere distinti e nella stessa valuta. La v3 aggiunge `isin` facoltativo alle posizioni Investimenti e ai comparti pensione: il valore viene normalizzato in maiuscolo e deve superare la verifica locale della cifra di controllo.
 
-In v2 templates, choose a **cash register** for rows using the Cash payment method and a non-cash account for other methods. For a neutral internal transfer, `account` is the source and `destination_account` is the destination; they must be distinct and use the same currency.
+In v2 and v3 templates, choose a **cash register** for rows using the Cash payment method and a non-cash account for other methods. For a neutral internal transfer, `account` is the source and `destination_account` is the destination; they must be distinct and use the same currency. Version 3 adds an optional `isin` to Investment positions and pension compartments: the value is normalized to uppercase and must pass the local check-digit validation.
 
 ## Errori e recupero / Errors and recovery
 

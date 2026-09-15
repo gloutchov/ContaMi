@@ -42,7 +42,7 @@ export function createEmptyFinanceData(year = new Date().getFullYear()): Finance
   const category = (nameIt: string, nameEn: string, kind: "income" | "expense" | "both") => ({ id: randomUUID(), nameIt, nameEn, kind, active: true });
   const payment = (name: string, kind: "cash" | "card" | "bank_transfer" | "direct_debit" | "digital_wallet" | "other") => ({ id: randomUUID(), name, kind, active: true });
   return financeDataSchema.parse({
-    meta: { schemaVersion: 11, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
+    meta: { schemaVersion: 12, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
     categories: [
       category("Stipendio", "Salary", "income"), category("Affitti", "Rent income", "income"),
       category("Alimentari", "Groceries", "expense"), category("Casa", "Home", "expense"),
@@ -252,6 +252,16 @@ function ensureInvestmentCorrectionTarget(
   if (previous && (!isInvestmentCorrectionKind(previous.kind) || previous.investmentId !== value.investmentId)) {
     throw new Error("INVALID_INVESTMENT_CORRECTION");
   }
+}
+
+function updateInvestmentIsin(
+  data: FinanceData,
+  investmentId: string,
+  isin: string | undefined,
+): void {
+  const investment = data.investments.find((item) => item.id === investmentId);
+  if (!investment) throw new Error("INVESTMENT_NOT_FOUND");
+  investment.isin = isin;
 }
 
 function ensureInvestmentPlanAccount(data: FinanceData, value: FinanceData["investments"][number]): void {
@@ -481,6 +491,20 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       if (!previous) throw new Error("ENTITY_NOT_FOUND");
       ensureInvestmentCorrectionTarget(next, command.value, previous);
       replace(next.investmentEntries, command.value);
+      break;
+    }
+    case "addInvestmentCorrectionWithIsin":
+      ensureUnique(next.investmentEntries, command.value.correction.id);
+      ensureInvestmentCorrectionTarget(next, command.value.correction);
+      next.investmentEntries.push(command.value.correction);
+      updateInvestmentIsin(next, command.value.correction.investmentId, command.value.isin);
+      break;
+    case "updateInvestmentCorrectionWithIsin": {
+      const previous = next.investmentEntries.find((item) => item.id === command.value.correction.id);
+      if (!previous) throw new Error("ENTITY_NOT_FOUND");
+      ensureInvestmentCorrectionTarget(next, command.value.correction, previous);
+      replace(next.investmentEntries, command.value.correction);
+      updateInvestmentIsin(next, command.value.correction.investmentId, command.value.isin);
       break;
     }
     case "addRecurringItem": {

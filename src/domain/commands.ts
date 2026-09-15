@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalIsinSchema } from "./isin";
 import {
   accountSchema,
   categorySchema,
@@ -96,6 +97,10 @@ const investmentCorrectionSchema = investmentEntrySchema.refine(
   (value) => value.kind === "contribution_correction" || value.kind === "withdrawal_correction",
   { message: "An investment correction needs a correction kind", path: ["kind"] },
 );
+const investmentCorrectionWithIsinSchema = z.object({
+  correction: investmentCorrectionSchema,
+  isin: optionalIsinSchema,
+});
 const vehicleWithInstallmentSchema = z.object({
   vehicle: vehicleSchema,
   installment: recurringItemSchema.optional(),
@@ -137,6 +142,8 @@ export const financeCommandSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("updateInvestmentEntry"), value: standardInvestmentEntrySchema }),
   z.object({ type: z.literal("addInvestmentCorrection"), value: investmentCorrectionSchema }),
   z.object({ type: z.literal("updateInvestmentCorrection"), value: investmentCorrectionSchema }),
+  z.object({ type: z.literal("addInvestmentCorrectionWithIsin"), value: investmentCorrectionWithIsinSchema }),
+  z.object({ type: z.literal("updateInvestmentCorrectionWithIsin"), value: investmentCorrectionWithIsinSchema }),
   z.object({ type: z.literal("addRecurringItem"), value: recurringItemSchema }),
   z.object({ type: z.literal("updateRecurringItem"), value: recurringItemSchema }),
   z.object({ type: z.literal("addRecurringRateChange"), value: recurringRateChangeSchema }),

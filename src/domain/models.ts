@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalIsinSchema } from "./isin";
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected an ISO date");
 const isoTimestamp = z.string().datetime();
@@ -140,6 +141,7 @@ export const propertyEntrySchema = z.object({
 export const investmentSchema = z.object({
   id,
   name: text,
+  isin: optionalIsinSchema,
   kind: z.enum(["fund", "stock", "bond", "pension", "savings", "etf", "other"]),
   typeId: id.optional(),
   parentInvestmentId: id.optional(),
@@ -352,7 +354,7 @@ export const vehicleAnnualSummarySchema = z.object({
 
 export const financeDataSchema = z.object({
   meta: z.object({
-    schemaVersion: z.literal(11),
+    schemaVersion: z.literal(12),
     activeYear: z.number().int().min(1900).max(9999),
     createdAt: isoTimestamp,
     updatedAt: isoTimestamp,

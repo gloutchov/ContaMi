@@ -6,6 +6,7 @@ import type { FinanceCommand } from "../../src/domain/commands";
 import { applyFinanceCommand, createEmptyFinanceData as createBaseFinanceData } from "../../src/domain/finance";
 import { InvestmentForm } from "../../src/renderer/forms/InvestmentForms";
 import { InvestmentCorrectionForm } from "../../src/renderer/forms/InvestmentCorrectionForm";
+import { PensionEntityForm } from "../../src/renderer/forms/PensionForms";
 import { TaxTypeForm } from "../../src/renderer/forms/CatalogForms";
 import { PropertyExpenseForm } from "../../src/renderer/forms/PropertyExpenseForms";
 import { PropertyEntryForm } from "../../src/renderer/forms/PropertyForms";
@@ -160,6 +161,11 @@ describe("v0.8 review forms", () => {
 
     expect(screen.getByText(/Non crea una Transazione/)).toBeInTheDocument();
     expect(screen.queryByLabelText("Metodo di pagamento")).not.toBeInTheDocument();
+    await user.type(screen.getByLabelText("Codice ISIN"), "zztestabcde8");
+    expect(screen.getByText("La cifra di controllo del codice ISIN non è valida.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Salva" })).toBeDisabled();
+    await user.clear(screen.getByLabelText("Codice ISIN"));
+    await user.type(screen.getByLabelText("Codice ISIN"), "  zztestabcde7 ");
     await user.selectOptions(screen.getByLabelText("Direzione della correzione"), "withdrawal_correction");
     await user.type(screen.getByLabelText("Importo"), "35");
     await user.type(screen.getByLabelText("Descrizione"), "Differenza liquidazioni importate");
@@ -167,10 +173,47 @@ describe("v0.8 review forms", () => {
 
     await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
     expect(onSave.mock.calls[0][0]).toMatchObject({
-      type: "addInvestmentCorrection",
+      type: "addInvestmentCorrectionWithIsin",
       value: {
-        investmentId, kind: "withdrawal_correction", amount: 35,
-        categoryId: undefined, paymentMethodId: undefined, accountId: undefined, transactionId: undefined,
+        isin: "ZZTESTABCDE7",
+        correction: {
+          investmentId, kind: "withdrawal_correction", amount: 35,
+          categoryId: undefined, paymentMethodId: undefined, accountId: undefined, transactionId: undefined,
+        },
+      },
+    });
+  });
+
+  it("updates an existing correction and the position ISIN through one command", async () => {
+    const data = createEmptyFinanceData(2026);
+    const investmentId = crypto.randomUUID();
+    data.investments.push({
+      id: investmentId, name: "Synthetic corrected fund", isin: "ZZTESTABCDE7", kind: "fund",
+      provider: "", currency: "EUR", active: true, openedAt: "2025-01-01", notes: "",
+    });
+    const correction = {
+      id: crypto.randomUUID(), investmentId, date: "2026-05-01" as const,
+      kind: "contribution_correction" as const, amount: 20,
+      description: "Synthetic existing correction", notes: "",
+    };
+    data.investmentEntries.push(correction);
+    const onSave = vi.fn<(command: FinanceCommand) => Promise<void>>().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    render(<I18nProvider language="en"><InvestmentCorrectionForm data={data} investmentId={investmentId} value={correction} onClose={() => undefined} onSave={onSave} /></I18nProvider>);
+
+    expect(screen.getByLabelText("ISIN code")).toHaveValue("ZZTESTABCDE7");
+    await user.clear(screen.getByLabelText("ISIN code"));
+    await user.type(screen.getByLabelText("ISIN code"), "zztestabcdf4");
+    await user.clear(screen.getByLabelText("Amount"));
+    await user.type(screen.getByLabelText("Amount"), "30");
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave.mock.calls[0][0]).toMatchObject({
+      type: "updateInvestmentCorrectionWithIsin",
+      value: {
+        isin: "ZZTESTABCDF4",
+        correction: { id: correction.id, investmentId, amount: 30 },
       },
     });
   });
@@ -183,6 +226,7 @@ describe("v0.8 review forms", () => {
     renderIt(<InvestmentForm data={data} onClose={() => undefined} onSave={onSave} />);
 
     await user.type(screen.getByLabelText("Nome"), "Fondo sintetico");
+    await user.type(screen.getByLabelText("Codice ISIN"), "zztestabcde7");
     await user.type(screen.getByLabelText(/^Versamento iniziale/), "2500");
     await user.click(screen.getByRole("button", { name: "Salva" }));
 
@@ -190,9 +234,41 @@ describe("v0.8 review forms", () => {
     const command = onSave.mock.calls[0][0];
     expect(command.type).toBe("addInvestmentWithInitialContribution");
     if (command.type === "addInvestmentWithInitialContribution") {
+      expect(command.value.investment.isin).toBe("ZZTESTABCDE7");
       expect(command.value.initialContribution).toMatchObject({ amount: 2_500, kind: "contribution", accountId });
       expect(command.value.initialContribution.investmentId).toBe(command.value.investment.id);
     }
+  });
+
+  it("supports an optional ISIN for pension compartments but not for the collector", async () => {
+    const data = createEmptyFinanceData(2026);
+    const pensionId = crypto.randomUUID();
+    const pensionTypeId = data.investmentTypes.find((item) => item.code === "pension")!.id;
+    data.investments.push({
+      id: pensionId, name: "Synthetic pension", kind: "pension", typeId: pensionTypeId,
+      provider: "", currency: "EUR", active: true, openedAt: "2020-01-01", notes: "",
+    });
+    const onSave = vi.fn<(command: FinanceCommand) => Promise<void>>().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    const view = render(<I18nProvider language="en"><PensionEntityForm data={data} mode="compartment" initialPensionId={pensionId} onClose={() => undefined} onSave={onSave} /></I18nProvider>);
+
+    await user.type(screen.getByLabelText("Name"), "Synthetic compartment");
+    await user.type(screen.getByLabelText("ISIN code"), "Z1TESTABCDE7");
+    expect(screen.getByText(/Enter a 12-character ISIN/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    await user.clear(screen.getByLabelText("ISIN code"));
+    await user.type(screen.getByLabelText("ISIN code"), "zztestabcde7");
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave.mock.calls[0][0]).toMatchObject({
+      type: "addInvestment",
+      value: { parentInvestmentId: pensionId, isin: "ZZTESTABCDE7" },
+    });
+
+    view.unmount();
+    render(<I18nProvider language="en"><PensionEntityForm data={data} mode="pension" onClose={() => undefined} onSave={onSave} /></I18nProvider>);
+    expect(screen.queryByLabelText("ISIN code")).not.toBeInTheDocument();
   });
 
   it("calculates a property valuation from the value per square metre", async () => {

@@ -13,6 +13,7 @@ export const importErrorCodeSchema = z.enum([
   "INVALID_DATE",
   "INVALID_ENUM",
   "INVALID_HEADERS",
+  "INVALID_ISIN",
   "INVALID_NUMBER",
   "INVALID_REFERENCE",
   "INVALID_ROW",

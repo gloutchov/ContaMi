@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export const IMPORT_TEMPLATE_VERSION = 2;
+export const IMPORT_TEMPLATE_VERSION = 3;
+export const SUPPORTED_IMPORT_TEMPLATE_VERSIONS = [1, 2, 3] as const;
+export type ImportTemplateVersion = typeof SUPPORTED_IMPORT_TEMPLATE_VERSIONS[number];
 export const IMPORT_TEMPLATE_DATA_SHEET = "Dati - Data";
 export const IMPORT_TEMPLATE_META_SHEET = "_Meta";
 export const IMPORT_TEMPLATE_LISTS_SHEET = "_Lists";
@@ -197,7 +199,7 @@ const propertyFields = (rental: boolean): ImportTemplateField[] => [
 const contracts: ImportTemplateContract[] = [
   {
     type: "residence",
-    fileName: "ContaMi-template-residence-v2.xlsx",
+    fileName: "ContaMi-template-residence-v3.xlsx",
     titleIt: "Immobile di residenza",
     titleEn: "Residence property",
     purposeIt: "Anagrafica della residenza e registrazioni collegate: valutazioni, entrate, uscite, utenze e tasse.",
@@ -206,7 +208,7 @@ const contracts: ImportTemplateContract[] = [
   },
   {
     type: "rental_properties",
-    fileName: "ContaMi-template-rental-properties-v2.xlsx",
+    fileName: "ContaMi-template-rental-properties-v3.xlsx",
     titleIt: "Immobili in affitto",
     titleEn: "Rental properties",
     purposeIt: "Anagrafiche degli immobili locati e registrazioni collegate, inclusi canoni, costi, utenze e tasse.",
@@ -215,7 +217,7 @@ const contracts: ImportTemplateContract[] = [
   },
   {
     type: "transactions",
-    fileName: "ContaMi-template-transactions-v2.xlsx",
+    fileName: "ContaMi-template-transactions-v3.xlsx",
     titleIt: "Transazioni",
     titleEn: "Transactions",
     purposeIt: "Entrate, uscite e trasferimenti non già creati da altri template collegati.",
@@ -237,7 +239,7 @@ const contracts: ImportTemplateContract[] = [
   },
   {
     type: "investments",
-    fileName: "ContaMi-template-investments-v2.xlsx",
+    fileName: "ContaMi-template-investments-v3.xlsx",
     titleIt: "Investimenti",
     titleEn: "Investments",
     purposeIt: "Posizioni non pensionistiche, versamenti, liquidazioni e valutazioni.",
@@ -246,6 +248,7 @@ const contracts: ImportTemplateContract[] = [
       recordType("investment_record_type"),
       field("investment_key", "Chiave investimento", "Investment key", "Identificativo scelto dall’utente e ripetuto per posizione e movimenti.", "User-defined identifier repeated for the position and its movements.", "text", { required: true }),
       field("name", "Nome", "Name", "Nome della posizione.", "Position name.", "text", { requiredFor: ["position"] }),
+      field("isin", "Codice ISIN", "ISIN code", "Facoltativo per la posizione: 12 caratteri ISO 6166 con cifra di controllo.", "Optional for the position: 12 ISO 6166 characters with a check digit.", "text"),
       field("investment_type", "Tipo investimento", "Investment type", "Tipologia configurata non pensionistica.", "Configured non-pension investment type.", "catalog", { requiredFor: ["position"], list: "investment_types" }),
       field("provider", "Intermediario", "Provider", "Banca, piattaforma o gestore.", "Bank, platform, or manager.", "text"),
       field("currency", "Valuta", "Currency", "Codice ISO di tre lettere.", "Three-letter ISO code.", "text", { requiredFor: ["position"] }),
@@ -269,7 +272,7 @@ const contracts: ImportTemplateContract[] = [
   },
   {
     type: "pension",
-    fileName: "ContaMi-template-pension-v2.xlsx",
+    fileName: "ContaMi-template-pension-v3.xlsx",
     titleIt: "Fondo pensione",
     titleEn: "Pension fund",
     purposeIt: "Pensioni-raccoglitore, comparti associati e relativi movimenti e valutazioni.",
@@ -279,6 +282,7 @@ const contracts: ImportTemplateContract[] = [
       field("pension_key", "Chiave pensione", "Pension key", "Identificativo scelto dall’utente per la pensione-raccoglitore.", "User-defined identifier for the pension collector.", "text", { required: true }),
       field("compartment_key", "Chiave comparto", "Compartment key", "Identificativo del comparto, ripetuto sui relativi movimenti.", "Compartment identifier, repeated on its movements.", "text", { requiredFor: ["compartment", "contribution", "withdrawal", "valuation"] }),
       field("name", "Nome", "Name", "Nome della pensione o del comparto.", "Pension or compartment name.", "text", { requiredFor: ["pension", "compartment"] }),
+      field("isin", "Codice ISIN comparto", "Compartment ISIN code", "Facoltativo per il comparto; lascia vuoto per pensione-raccoglitore e movimenti.", "Optional for the compartment; leave blank for the pension collector and movements.", "text"),
       field("provider", "Gestore", "Provider", "Gestore della pensione.", "Pension provider.", "text"),
       field("currency", "Valuta", "Currency", "Codice ISO di tre lettere.", "Three-letter ISO code.", "text", { requiredFor: ["pension", "compartment"] }),
       field("opened_at", "Data apertura", "Opened at", "Data di apertura.", "Opening date.", "date", { requiredFor: ["pension", "compartment"] }),
@@ -301,7 +305,7 @@ const contracts: ImportTemplateContract[] = [
   },
   {
     type: "shared_expenses",
-    fileName: "ContaMi-template-shared-expenses-v2.xlsx",
+    fileName: "ContaMi-template-shared-expenses-v3.xlsx",
     titleIt: "Spese condivise",
     titleEn: "Shared expenses",
     purposeIt: "Spese ripartite tra titolare e partner con transazione collegata.",
@@ -322,7 +326,7 @@ const contracts: ImportTemplateContract[] = [
   },
   {
     type: "recurring_items",
-    fileName: "ContaMi-template-recurring-items-v2.xlsx",
+    fileName: "ContaMi-template-recurring-items-v3.xlsx",
     titleIt: "Spese ricorrenti",
     titleEn: "Recurring items",
     purposeIt: "Abbonamenti, servizi, rate, affitti e altri impegni periodici.",
@@ -348,7 +352,7 @@ const contracts: ImportTemplateContract[] = [
   },
   {
     type: "vehicles",
-    fileName: "ContaMi-template-vehicles-v2.xlsx",
+    fileName: "ContaMi-template-vehicles-v3.xlsx",
     titleIt: "Automobile",
     titleEn: "Vehicles",
     purposeIt: "Anagrafica delle automobili e registrazioni di costi, consumi e valutazioni.",
@@ -390,4 +394,17 @@ export const IMPORT_TEMPLATE_TYPES = Object.freeze(contracts.map((contract) => c
 
 export function importTemplateContract(type: ImportTemplateType): ImportTemplateContract {
   return IMPORT_TEMPLATE_CONTRACTS[type];
+}
+
+export function importTemplateContractForVersion(
+  type: ImportTemplateType,
+  version: ImportTemplateVersion,
+): ImportTemplateContract {
+  const current = IMPORT_TEMPLATE_CONTRACTS[type];
+  const fields = current.fields.filter((item) => {
+    if (version < 3 && item.key === "isin") return false;
+    if (version < 2 && (item.key === "account" || item.key === "periodic_account" || item.key === "destination_account")) return false;
+    return true;
+  });
+  return { ...current, fields };
 }

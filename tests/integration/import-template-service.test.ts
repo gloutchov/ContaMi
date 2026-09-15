@@ -25,7 +25,7 @@ describe("ImportTemplateService", () => {
     expect(result).not.toHaveProperty("path");
     expect(electronMocks.showSaveDialog).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
       title: "Salva template Excel per importazione",
-      defaultPath: "ContaMi-template-transactions-v2.xlsx",
+      defaultPath: "ContaMi-template-transactions-v3.xlsx",
       properties: expect.arrayContaining(["showOverwriteConfirmation"]),
     }));
     expect(generator.save).toHaveBeenCalledWith(

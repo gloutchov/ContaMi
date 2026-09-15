@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from "react";
 import type { FinanceCommand } from "../../domain/commands";
+import { normalizeOptionalIsin, validateOptionalIsin } from "../../domain/isin";
 import { pensionPlans } from "../../domain/investments";
 import type { FinanceData, Investment } from "../../domain/models";
 import { Field, Modal } from "../components/Modal";
+import { IsinField } from "../components/IsinField";
 import { PaymentAccountField } from "../components/PaymentAccountField";
 import { useI18n } from "../i18n/I18nContext";
 import { todayIso } from "../utils/format";
@@ -24,6 +26,7 @@ export function PensionEntityForm({ data, mode, value, initialPensionId, onClose
   const [provider, setProvider] = useState(value?.provider ?? (mode === "compartment" ? initialPlan?.provider ?? "" : ""));
   const [openedAt, setOpenedAt] = useState(value?.openedAt ?? (mode === "compartment" ? initialPlan?.openedAt ?? todayIso() : todayIso()));
   const [notes, setNotes] = useState(value?.notes ?? "");
+  const [isin, setIsin] = useState(value?.isin ?? "");
   const [parentInvestmentId, setParentInvestmentId] = useState(value?.parentInvestmentId ?? initialPensionId ?? plans[0]?.id ?? "");
   const [periodic, setPeriodic] = useState(Boolean(value?.periodicAmount));
   const [periodicAmount, setPeriodicAmount] = useState(value?.periodicAmount ? String(value.periodicAmount) : "");
@@ -33,7 +36,8 @@ export function PensionEntityForm({ data, mode, value, initialPensionId, onClose
   const [periodicPaymentMethodId, setPeriodicPaymentMethodId] = useState(value?.periodicPaymentMethodId ?? data.paymentMethods.find((item) => item.active)?.id ?? "");
   const [periodicAccountId, setPeriodicAccountId] = useState(value?.periodicAccountId ?? data.accounts.find((item) => item.active)?.id ?? "");
   const validPeriodic = !periodic || (Number(periodicAmount) > 0 && periodicCategoryId && periodicPaymentMethodId && periodicAccountId && periodicNextDueDate);
-  const valid = Boolean(name.trim() && pensionTypeId && (mode === "pension" || parentInvestmentId) && validPeriodic);
+  const valid = Boolean(name.trim() && pensionTypeId && (mode === "pension" || parentInvestmentId) && validPeriodic
+    && (mode === "pension" || !validateOptionalIsin(isin)));
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,6 +46,7 @@ export function PensionEntityForm({ data, mode, value, initialPensionId, onClose
       ...value,
       id: value?.id ?? crypto.randomUUID(),
       name,
+      isin: mode === "compartment" ? normalizeOptionalIsin(isin) : value?.isin,
       kind: "pension",
       typeId: pensionTypeId,
       parentInvestmentId: mode === "compartment" ? parentInvestmentId : undefined,
@@ -72,6 +77,7 @@ export function PensionEntityForm({ data, mode, value, initialPensionId, onClose
   return <Modal title={value ? t(mode === "pension" ? "editPension" : "editCompartment") : t(mode === "pension" ? "createPension" : "createCompartment")} onClose={onClose} onSubmit={submit} submitDisabled={!valid}>
     <Field label={t("name")} wide><input required value={name} maxLength={240} onChange={(event) => setName(event.target.value)} autoFocus /></Field>
     {mode === "compartment" && <Field label={t("pension")}><select required value={parentInvestmentId} onChange={(event) => setParentInvestmentId(event.target.value)}><option value="">—</option>{plans.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field>}
+    {mode === "compartment" && <IsinField value={isin} onChange={setIsin} />}
     <Field label={t("provider")}><input value={provider} maxLength={120} onChange={(event) => setProvider(event.target.value)} /></Field>
     <Field label={t("date")}><input required type="date" value={openedAt} onChange={(event) => setOpenedAt(event.target.value)} /></Field>
     {mode === "pension" && <Field label={t("pensionCollector")} wide><small>{t("pensionCollectorHelp")}</small></Field>}

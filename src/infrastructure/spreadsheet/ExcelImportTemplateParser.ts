@@ -3,15 +3,17 @@ import ExcelJS from "exceljs";
 import { financeCommandSchema, type FinanceCommand } from "../../domain/commands";
 import { applyFinanceCommands } from "../../domain/finance";
 import {
-  IMPORT_TEMPLATE_CONTRACTS,
   IMPORT_TEMPLATE_DATA_SHEET,
   IMPORT_TEMPLATE_LISTS_SHEET,
   IMPORT_TEMPLATE_META_SHEET,
-  IMPORT_TEMPLATE_VERSION,
+  SUPPORTED_IMPORT_TEMPLATE_VERSIONS,
+  importTemplateContractForVersion,
   importTemplateTypeSchema,
   type ImportTemplateContract,
   type ImportTemplateType,
+  type ImportTemplateVersion,
 } from "../../domain/importTemplates";
+import { normalizeOptionalIsin, validateOptionalIsin } from "../../domain/isin";
 import type { ImportDuplicateStrategy, ImportErrorCode, ImportRowError, PreparedImport } from "../../domain/imports";
 import type {
   FinanceData,
@@ -95,6 +97,10 @@ class RowReader {
     private readonly row: ExcelJS.Row,
     private readonly columns: ReadonlyMap<string, number>,
   ) {}
+
+  hasColumn(column: string): boolean {
+    return this.columns.has(column);
+  }
 
   private error(column: string, code: ImportErrorCode): undefined {
     this.errors.push({ row: this.row.number, column, code });
@@ -263,10 +269,11 @@ async function readSupportedWorkbook(filePath: string): Promise<ParsedWorkbook> 
   }
   const meta = metaValues(metaSheet);
   if (meta.get("signature") !== "ContaMi Import Template") throw new Error("INVALID_IMPORT_TEMPLATE");
-  if (Number(meta.get("templateVersion")) !== IMPORT_TEMPLATE_VERSION) throw new Error("IMPORT_TEMPLATE_VERSION_UNSUPPORTED");
+  const templateVersion = Number(meta.get("templateVersion"));
+  if (!SUPPORTED_IMPORT_TEMPLATE_VERSIONS.some((version) => version === templateVersion)) throw new Error("IMPORT_TEMPLATE_VERSION_UNSUPPORTED");
   const type = importTemplateTypeSchema.safeParse(meta.get("templateType"));
   if (!type.success) throw new Error("INVALID_IMPORT_TEMPLATE");
-  const contract = IMPORT_TEMPLATE_CONTRACTS[type.data];
+  const contract = importTemplateContractForVersion(type.data, templateVersion as ImportTemplateVersion);
   const headerRow = Number(meta.get("headerRow"));
   const dataStartRow = Number(meta.get("dataStartRow"));
   const maxDataRows = Number(meta.get("maxDataRows"));
@@ -374,11 +381,11 @@ function parseTransactions(parsed: ParsedWorkbook, data: FinanceData, builder: I
     const categoryId = reader.catalog("category", categoryItems(data, kind === "income" ? "income" : kind === "expense" ? "expense" : undefined), true);
     const paymentMethodId = reader.catalog("payment_method", catalogs.payments, true);
     const cashFlowDirection = reader.enum("cash_flow_direction", ["inflow", "outflow", "neutral"] as const, kind === "transfer");
-    const accountId = reader.catalog("account", catalogs.accounts, true);
-    const destinationAccountId = reader.catalog("destination_account", catalogs.accounts, kind === "transfer" && cashFlowDirection === "neutral");
+    const accountId = reader.catalog("account", catalogs.accounts, reader.hasColumn("account"));
+    const destinationAccountId = reader.catalog("destination_account", catalogs.accounts, reader.hasColumn("destination_account") && kind === "transfer" && cashFlowDirection === "neutral");
     const planned = reader.boolean("planned", true);
     const rowNotes = notes(reader);
-    if (reader.errors.length || !date || !description || !kind || amount === undefined || !currency || !categoryId || !paymentMethodId || !accountId || planned === undefined) {
+    if (reader.errors.length || !date || !description || !kind || amount === undefined || !currency || !categoryId || !paymentMethodId || planned === undefined) {
       builder.reject(reader);
       continue;
     }
@@ -460,7 +467,7 @@ function parseProperties(parsed: ParsedWorkbook, data: FinanceData, builder: Imp
     const monetaryKind = recordType === "income" ? "income" : recordType === "valuation" ? undefined : "expense";
     const categoryId = monetaryKind ? reader.catalog("category", categoryItems(data, monetaryKind), true) : undefined;
     const paymentMethodId = monetaryKind ? reader.catalog("payment_method", catalogs.payments, true) : undefined;
-    const accountId = monetaryKind ? reader.catalog("account", catalogs.accounts, true) : undefined;
+    const accountId = monetaryKind ? reader.catalog("account", catalogs.accounts, reader.hasColumn("account")) : undefined;
     const taxTypeId = recordType === "tax" ? reader.catalog("tax_type", catalogs.taxes, true) : undefined;
     const taxInstallmentNumber = recordType === "tax" ? reader.number("installment_number", false, { integer: true, positive: true, max: 24 }) : undefined;
     const detail = recordType === "utility"
@@ -546,6 +553,7 @@ function readInvestment(
   typeId: string | undefined,
   parentInvestmentId: string | undefined,
   current?: Investment,
+  allowIsin = true,
 ): Investment | undefined {
   const catalogs = simpleItems(data);
   const name = reader.text("name", true);
@@ -556,12 +564,19 @@ function readInvestment(
   if (periodic.periodicAmount) {
     periodic.periodicCategoryId = reader.catalog("periodic_category", categoryItems(data, "expense"), true);
     periodic.periodicPaymentMethodId = reader.catalog("periodic_payment_method", catalogs.payments, true);
-    periodic.periodicAccountId = reader.catalog("periodic_account", catalogs.accounts, true);
+    periodic.periodicAccountId = reader.catalog("periodic_account", catalogs.accounts, reader.hasColumn("periodic_account"));
   }
+  const rawIsin = allowIsin && reader.hasColumn("isin") ? reader.text("isin", false, 32) : undefined;
+  const isin = allowIsin
+    ? reader.hasColumn("isin")
+      ? normalizeOptionalIsin(rawIsin ?? "")
+      : current?.isin
+    : undefined;
+  if (rawIsin && validateOptionalIsin(rawIsin)) reader.issue("isin", "INVALID_ISIN");
   if (reader.errors.length || !name || !currency || !openedAt || active === undefined) return undefined;
   return {
     id, name, kind, typeId, parentInvestmentId, provider: reader.text("provider", false, 120) ?? "",
-    currency, ...periodic, active, openedAt, closedAt: active ? undefined : (reader.date("closed_at") ?? current?.closedAt), notes: notes(reader),
+    isin, currency, ...periodic, active, openedAt, closedAt: active ? undefined : (reader.date("closed_at") ?? current?.closedAt), notes: notes(reader),
   };
 }
 
@@ -599,7 +614,7 @@ function parseInvestmentEntries(
       ? reader.catalog("category", categoryItems(data, recordType === "contribution" ? "expense" : "income"), true)
       : undefined;
     const paymentMethodId = recordType !== "valuation" ? reader.catalog("payment_method", catalogs.payments, true) : undefined;
-    const accountId = recordType !== "valuation" ? reader.catalog("account", catalogs.accounts, true) : undefined;
+    const accountId = recordType !== "valuation" ? reader.catalog("account", catalogs.accounts, reader.hasColumn("account")) : undefined;
     const rowNotes = notes(reader);
     if (reader.errors.length || !investmentId || !date || !description || amount === undefined) { builder.reject(reader); continue; }
     const fingerprint = recordFingerprint([investmentId, date, recordType, description, amount, categoryId, paymentMethodId, accountId]);
@@ -678,7 +693,7 @@ function parsePension(parsed: ParsedWorkbook, data: FinanceData, builder: Import
       const choice = existingChoice(rowNumber, "name", matches, builder);
       if (!choice) continue;
       const id = choice.current?.id ?? crypto.randomUUID();
-      const value = readInvestment(reader, data, id, "pension", pensionType.id, parentId, choice.current);
+      const value = readInvestment(reader, data, id, "pension", pensionType.id, parentId, choice.current, registryType === "compartment");
       if (!value || reader.errors.length) { builder.reject(reader); continue; }
       map.set(key, id);
       builder.add(rowNumber, "name", choice.action, choice.action === "skip" ? undefined : {
@@ -708,7 +723,7 @@ function parseSharedExpenses(parsed: ParsedWorkbook, data: FinanceData, builder:
     const settled = reader.boolean("settled", true);
     const categoryId = reader.catalog("category", categoryItems(data, "expense"), true);
     const paymentMethodId = reader.catalog("payment_method", catalogs.payments, true);
-    const accountId = reader.catalog("account", catalogs.accounts, true);
+    const accountId = reader.catalog("account", catalogs.accounts, reader.hasColumn("account"));
     const rowNotes = notes(reader);
     if (amount !== undefined && ownerShare !== undefined && partnerShare !== undefined && Math.abs(ownerShare + partnerShare - amount) > 0.01) {
       reader.errors.push({ row: rowNumber, column: "partner_share", code: "INVALID_NUMBER" });
@@ -746,7 +761,7 @@ function parseRecurring(parsed: ParsedWorkbook, data: FinanceData, builder: Impo
     const frequency = reader.enum("frequency", ["weekly", "monthly", "quarterly", "yearly"] as const, true);
     const categoryId = reader.catalog("category", categoryItems(data, direction), true);
     const paymentMethodId = reader.catalog("payment_method", catalogs.payments, true);
-    const accountId = reader.catalog("account", catalogs.accounts, true);
+    const accountId = reader.catalog("account", catalogs.accounts, reader.hasColumn("account"));
     const nextDueDate = reader.date("next_due_date", true);
     const endDate = reader.date("end_date");
     const remainingInstallments = reader.number("remaining_installments", false, { integer: true, max: 10_000 });
@@ -828,7 +843,7 @@ function parseVehicles(parsed: ParsedWorkbook, data: FinanceData, builder: Impor
     const amount = reader.number("amount", true, { positive: recordType !== "valuation" });
     const categoryId = recordType !== "valuation" ? reader.catalog("category", categoryItems(data, "expense"), true) : undefined;
     const paymentMethodId = recordType !== "valuation" ? reader.catalog("payment_method", catalogs.payments, true) : undefined;
-    const accountId = recordType !== "valuation" ? reader.catalog("account", catalogs.accounts, true) : undefined;
+    const accountId = recordType !== "valuation" ? reader.catalog("account", catalogs.accounts, reader.hasColumn("account")) : undefined;
     const fuelLiters = reader.number("fuel_liters", false, { positive: true, max: 1_000_000 });
     const odometerKm = reader.number("odometer_km", false, { max: 100_000_000 });
     const distanceKm = reader.number("distance_km", false, { max: 10_000_000 });

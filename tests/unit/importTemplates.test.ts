@@ -8,7 +8,7 @@ import {
 
 describe("import template contracts", () => {
   it("defines eight versioned contracts with stable unique columns", () => {
-    expect(IMPORT_TEMPLATE_VERSION).toBe(2);
+    expect(IMPORT_TEMPLATE_VERSION).toBe(3);
     expect(IMPORT_TEMPLATE_TYPES).toEqual([
       "residence",
       "rental_properties",
@@ -24,7 +24,7 @@ describe("import template contracts", () => {
     for (const type of IMPORT_TEMPLATE_TYPES) {
       const contract = IMPORT_TEMPLATE_CONTRACTS[type];
       expect(contract.type).toBe(type);
-      expect(contract.fileName).toMatch(/^ContaMi-template-[a-z-]+-v2\.xlsx$/);
+      expect(contract.fileName).toMatch(/^ContaMi-template-[a-z-]+-v3\.xlsx$/);
       expect(contract.titleIt).not.toBe(contract.titleEn);
       expect(contract.fields.length).toBeGreaterThan(8);
       expect(new Set(contract.fields.map((field) => field.key)).size).toBe(contract.fields.length);
