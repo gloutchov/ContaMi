@@ -44,7 +44,7 @@ test("creates a shared vehicle cost in English light mode", async ({ page }) => 
   await page.getByRole("navigation").getByRole("button", { name: "Vehicles", exact: true }).click();
   await page.locator(".page-header").getByRole("button", { name: "New cost / reading" }).click();
   const dialog = page.getByRole("dialog", { name: "New cost / reading" });
-  await dialog.getByRole("combobox", { name: "Type" }).selectOption("insurance");
+  await dialog.getByRole("combobox", { name: "Type", exact: true }).selectOption("insurance");
   await dialog.getByRole("spinbutton", { name: "Amount" }).fill("60");
   await dialog.getByRole("textbox", { name: "Description" }).fill("Shared vehicle insurance");
   await dialog.getByRole("combobox", { name: "Category" }).selectOption({ label: "Transport" });

@@ -61,6 +61,7 @@ ContaMì/
 │   │   ├── propertyReport.ts           # aggregazioni mensili/annuali, previsioni e quote dei report immobili
 │   │   ├── rent.ts                     # stato rate affitto da competenza e incasso effettivo
 │   │   ├── recurringRates.ts           # tariffa per decorrenza, anteprima e protezione dello storico
+│   │   ├── vehicleEntries.ts           # lettura precedente, percorrenza e litri suggeriti per le registrazioni Automobile
 │   │   ├── vehicleInstallments.ts      # unicità, ciclo di vita e protezione dello storico dei finanziamenti auto
 │   │   ├── migrations.ts               # migrazione workbook v1–v10 → v11 senza inventare rendimenti storici
 │   │   ├── models.ts                   # schema Zod v11 e modello finanziario
@@ -187,6 +188,7 @@ ContaMì/
 │       ├── linkedRecords.test.ts         # collegamenti, limiti e chiusura delle ricorrenze
 │       ├── migrations.test.ts            # compatibilità schema v1–v10 → v11
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
+│       ├── vehicleEntries.test.ts         # contachilometri precedente, distanza e litri calcolati
 │       ├── vehicleInstallments.test.ts   # comando atomico, unicità, classificazione e ciclo di vita rate auto
 │       ├── xlsxZipPreflight.test.ts      # limiti, mutazioni seeded e casi ZIP ostili
 │       ├── overviewTransactions.test.ts  # liste recenti alla data odierna / as-of-today lists

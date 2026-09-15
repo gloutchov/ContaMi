@@ -149,6 +149,37 @@ describe("ExcelWorkbookRepository", () => {
     });
   });
 
+  it("round-trips calculated vehicle fields, supported fuel codes, legacy text and an empty fuel type", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-vehicle-entry-assistance-")); directories.push(directory);
+    const filePath = path.join(directory, "ContaMi-vehicle-entry-assistance.xlsx");
+    const data = createEmptyFinanceData(2026);
+    const vehicleId = crypto.randomUUID();
+    data.vehicles.push({
+      id: vehicleId, name: "Synthetic vehicle", manufacturer: "Example", model: "Fuel", fuelType: "petrol", active: true, notes: "",
+    });
+    data.vehicleEntries.push(
+      {
+        id: crypto.randomUUID(), vehicleId, date: "2026-05-10", kind: "fuel", description: "Synthetic hydrogen fuel",
+        amount: 60, odometerKm: 10_750, distanceKm: 750, fuelLiters: 30, fuelUnitPrice: 2, fuelType: "hydrogen", notes: "",
+      },
+      {
+        id: crypto.randomUUID(), vehicleId, date: "2026-06-10", kind: "fuel", description: "Synthetic legacy fuel",
+        amount: 45, fuelLiters: 25, fuelType: "legacy synthetic value", notes: "",
+      },
+      {
+        id: crypto.randomUUID(), vehicleId, date: "2026-07-10", kind: "fuel", description: "Synthetic fuel without type",
+        amount: 30, fuelLiters: 15, notes: "",
+      },
+    );
+    const repository = new ExcelWorkbookRepository();
+
+    await repository.save(filePath, data);
+    const loaded = await repository.load(filePath);
+
+    expect(loaded.vehicleEntries).toEqual(data.vehicleEntries);
+    expect(loaded.vehicleEntries.map((entry) => entry.fuelType)).toEqual(["hydrogen", "legacy synthetic value", undefined]);
+  });
+
   it("round-trips typed finance data and writes human-readable sheets", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-")); directories.push(directory);
     const filePath = path.join(directory, "ContaMi-2026.xlsx");

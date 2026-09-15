@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import type { FinanceCommand } from "../../domain/commands";
 import type { FinanceData, RecurringItem, Vehicle, VehicleEntry } from "../../domain/models";
+import { calculateFuelLiters, calculateVehicleDistance, previousVehicleOdometer } from "../../domain/vehicleEntries";
 import { vehicleInstallmentPlan } from "../../domain/vehicleInstallments";
 import { Field, Modal } from "../components/Modal";
 import { PaymentAccountField } from "../components/PaymentAccountField";
@@ -11,6 +12,20 @@ import { saveAndClose } from "../utils/save";
 
 const fuelTypes: Vehicle["fuelType"][] = ["petrol", "diesel", "lpg", "methane", "hybrid", "electric", "other"];
 const entryKinds: VehicleEntry["kind"][] = ["fuel", "installment", "tax", "insurance", "tires", "maintenance", "repair", "valuation", "other"];
+const entryFuelTypes = [
+  { value: "petrol", label: "petrol" },
+  { value: "diesel", label: "diesel" },
+  { value: "lpg", label: "lpg" },
+  { value: "methane", label: "methane" },
+  { value: "electric", label: "fuelElectricity" },
+  { value: "hydrogen", label: "hydrogen" },
+] as const;
+
+function numberFromInput(value: string): number | undefined {
+  if (value.trim() === "") return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
 
 export function VehicleForm({ data, value, onClose, onSave }: { data: FinanceData; value?: Vehicle; onClose: () => void; onSave: (command: FinanceCommand) => Promise<void> }) {
   const { t, language } = useI18n();
@@ -117,14 +132,23 @@ export function VehicleEntryForm({ data, value, initialVehicleId, onClose, onSav
   const existingSharedExpense = existingTransaction
     ? data.sharedExpenses.find((item) => item.id === existingTransaction.sharedExpenseId || item.transactionId === existingTransaction.id)
     : undefined;
-  const [vehicleId, setVehicleId] = useState(value?.vehicleId ?? initialVehicleId ?? data.vehicles.find((item) => item.active)?.id ?? "");
-  const [date, setDate] = useState(value?.date ?? todayIso());
+  const initialVehicle = value?.vehicleId ?? initialVehicleId ?? data.vehicles.find((item) => item.active)?.id ?? "";
+  const initialDate = value?.date ?? todayIso();
+  const initialPreviousOdometer = previousVehicleOdometer(data, initialVehicle, initialDate, value?.id);
+  const initialDistance = calculateVehicleDistance(value?.odometerKm, initialPreviousOdometer);
+  const initialFuelLiters = calculateFuelLiters(value?.amount, value?.fuelUnitPrice);
+  const [vehicleId, setVehicleId] = useState(initialVehicle);
+  const [date, setDate] = useState(initialDate);
   const [kind, setKind] = useState<VehicleEntry["kind"]>(value?.kind ?? "fuel");
   const [description, setDescription] = useState(value?.description ?? "");
   const [amount, setAmount] = useState(value ? String(value.amount) : "");
   const [odometerKm, setOdometerKm] = useState(value?.odometerKm !== undefined ? String(value.odometerKm) : "");
-  const [distanceKm, setDistanceKm] = useState(value?.distanceKm !== undefined ? String(value.distanceKm) : "");
-  const [fuelLiters, setFuelLiters] = useState(value?.fuelLiters !== undefined ? String(value.fuelLiters) : "");
+  const [distanceKmOverride, setDistanceKmOverride] = useState<string | null>(
+    value?.distanceKm !== undefined && value.distanceKm !== initialDistance ? String(value.distanceKm) : null,
+  );
+  const [fuelLitersOverride, setFuelLitersOverride] = useState<string | null>(
+    value?.fuelLiters !== undefined && value.fuelLiters !== initialFuelLiters ? String(value.fuelLiters) : null,
+  );
   const [fuelUnitPrice, setFuelUnitPrice] = useState(value?.fuelUnitPrice !== undefined ? String(value.fuelUnitPrice) : "");
   const [fuelType, setFuelType] = useState(value?.fuelType ?? "");
   const [vendor, setVendor] = useState(value?.vendor ?? "");
@@ -134,6 +158,21 @@ export function VehicleEntryForm({ data, value, initialVehicleId, onClose, onSav
   const [shared, setShared] = useState(Boolean(existingTransaction?.shared || existingSharedExpense));
   const [sharedPaidBy, setSharedPaidBy] = useState<"owner" | "partner">(existingSharedExpense?.paidBy ?? existingTransaction?.sharedPaidBy ?? "owner");
   const [notes, setNotes] = useState(value?.notes ?? "");
+  const previousOdometerKm = useMemo(
+    () => previousVehicleOdometer(data, vehicleId, date, value?.id),
+    [data, date, value?.id, vehicleId],
+  );
+  const odometerValue = numberFromInput(odometerKm);
+  const suggestedDistanceKm = calculateVehicleDistance(odometerValue, previousOdometerKm);
+  const suggestedFuelLiters = calculateFuelLiters(numberFromInput(amount), numberFromInput(fuelUnitPrice));
+  const distanceManuallyEdited = distanceKmOverride !== null;
+  const fuelLitersManuallyEdited = fuelLitersOverride !== null;
+  const distanceKm = distanceKmOverride ?? (suggestedDistanceKm === undefined ? "" : String(suggestedDistanceKm));
+  const fuelLiters = fuelLitersOverride ?? (suggestedFuelLiters === undefined ? "" : String(suggestedFuelLiters));
+  const odometerIsLower = odometerValue !== undefined
+    && previousOdometerKm !== undefined
+    && odometerValue < previousOdometerKm;
+
   const valid = Boolean(vehicleId && description.trim() && Number(amount || 0) >= 0 && (kind === "valuation" || (categoryId && paymentMethodId && accountId)) && (kind !== "fuel" || Number(fuelLiters) > 0) && (!shared || (kind !== "valuation" && Number(amount) > 0)));
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); if (!valid) return;
@@ -164,9 +203,13 @@ export function VehicleEntryForm({ data, value, initialVehicleId, onClose, onSav
     <Field label={t("amount")}><input type="number" min="0" step="0.01" value={amount} onChange={(event) => setAmount(event.target.value)} /></Field>
     <Field label={t("description")} wide><input required maxLength={240} value={description} onChange={(event) => setDescription(event.target.value)} /></Field>
     {kind !== "valuation" && <><Field label={t("category")}><select required value={categoryId} onChange={(event) => setCategoryId(event.target.value)}><option value="">—</option>{data.categories.filter((item) => item.active && (item.kind === "expense" || item.kind === "both")).map((item) => <option key={item.id} value={item.id}>{language === "it" ? item.nameIt : item.nameEn}</option>)}</select></Field><Field label={t("paymentMethod")}><select required value={paymentMethodId} onChange={(event) => setPaymentMethodId(event.target.value)}><option value="">—</option>{data.paymentMethods.filter((item) => item.active).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field><PaymentAccountField data={data} paymentMethodId={paymentMethodId} date={date} value={accountId} onChange={setAccountId} /></>}
-    <Field label={t("odometerKm")}><input type="number" min="0" step="1" value={odometerKm} onChange={(event) => setOdometerKm(event.target.value)} /></Field>
-    <Field label={t("distanceKm")}><input type="number" min="0" step="1" value={distanceKm} onChange={(event) => setDistanceKm(event.target.value)} /></Field>
-    {kind === "fuel" && <><Field label={t("fuelLiters")}><input required type="number" min="0.001" step="0.001" value={fuelLiters} onChange={(event) => setFuelLiters(event.target.value)} /></Field><Field label={t("fuelUnitPrice")}><input type="number" min="0" step="0.001" value={fuelUnitPrice} onChange={(event) => setFuelUnitPrice(event.target.value)} /></Field><Field label={t("fuelType")}><input maxLength={80} value={fuelType} onChange={(event) => setFuelType(event.target.value)} /></Field></>}
+    <Field label={t("odometerKm")}><input type="number" min="0" max="100000000" step="1" value={odometerKm} onChange={(event) => setOdometerKm(event.target.value)} /></Field>
+    <Field label={t("distanceKm")} hint={odometerIsLower
+      ? t("odometerLowerThanPrevious", { value: previousOdometerKm.toLocaleString(language) })
+      : !distanceManuallyEdited && suggestedDistanceKm !== undefined
+        ? t("distanceCalculatedHelp", { value: previousOdometerKm?.toLocaleString(language) ?? "" })
+        : undefined}><input type="number" min="0" max="10000000" step="1" value={distanceKm} onChange={(event) => setDistanceKmOverride(event.target.value)} onBlur={() => { if (distanceKmOverride === "") setDistanceKmOverride(null); }} /></Field>
+    {kind === "fuel" && <><Field label={t("fuelUnitPrice")}><input type="number" min="0" step="0.001" value={fuelUnitPrice} onChange={(event) => setFuelUnitPrice(event.target.value)} /></Field><Field label={t("fuelLiters")} hint={!fuelLitersManuallyEdited && suggestedFuelLiters !== undefined ? t("fuelLitersCalculatedHelp") : undefined}><input required type="number" min="0.001" max="1000000" step="0.001" value={fuelLiters} onChange={(event) => setFuelLitersOverride(event.target.value)} onBlur={() => { if (fuelLitersOverride === "") setFuelLitersOverride(null); }} /></Field><Field label={t("fuelType")}><select value={fuelType} onChange={(event) => setFuelType(event.target.value)}><option value="">—</option>{fuelType && !entryFuelTypes.some((item) => item.value === fuelType) && <option value={fuelType}>{fuelType}</option>}{entryFuelTypes.map((item) => <option key={item.value} value={item.value}>{t(item.label)}</option>)}</select></Field></>}
     <Field label={t("vendor")}><input maxLength={160} value={vendor} onChange={(event) => setVendor(event.target.value)} /></Field>
     {kind !== "valuation" && <><Field label={t("sharedExpense")}><span className="check-field"><input type="checkbox" aria-label={t("splitHalf")} checked={shared} onChange={(event) => setShared(event.target.checked)} />{t("splitHalf")}</span></Field>{shared && <Field label={t("paidBy")}><select value={sharedPaidBy} onChange={(event) => setSharedPaidBy(event.target.value as "owner" | "partner")}><option value="owner">{t("you")}</option><option value="partner">{t("partner")}</option></select></Field>}</>}
     <Field label={t("notes")} wide><textarea maxLength={2000} value={notes} onChange={(event) => setNotes(event.target.value)} /></Field>

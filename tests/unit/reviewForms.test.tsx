@@ -297,6 +297,82 @@ describe("v0.8 review forms", () => {
     expect(data.sharedExpenses[0]).toMatchObject({ ownerShare: 30, partnerShare: 30 });
   });
 
+  it("calculates vehicle distance and fuel litres while preserving manual overrides", async () => {
+    const data = createEmptyFinanceData(2026);
+    const vehicleId = crypto.randomUUID();
+    data.vehicles.push({ id: vehicleId, name: "Auto sintetica", manufacturer: "Example", model: "Four", fuelType: "petrol", active: true, notes: "" });
+    data.vehicleEntries.push({
+      id: crypto.randomUUID(), vehicleId, date: "2026-05-10", kind: "fuel", description: "Lettura sintetica precedente",
+      amount: 50, odometerKm: 10_000, distanceKm: 600, fuelLiters: 25, notes: "",
+    });
+    const onSave = vi.fn<(command: FinanceCommand) => Promise<void>>().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    renderIt(<VehicleEntryForm data={data} initialVehicleId={vehicleId} onClose={() => undefined} onSave={onSave} />);
+
+    fireEvent.change(screen.getByLabelText("Data"), { target: { value: "2026-06-10" } });
+    fireEvent.change(screen.getByLabelText("Chilometri totali"), { target: { value: "10750" } });
+    await waitFor(() => expect(screen.getByLabelText(/^Chilometri percorsi/)).toHaveValue(750));
+    expect(screen.getByText("Calcolati dall’ultima lettura disponibile: 10.000 km.")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Importo"), { target: { value: "60" } });
+    fireEvent.change(screen.getByLabelText("Prezzo al litro"), { target: { value: "2" } });
+    await waitFor(() => expect(screen.getByLabelText(/^Litri/)).toHaveValue(30));
+    expect(screen.getByText("Calcolati automaticamente dall’importo e dal prezzo al litro; puoi correggerli.")).toBeInTheDocument();
+
+    const distance = screen.getByLabelText(/^Chilometri percorsi/);
+    fireEvent.change(distance, { target: { value: "700" } });
+    fireEvent.change(screen.getByLabelText("Chilometri totali"), { target: { value: "10800" } });
+    expect(distance).toHaveValue(700);
+    fireEvent.change(distance, { target: { value: "" } });
+    fireEvent.blur(distance);
+    await waitFor(() => expect(distance).toHaveValue(800));
+    fireEvent.change(screen.getByLabelText("Chilometri totali"), { target: { value: "9900" } });
+    await waitFor(() => expect(distance).toHaveValue(null));
+    expect(screen.getByText(/La lettura è inferiore ai 10\.000 km precedenti/)).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Chilometri totali"), { target: { value: "10800" } });
+    await waitFor(() => expect(distance).toHaveValue(800));
+
+    const liters = screen.getByLabelText(/^Litri/);
+    fireEvent.change(liters, { target: { value: "29" } });
+    fireEvent.change(screen.getByLabelText("Importo"), { target: { value: "62" } });
+    expect(liters).toHaveValue(29);
+    fireEvent.change(liters, { target: { value: "" } });
+    fireEvent.blur(liters);
+    await waitFor(() => expect(liters).toHaveValue(31));
+
+    const fuelType = screen.getByLabelText("Alimentazione") as HTMLSelectElement;
+    expect(Array.from(fuelType.options).map((option) => option.text)).toEqual(["—", "Benzina", "Diesel", "GPL", "Metano", "Elettricità", "Idrogeno"]);
+    await user.selectOptions(fuelType, "hydrogen");
+    await user.type(screen.getByLabelText("Descrizione"), "Rifornimento sintetico");
+    await user.selectOptions(screen.getByLabelText("Categoria"), data.categories.find((item) => item.nameIt === "Trasporti")!.id);
+    await waitFor(() => expect(screen.getByLabelText("Conto")).toHaveValue(data.accounts[0].id));
+    await user.click(screen.getByRole("button", { name: "Salva" }));
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave.mock.calls[0][0]).toMatchObject({
+      type: "addVehicleEntryWithSharedExpense",
+      value: { entry: { vehicleId, distanceKm: 800, fuelLiters: 31, fuelUnitPrice: 2, fuelType: "hydrogen" } },
+    });
+  });
+
+  it("shows the vehicle fuel dropdown in English and preserves a legacy current value", () => {
+    const data = createEmptyFinanceData(2026);
+    const vehicleId = crypto.randomUUID();
+    data.vehicles.push({ id: vehicleId, name: "Synthetic car", manufacturer: "Example", model: "Five", fuelType: "petrol", active: true, notes: "" });
+    const value = {
+      id: crypto.randomUUID(), vehicleId, date: "2026-06-10", kind: "fuel" as const, description: "Synthetic legacy fuel",
+      amount: 60, fuelLiters: 30, fuelUnitPrice: 2, fuelType: "legacy synthetic value", notes: "",
+    };
+
+    render(<I18nProvider language="en"><VehicleEntryForm data={data} value={value} onClose={() => undefined} onSave={async () => undefined} /></I18nProvider>);
+
+    const fuelType = screen.getByLabelText("Fuel type") as HTMLSelectElement;
+    expect(fuelType).toHaveValue("legacy synthetic value");
+    expect(Array.from(fuelType.options).map((option) => option.text)).toEqual([
+      "—", "legacy synthetic value", "Petrol", "Diesel", "LPG", "Methane", "Electricity", "Hydrogen",
+    ]);
+  });
+
   it("creates an electricity expense with bands and a shared split", async () => {
     const data = createEmptyFinanceData(2026);
     const propertyId = crypto.randomUUID();
