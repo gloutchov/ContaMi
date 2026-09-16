@@ -16,6 +16,7 @@ ContaMì/
 ├── docs/
 │   ├── assets/                        # copia icona canonica, screenshot sintetici e demo MP4 IT/EN
 │   ├── app.js                         # lingua, override, link manuale localizzato e media tema/lingua
+│   ├── CNAME                          # dominio pubblico personalizzato contami.glaucosilvestri.it
 │   ├── index.html                     # landing statica, CTA GitHub/manuale e CSP senza dipendenze remote
 │   ├── styles.css                     # layout editoriale responsive, chiaro/scuro e reduced motion
 │   └── .nojekyll                      # pubblicazione statica GitHub Pages da main + /docs
@@ -231,7 +232,7 @@ Generati, non versionati / Generated, not versioned:
 └── .playwright-cli/                     # snapshot del collaudo UI locale
 ```
 
-Le GIF originali sotto `docs/assets/` sono sorgenti locali ignorate da Git; il sito pubblica le sole copie MP4 ottimizzate e i poster PNG già ispezionati. La landing usa esclusivamente percorsi relativi, viene pubblicata da GitHub Pages tramite `main` + `/docs` e non entra in `app.asar` o negli artifact Electron. I documenti tecnici e di manutenzione restano separati sotto `documents/` e non fanno parte del sito pubblico.
+Le GIF originali sotto `docs/assets/` sono sorgenti locali ignorate da Git; il sito pubblica le sole copie MP4 ottimizzate e i poster PNG già ispezionati. La landing pubblica è disponibile su [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/), usa esclusivamente percorsi relativi, viene distribuita da GitHub Pages tramite `main` + `/docs` con il dominio personalizzato definito in `docs/CNAME` e non entra in `app.asar` o negli artifact Electron. I documenti tecnici e di manutenzione restano separati sotto `documents/` e non fanno parte del sito pubblico.
 
 ## Dipendenze tra livelli / Layer direction
 

@@ -8,7 +8,7 @@ ContaMì is a local-first desktop app for managing detailed personal finances wh
 
 > Stato / Status: **1.19.0 — ISIN opzionale per investimenti / optional investment ISIN (implementazione locale / local implementation)** · Licenza / License: **Apache-2.0**
 
-Sito / Website: [gloutchov.github.io/Contami](https://gloutchov.github.io/Contami/) — presentazione bilingue, funzioni, dettagli tecnici, accesso all’ultima release e collegamento diretto al manuale nella lingua selezionata. La pubblicazione avviene dal solo contenuto di `docs/` tramite GitHub Pages configurato su `main` + `/docs`.
+Sito / Website: [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/) — presentazione bilingue, funzioni, dettagli tecnici, accesso all’ultima release e collegamento diretto al manuale nella lingua selezionata. La pubblicazione avviene dal solo contenuto di `docs/` tramite GitHub Pages configurato su `main` + `/docs`, con il dominio personalizzato dichiarato in `docs/CNAME`.
 
 ## Funzioni principali / Key features
 

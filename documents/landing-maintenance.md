@@ -1,6 +1,6 @@
 # ContaMì landing page
 
-Static, bilingual GitHub Pages site for ContaMì. It uses only relative paths and local assets, with no CDN, remote fonts, analytics, cookies or third-party runtime services.
+Static, bilingual site for ContaMì, publicly available at [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/). It uses only relative paths and local assets, with no CDN, remote fonts, analytics, cookies or third-party runtime services.
 
 ## Media
 
@@ -29,8 +29,10 @@ Then open `http://127.0.0.1:4174/`. Do not open `index.html` directly with `file
 
 Run `npm run test:landing` for the static contract and `npm run test:landing:e2e` for language detection, theme/media selection, video controls, keyboard focus and mobile overflow.
 
-## GitHub Pages
+## Publication and custom domain
 
-The public site lives entirely under `docs/`. In the repository settings, select **Pages → Deploy from a branch → main → /docs**. The `.nojekyll` marker keeps the deployment static; no repository-managed Pages workflow is required. Treat every file under `docs/` as public. Technical specifications and maintenance notes belong under `documents/` instead.
+The canonical public URL is `https://contami.glaucosilvestri.it/`. The site lives entirely under `docs/`, and `docs/CNAME` must contain exactly `contami.glaucosilvestri.it`; preserve that file when changing or rebuilding the landing.
+
+GitHub Pages remains the deployment service. In the repository settings, select **Pages → Deploy from a branch → main → /docs** and keep the custom domain set to `contami.glaucosilvestri.it`. The `.nojekyll` marker keeps the deployment static; no repository-managed Pages workflow is required. Treat every file under `docs/` as public. Technical specifications and maintenance notes belong under `documents/` instead.
 
 Files stored at the repository root are not served inside the Project Pages path. Links from the landing to `ISTRUZIONI.md` and `INSTRUCTIONS.md` must therefore use their absolute GitHub `blob/main` URLs; `docs/app.js` selects the matching manual whenever the landing language changes.
