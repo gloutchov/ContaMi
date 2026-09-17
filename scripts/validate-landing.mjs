@@ -9,6 +9,8 @@ const assetsRoot = path.join(landingRoot, "assets");
 const html = await readFile(path.join(landingRoot, "index.html"), "utf8");
 const script = await readFile(path.join(landingRoot, "app.js"), "utf8");
 const styles = await readFile(path.join(landingRoot, "styles.css"), "utf8");
+const canonicalLandingUrl = "https://contami.glaucosilvestri.it/";
+const personalSiteUrl = "https://glaucosilvestri.it/";
 
 const failures = [];
 const fail = (message) => failures.push(message);
@@ -100,6 +102,12 @@ try {
 }
 
 if (!html.includes("Content-Security-Policy")) fail("Landing page must declare a restrictive CSP");
+if (!html.includes(`<link rel="canonical" href="${canonicalLandingUrl}" />`)) fail("Landing page must declare the custom domain as canonical URL");
+if (!html.includes(`<meta property="og:url" content="${canonicalLandingUrl}" />`)) fail("Landing page must expose the custom domain through og:url");
+if (!html.includes(`href="${personalSiteUrl}"`)) fail("Landing header must link to the main personal site");
+if (/https?:\/\/[^/\s"']+\.github\.io(?:\/|[\s"'])/i.test(`${html}\n${styles}\n${script}`)) {
+  fail("Landing page must not reference a default github.io address");
+}
 const applicationScriptTag = '<script defer src="./app.js"></script>';
 if (!html.includes(applicationScriptTag)) fail("Landing page must load its local script as a deferred classic script");
 if (/<(?:script|style)(?:\s[^>]*)?>\s*(?!<\/)/i.test(html.replace(applicationScriptTag, ""))) {
@@ -111,7 +119,7 @@ if (/https?:\/\/(?:fonts\.|cdn\.|unpkg\.|jsdelivr\.)/i.test(`${html}\n${styles}\
   fail("Landing page must not depend on remote fonts or CDNs");
 }
 if (/\.gif\b/i.test(`${html}\n${styles}\n${script}`)) fail("Published landing code must use optimized video rather than GIF sources");
-if (/(?:src|poster|href)=["']\/(?!\/)/i.test(html)) fail("Project Pages assets and links must not use root-absolute paths");
+if (/(?:src|poster|href)=["']\/(?!\/)/i.test(html)) fail("Custom-domain landing assets and links must not use root-absolute paths");
 for (const manualHref of [
   "https://github.com/gloutchov/Contami/blob/main/ISTRUZIONI.md",
   "https://github.com/gloutchov/Contami/blob/main/INSTRUCTIONS.md",

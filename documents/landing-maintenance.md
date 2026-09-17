@@ -1,6 +1,6 @@
 # ContaMì landing page
 
-Static, bilingual site for ContaMì, publicly available at [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/). It uses only relative paths and local assets, with no CDN, remote fonts, analytics, cookies or third-party runtime services.
+Static, bilingual site for ContaMì, publicly available only through the canonical address [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/). It uses only relative paths and local assets, with no CDN, remote fonts, analytics, cookies or third-party runtime services.
 
 ## Media
 
@@ -31,8 +31,8 @@ Run `npm run test:landing` for the static contract and `npm run test:landing:e2e
 
 ## Publication and custom domain
 
-The canonical public URL is `https://contami.glaucosilvestri.it/`. The site lives entirely under `docs/`, and `docs/CNAME` must contain exactly `contami.glaucosilvestri.it`; preserve that file when changing or rebuilding the landing.
+The canonical public URL is `https://contami.glaucosilvestri.it/`. Both the HTML canonical link and Open Graph URL must use that exact address, and documentation or public site code must not advertise an alternative Pages address. The site lives entirely under `docs/`, and `docs/CNAME` must contain exactly `contami.glaucosilvestri.it`; preserve that file when changing or rebuilding the landing.
 
 GitHub Pages remains the deployment service. In the repository settings, select **Pages → Deploy from a branch → main → /docs** and keep the custom domain set to `contami.glaucosilvestri.it`. The `.nojekyll` marker keeps the deployment static; no repository-managed Pages workflow is required. Treat every file under `docs/` as public. Technical specifications and maintenance notes belong under `documents/` instead.
 
-Files stored at the repository root are not served inside the Project Pages path. Links from the landing to `ISTRUZIONI.md` and `INSTRUCTIONS.md` must therefore use their absolute GitHub `blob/main` URLs; `docs/app.js` selects the matching manual whenever the landing language changes.
+Files stored at the repository root are not published as part of the landing. Links from the landing to `ISTRUZIONI.md` and `INSTRUCTIONS.md` must therefore use their absolute GitHub `blob/main` URLs; `docs/app.js` selects the matching manual whenever the landing language changes. The home icon in the right side of the header links to `https://glaucosilvestri.it/` and must retain its localized accessible name.

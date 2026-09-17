@@ -53,6 +53,14 @@ const forbidden = tracked.filter((file) => file.startsWith("sources/") || /\.(nu
 if (forbidden.length) throw new Error(`Private or sensitive artifacts are tracked: ${forbidden.join(", ")}`);
 const stalePagesPaths = tracked.filter((file) => file === ".github/workflows/pages.yml" || file.startsWith("landing/"));
 if (stalePagesPaths.length) throw new Error(`GitHub Pages must publish only from main/docs: ${stalePagesPaths.join(", ")}`);
+const publicDocumentationFiles = tracked.filter((file) => file.endsWith(".md") || ["docs/index.html", "docs/app.js", "docs/styles.css"].includes(file));
+const defaultPagesReferences = (await Promise.all(publicDocumentationFiles.map(async (file) => ({
+  file,
+  text: await readFile(file, "utf8"),
+})))).filter(({ text }) => /https?:\/\/[^/\s"')]+\.github\.io(?:\/|[\s"')])/i.test(text)).map(({ file }) => file);
+if (defaultPagesReferences.length) {
+  throw new Error(`Documentation and landing must use only the custom public domain: ${defaultPagesReferences.join(", ")}`);
+}
 
 const [readme, securityModel, ...workflowText] = await Promise.all([
   "README.md", "SECURITY_MODEL.md", ".github/workflows/ci.yml", ".github/workflows/release.yml",

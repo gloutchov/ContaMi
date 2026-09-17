@@ -88,8 +88,13 @@ button, input, select, textarea { font: inherit; }
   font-weight: 700;
 }
 .primary-nav a:hover { color: var(--navy-2); }
-.language-switcher {
+.header-actions {
   justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.language-switcher {
   display: inline-flex;
   padding: .2rem;
   border: 1px solid var(--border);
@@ -109,6 +114,28 @@ button, input, select, textarea { font: inherit; }
   font-weight: 800;
 }
 .language-switcher button[aria-pressed="true"] { background: var(--navy); color: white; }
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--border);
+  border-radius: .7rem;
+  color: var(--muted);
+  background: var(--surface);
+  text-decoration: none;
+}
+.home-link:hover { color: var(--navy-2); border-color: var(--mint); }
+.home-link svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
 .section, .section-narrow, .site-footer {
   width: min(1180px, calc(100% - 2.5rem));
@@ -323,6 +350,7 @@ p { margin-top: 0; }
     --shadow: 0 24px 70px rgb(0 0 0 / 32%);
   }
   .primary-nav a:hover, .eyebrow { color: var(--mint); }
+  .home-link:hover { color: var(--mint); }
   .button.secondary { background: var(--surface); }
   .button.primary { color: #332100; }
   .language-switcher button[aria-pressed="true"] { background: var(--mint); color: #062a35; }
@@ -379,7 +407,7 @@ p { margin-top: 0; }
   .site-header { position: relative; }
   .header-inner { width: min(100% - 1.5rem, 42rem); grid-template-columns: 1fr auto; padding-block: .65rem; }
   .primary-nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; overflow-x: auto; padding-bottom: .2rem; }
-  .language-switcher { grid-column: 2; grid-row: 1; }
+  .header-actions { grid-column: 2; grid-row: 1; }
   .section, .section-narrow, .site-footer { width: min(100% - 1.5rem, 42rem); }
   .section { padding-block: clamp(4.5rem, 16vw, 6.5rem); }
   .hero { padding-top: 4rem; }

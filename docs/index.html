@@ -16,6 +16,7 @@
     <meta name="theme-color" content="#f3f7f5" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#071b23" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://contami.glaucosilvestri.it/" />
     <meta property="og:title" content="ContaMì — Your finances, truly yours" />
     <meta
       property="og:description"
@@ -23,6 +24,7 @@
     />
     <meta property="og:image" content="./assets/panoramica_whi_english.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://contami.glaucosilvestri.it/" />
     <link rel="icon" type="image/png" href="./assets/contami-icon.png" />
     <link rel="apple-touch-icon" href="./assets/contami-icon.png" />
     <link rel="stylesheet" href="./styles.css" />
@@ -46,9 +48,23 @@
           <a href="#download" data-i18n="nav.download">Download</a>
         </nav>
 
-        <div class="language-switcher" role="group" data-i18n-aria="language.label" aria-label="Language">
-          <button type="button" data-language="it" aria-pressed="false">IT</button>
-          <button type="button" data-language="en" aria-pressed="true">EN</button>
+        <div class="header-actions">
+          <div class="language-switcher" role="group" data-i18n-aria="language.label" aria-label="Language">
+            <button type="button" data-language="it" aria-pressed="false">IT</button>
+            <button type="button" data-language="en" aria-pressed="true">EN</button>
+          </div>
+          <a
+            class="home-link"
+            href="https://glaucosilvestri.it/"
+            data-i18n-aria="actions.home"
+            aria-label="Glauco Silvestri homepage"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M3 10.75 12 3l9 7.75" />
+              <path d="M5.5 9.5V21h13V9.5" />
+              <path d="M9.5 21v-6h5v6" />
+            </svg>
+          </a>
         </div>
       </div>
     </header>

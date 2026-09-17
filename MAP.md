@@ -17,7 +17,7 @@ ContaMì/
 │   ├── assets/                        # copia icona canonica, screenshot sintetici e demo MP4 IT/EN
 │   ├── app.js                         # lingua, override, link manuale localizzato e media tema/lingua
 │   ├── CNAME                          # dominio pubblico personalizzato contami.glaucosilvestri.it
-│   ├── index.html                     # landing statica, CTA GitHub/manuale e CSP senza dipendenze remote
+│   ├── index.html                     # landing statica, dominio canonico, link al sito principale e CSP locale
 │   ├── styles.css                     # layout editoriale responsive, chiaro/scuro e reduced motion
 │   └── .nojekyll                      # pubblicazione statica GitHub Pages da main + /docs
 ├── documents/

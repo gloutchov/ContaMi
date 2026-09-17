@@ -39,6 +39,14 @@ test("landing detects non-Italian locales and exposes the main conversion path",
     "https://github.com/gloutchov/Contami/releases/latest",
   );
   await expect(page.getByRole("link", { name: "View on GitHub" }).first()).toHaveAttribute("href", "https://github.com/gloutchov/Contami");
+  const homeLink = page.getByRole("link", { name: "Glauco Silvestri homepage" });
+  await expect(homeLink).toHaveAttribute("href", "https://glaucosilvestri.it/");
+  const [homeBounds, headerBounds] = await Promise.all([
+    homeLink.evaluate((element) => element.getBoundingClientRect().toJSON()),
+    page.locator(".header-inner").evaluate((element) => element.getBoundingClientRect().toJSON()),
+  ]);
+  expect(homeBounds.left).toBeGreaterThan(headerBounds.left + headerBounds.width / 2);
+  expect(homeBounds.right).toBeLessThanOrEqual(headerBounds.right);
   await expect(page.getByRole("link", { name: "Read the user guide" }).first()).toHaveAttribute(
     "href",
     "https://github.com/gloutchov/Contami/blob/main/INSTRUCTIONS.md",
@@ -59,6 +67,10 @@ test("landing detects Italian, follows dark mode, and loads localized media", as
   await expect(page.getByRole("link", { name: "Leggi le istruzioni" }).first()).toHaveAttribute(
     "href",
     "https://github.com/gloutchov/Contami/blob/main/ISTRUZIONI.md",
+  );
+  await expect(page.getByRole("link", { name: "Sito principale di Glauco Silvestri" })).toHaveAttribute(
+    "href",
+    "https://glaucosilvestri.it/",
   );
   expect(consoleErrors).toEqual([]);
   expect(remoteRequests).toEqual([]);
@@ -88,6 +100,7 @@ test("manual language choice persists and keeps dictionaries equivalent", async 
   await page.getByRole("button", { name: "IT" }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "it");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Le tue finanze");
+  await expect(page.getByRole("link", { name: "Sito principale di Glauco Silvestri" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Leggi le istruzioni" }).first()).toHaveAttribute("href", /ISTRUZIONI\.md$/);
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("lang", "it");
@@ -96,6 +109,7 @@ test("manual language choice persists and keeps dictionaries equivalent", async 
   await page.getByRole("button", { name: "EN" }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.getByRole("link", { name: "Read the user guide" }).first()).toHaveAttribute("href", /INSTRUCTIONS\.md$/);
+  await expect(page.getByRole("link", { name: "Glauco Silvestri homepage" })).toBeVisible();
   await context.close();
 });
 
@@ -209,6 +223,12 @@ test("landing remains keyboard-usable and free of horizontal overflow on mobile"
   await expect(page.locator(".skip-link")).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("#main")).toBeInViewport();
+  const homeLink = page.getByRole("link", { name: "Sito principale di Glauco Silvestri" });
+  await expect(homeLink).toBeVisible();
+  await homeLink.focus();
+  await expect(homeLink).toBeFocused();
+  const headerActionsBounds = await page.locator(".header-actions").evaluate((element) => element.getBoundingClientRect().toJSON());
+  expect(headerActionsBounds.right).toBeLessThanOrEqual(390);
   await expect(page.locator(".feature-chapter")).toHaveCount(9);
   expect(consoleErrors).toEqual([]);
   expect(remoteRequests).toEqual([]);

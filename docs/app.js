@@ -15,7 +15,7 @@ const translations = {
       titleAccent: "truly yours.",
       lead: "Understand and manage your financial life without accounts, cloud services or telemetry. Your workbook stays on your computer.",
     },
-    actions: { download: "Download latest release", github: "View on GitHub", manual: "Read the user guide" },
+    actions: { download: "Download latest release", github: "View on GitHub", manual: "Read the user guide", home: "Glauco Silvestri homepage" },
     facts: { priceLabel: "Price", priceValue: "Free", platformLabel: "Platforms", platformValue: "macOS · Windows", licenseLabel: "License" },
     media: {
       overviewAlt: "ContaMì overview in light theme",
@@ -92,7 +92,7 @@ const translations = {
       titleAccent: "davvero tue.",
       lead: "Comprendi e gestisci la tua vita finanziaria senza account, servizi cloud o telemetria. Il workbook resta sul tuo computer.",
     },
-    actions: { download: "Scarica l’ultima release", github: "Esplora su GitHub", manual: "Leggi le istruzioni" },
+    actions: { download: "Scarica l’ultima release", github: "Esplora su GitHub", manual: "Leggi le istruzioni", home: "Sito principale di Glauco Silvestri" },
     facts: { priceLabel: "Prezzo", priceValue: "Gratis", platformLabel: "Piattaforme", platformValue: "macOS · Windows", licenseLabel: "Licenza" },
     media: {
       overviewAlt: "Panoramica di ContaMì in tema chiaro",

@@ -1,7 +1,7 @@
 {
   "name": "contami",
   "productName": "ContaMì",
-  "version": "1.19.0",
+  "version": "1.19.1",
   "description": "Finanze personali local-first con un foglio di calcolo come fonte dati durevole.",
   "license": "Apache-2.0",
   "author": "ContaMì contributors",
