@@ -16,6 +16,28 @@ function withoutId(value: object): Record<string, unknown> {
 }
 
 describe("ExcelWorkbookRepository", () => {
+  it("round-trips an initial purchase of 75 units followed by another 25 without a snapshot", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-unit-purchases-")); directories.push(directory);
+    const filePath = path.join(directory, "ContaMi-unit-purchases.xlsx");
+    const data = createEmptyFinanceData(2026);
+    const investmentId = crypto.randomUUID();
+    const categoryId = data.categories.find((item) => item.nameIt === "Investimenti")!.id;
+    const paymentMethodId = data.paymentMethods[0].id;
+    data.investments.push({ id: investmentId, name: "Synthetic fund", kind: "etf", provider: "",
+      currency: "EUR", active: true, openedAt: "2026-01-01", notes: "" });
+    data.investmentEntries.push(
+      { id: crypto.randomUUID(), investmentId, date: "2026-01-01", kind: "contribution",
+        amount: 1_500, quantity: 75, description: "Initial purchase", categoryId, paymentMethodId, notes: "" },
+      { id: crypto.randomUUID(), investmentId, date: "2026-09-28", kind: "contribution",
+        amount: 500, quantity: 25, description: "Later purchase", categoryId, paymentMethodId, notes: "" },
+    );
+    const repository = new ExcelWorkbookRepository();
+    await repository.save(filePath, data);
+    const loaded = await repository.load(filePath);
+    expect(investmentUnitBalance(loaded, investmentId)).toBe(100);
+    expect(loaded.investmentEntries.map((entry) => entry.quantity)).toEqual([75, 25]);
+  });
+
   it("round-trips dated investment units without changing money or creating transactions", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-units-")); directories.push(directory);
     const filePath = path.join(directory, "ContaMi-units.xlsx");

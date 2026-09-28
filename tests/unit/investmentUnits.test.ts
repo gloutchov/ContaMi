@@ -18,6 +18,69 @@ function syntheticPosition() {
 }
 
 describe("investment unit history", () => {
+  it("counts units from the first recorded purchase without a separate snapshot", () => {
+    const { data: empty, investment, accountId, categoryId, paymentMethodId } = syntheticPosition();
+    let data = applyFinanceCommand(empty, { type: "addInvestment", value: investment });
+    data = applyFinanceCommand(data, { type: "addInvestmentEntry", value: {
+      id: crypto.randomUUID(), investmentId: investment.id, date: "2026-01-01", kind: "contribution",
+      amount: 1_500, quantity: 75, description: "First purchase", categoryId, paymentMethodId, accountId, notes: "",
+    } });
+    data = applyFinanceCommand(data, { type: "addInvestmentEntry", value: {
+      id: crypto.randomUUID(), investmentId: investment.id, date: "2026-09-28", kind: "contribution",
+      amount: 500, quantity: 25, description: "Later purchase", categoryId, paymentMethodId, accountId, notes: "",
+    } });
+
+    expect(investmentUnitTimeline(data, investment.id)).toEqual([
+      { date: "2026-01-01", quantity: 75, variation: 75 },
+      { date: "2026-09-28", quantity: 100, variation: 25 },
+    ]);
+    expect(investmentUnitBalance(data, investment.id)).toBe(100);
+    expect(investmentUnitBalance(createRolloverFinanceData(data, 2027), investment.id)).toBe(100);
+    expect(() => applyFinanceCommand(data, { type: "addInvestmentEntry", value: {
+      id: crypto.randomUUID(), investmentId: investment.id, date: "2026-10-01", kind: "withdrawal",
+      amount: 1_000, quantity: 101, description: "Oversold units", categoryId, paymentMethodId, accountId, notes: "",
+    } })).toThrow();
+  });
+
+  it("combines same-day purchases into one dated balance and variation", () => {
+    const { data, investment, categoryId, paymentMethodId } = syntheticPosition();
+    data.investments.push(investment);
+    data.investmentEntries.push(
+      { id: crypto.randomUUID(), investmentId: investment.id, date: "2026-01-01", kind: "contribution",
+        amount: 1_500, quantity: 75, description: "First purchase", categoryId, paymentMethodId, notes: "" },
+      { id: crypto.randomUUID(), investmentId: investment.id, date: "2026-01-01", kind: "contribution",
+        amount: 500, quantity: 25, description: "Second purchase", categoryId, paymentMethodId, notes: "" },
+    );
+    expect(financeDataSchema.parse(data)).toEqual(data);
+    expect(investmentUnitTimeline(data, investment.id)).toEqual([
+      { date: "2026-01-01", quantity: 100, variation: 100 },
+    ]);
+  });
+
+  it("does not assume zero opening units after an unquantified purchase or older history", () => {
+    const { data, investment, categoryId, paymentMethodId } = syntheticPosition();
+    data.investments.push(investment);
+    data.investmentEntries.push(
+      { id: crypto.randomUUID(), investmentId: investment.id, date: "2026-01-01", kind: "contribution",
+        amount: 1_000, description: "Purchase without units", categoryId, paymentMethodId, notes: "" },
+      { id: crypto.randomUUID(), investmentId: investment.id, date: "2026-02-01", kind: "contribution",
+        amount: 500, quantity: 25, description: "Later purchase", categoryId, paymentMethodId, notes: "" },
+    );
+    expect(investmentUnitBalance(data, investment.id)).toBeUndefined();
+
+    const withEarlierValuation = structuredClone(data);
+    withEarlierValuation.investmentEntries.shift();
+    withEarlierValuation.investmentEntries.push({ id: crypto.randomUUID(), investmentId: investment.id,
+      date: "2026-01-01", kind: "valuation", amount: 1_000, description: "Older holding", notes: "" });
+    expect(investmentUnitBalance(withEarlierValuation, investment.id)).toBeUndefined();
+
+    const withAnnualHistory = structuredClone(data);
+    withAnnualHistory.investmentEntries.shift();
+    withAnnualHistory.investmentAnnualSummaries.push({ investmentId: investment.id, year: 2025,
+      closingValue: 1_000, contributions: 1_000, withdrawals: 0 });
+    expect(investmentUnitBalance(withAnnualHistory, investment.id)).toBeUndefined();
+  });
+
   it("stores dated snapshots and purchase/sale quantities without changing monetary values", () => {
     const fixture = syntheticPosition();
     const { investment, accountId, categoryId, paymentMethodId } = fixture;

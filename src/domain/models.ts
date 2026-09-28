@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { canInferOpeningInvestmentUnits, investmentUnitOpeningIndex } from "./investmentUnitOpening";
 import { optionalIsinSchema } from "./isin";
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected an ISO date");
@@ -414,12 +415,14 @@ export const financeDataSchema = z.object({
     entries.push({ entry, index });
     entriesByInvestment.set(entry.investmentId, entries);
   }
+  const unitOpeningIndex = investmentUnitOpeningIndex(value);
   for (const entries of entriesByInvestment.values()) {
-    if (!entries.some(({ entry }) => entry.kind === "unit_snapshot")) continue;
     entries.sort((left, right) => left.entry.date.localeCompare(right.entry.date)
       || Number(left.entry.kind === "unit_snapshot") - Number(right.entry.kind === "unit_snapshot")
       || left.entry.id.localeCompare(right.entry.id));
-    let quantity: number | undefined;
+    const inferredOpening = canInferOpeningInvestmentUnits(unitOpeningIndex, entries[0]?.entry);
+    if (!inferredOpening && !entries.some(({ entry }) => entry.kind === "unit_snapshot")) continue;
+    let quantity: number | undefined = inferredOpening ? 0 : undefined;
     const snapshotDates = new Set<string>();
     for (const { entry, index } of entries) {
       if (entry.kind === "unit_snapshot") {

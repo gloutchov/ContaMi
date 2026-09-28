@@ -1,4 +1,5 @@
 import type { FinanceData, Investment, InvestmentEntry } from "./models";
+import { canInferOpeningInvestmentUnits, investmentUnitOpeningIndex } from "./investmentUnitOpening";
 
 export type InvestmentCorrectionKind = "contribution_correction" | "withdrawal_correction";
 export type LinkedInvestmentMovementKind = "contribution" | "withdrawal";
@@ -110,9 +111,16 @@ export function investmentUnitTimeline(data: FinanceData, investmentId: string):
     .sort((left, right) => left.date.localeCompare(right.date)
       || Number(left.kind === "unit_snapshot") - Number(right.kind === "unit_snapshot")
       || left.id.localeCompare(right.id));
-  let quantity: number | null = null;
+  if (!entries.length) return [];
+  let quantity: number | null = canInferOpeningInvestmentUnits(investmentUnitOpeningIndex(data), entries[0]) ? 0 : null;
+  let currentDate: string | undefined;
+  let openingQuantity: number | null = null;
   const points: InvestmentUnitPoint[] = [];
   for (const entry of entries) {
+    if (entry.date !== currentDate) {
+      currentDate = entry.date;
+      openingQuantity = quantity;
+    }
     const before = quantity;
     if (entry.kind === "unit_snapshot") quantity = entry.quantity ?? null;
     else if (quantity !== null) quantity = entry.quantity === undefined
@@ -120,8 +128,8 @@ export function investmentUnitTimeline(data: FinanceData, investmentId: string):
       : Math.round((quantity + (entry.kind === "contribution" ? entry.quantity : -entry.quantity)) * 100_000_000) / 100_000_000;
     if (entry.kind !== "unit_snapshot" && before === null) continue;
     if (quantity !== null && quantity < -0.000_000_01) throw new Error("NEGATIVE_INVESTMENT_QUANTITY");
-    const variation = before === null || quantity === null ? null
-      : Math.round((quantity - before) * 100_000_000) / 100_000_000;
+    const variation = openingQuantity === null || quantity === null ? null
+      : Math.round((quantity - openingQuantity) * 100_000_000) / 100_000_000;
     const last = points.at(-1);
     const point = { date: entry.date, quantity, variation };
     if (last?.date === entry.date) points[points.length - 1] = point;
