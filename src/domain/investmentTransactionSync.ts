@@ -1,5 +1,5 @@
 import { financeDataSchema, type FinanceData, type InvestmentEntry, type Transaction } from "./models";
-import { isInvestmentCorrectionKind, isLinkedInvestmentMovementKind, type LinkedInvestmentMovementKind } from "./investments";
+import { isLinkedInvestmentMovementKind, type LinkedInvestmentMovementKind } from "./investments";
 
 export type InvestmentTransactionRepairKind =
   | "create_transaction"
@@ -116,6 +116,7 @@ export function investmentEntryFromTransaction(
     date: transaction.date,
     kind,
     amount: transaction.amount,
+    quantity: existing?.kind === kind ? existing.quantity : undefined,
     description: transaction.description,
     categoryId: transaction.categoryId,
     paymentMethodId: transaction.paymentMethodId,
@@ -165,7 +166,7 @@ export function reconcileInvestmentTransactions(
   };
 
   for (const currentEntry of [...next.investmentEntries]) {
-    if (currentEntry.kind === "valuation" || isInvestmentCorrectionKind(currentEntry.kind) || currentEntry.amount <= 0) continue;
+    if (!isLinkedInvestmentMovementKind(currentEntry.kind) || currentEntry.amount <= 0) continue;
     if (!next.investments.some((item) => item.id === currentEntry.investmentId)) {
       ambiguousEntries += 1;
       continue;
@@ -218,7 +219,7 @@ export function reconcileInvestmentTransactions(
       ? next.investmentEntries.find((entry) => entry.id === currentTransaction.investmentEntryId)
       : undefined;
     if (explicitEntry) {
-      if (claimedEntryIds.has(explicitEntry.id) || explicitEntry.kind === "valuation" || isInvestmentCorrectionKind(explicitEntry.kind) || transactionConflictsWithEntry(currentTransaction, explicitEntry)) {
+      if (claimedEntryIds.has(explicitEntry.id) || !isLinkedInvestmentMovementKind(explicitEntry.kind) || transactionConflictsWithEntry(currentTransaction, explicitEntry)) {
         ambiguousTransactions += 1;
         continue;
       }
@@ -227,8 +228,7 @@ export function reconcileInvestmentTransactions(
     }
     const exactCandidates = next.investmentEntries.filter((entry) =>
       !claimedEntryIds.has(entry.id)
-      && entry.kind !== "valuation"
-      && !isInvestmentCorrectionKind(entry.kind)
+      && isLinkedInvestmentMovementKind(entry.kind)
       && !entry.transactionId
       && transactionMatchesEntry(currentTransaction, entry));
     if (exactCandidates.length > 1) {

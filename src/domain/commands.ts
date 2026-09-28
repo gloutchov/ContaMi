@@ -89,8 +89,26 @@ const investmentWithInitialContributionSchema = z.object({
     context.addIssue({ code: "custom", message: "The initial contribution must be positive and linked to the new investment", path: ["initialContribution"] });
   }
 });
+const investmentUnitSnapshotSchema = investmentEntrySchema.refine(
+  (value) => value.kind === "unit_snapshot",
+  { message: "A unit observation needs a snapshot kind", path: ["kind"] },
+);
+const investmentWithUnitsSchema = z.object({
+  investment: investmentSchema,
+  initialContribution: investmentEntrySchema.optional(),
+  unitSnapshot: investmentUnitSnapshotSchema.optional(),
+}).superRefine((value, context) => {
+  if (value.initialContribution && (value.initialContribution.kind !== "contribution"
+    || value.initialContribution.amount <= 0
+    || value.initialContribution.investmentId !== value.investment.id)) {
+    context.addIssue({ code: "custom", message: "Invalid initial contribution", path: ["initialContribution"] });
+  }
+  if (value.unitSnapshot && value.unitSnapshot.investmentId !== value.investment.id) {
+    context.addIssue({ code: "custom", message: "The unit snapshot must belong to the investment", path: ["unitSnapshot"] });
+  }
+});
 const standardInvestmentEntrySchema = investmentEntrySchema.refine(
-  (value) => value.kind !== "contribution_correction" && value.kind !== "withdrawal_correction",
+  (value) => value.kind !== "contribution_correction" && value.kind !== "withdrawal_correction" && value.kind !== "unit_snapshot",
   { message: "A regular investment entry cannot be a correction", path: ["kind"] },
 );
 const investmentCorrectionSchema = investmentEntrySchema.refine(
@@ -137,7 +155,9 @@ export const financeCommandSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("updatePropertyExpense"), value: propertyExpenseBundleSchema }),
   z.object({ type: z.literal("addInvestment"), value: investmentSchema }),
   z.object({ type: z.literal("addInvestmentWithInitialContribution"), value: investmentWithInitialContributionSchema }),
+  z.object({ type: z.literal("addInvestmentWithUnits"), value: investmentWithUnitsSchema }),
   z.object({ type: z.literal("updateInvestment"), value: investmentSchema }),
+  z.object({ type: z.literal("updateInvestmentWithUnits"), value: investmentWithUnitsSchema }),
   z.object({ type: z.literal("addInvestmentEntry"), value: standardInvestmentEntrySchema }),
   z.object({ type: z.literal("updateInvestmentEntry"), value: standardInvestmentEntrySchema }),
   z.object({ type: z.literal("addInvestmentCorrection"), value: investmentCorrectionSchema }),

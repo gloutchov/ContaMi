@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { investmentPortfolioReturnSeries, investmentReturnSeries, rentalPropertyReturnSeries } from "../../src/domain/assetReturns";
 import { createEmptyFinanceData } from "../../src/domain/finance";
-import { ROLLOVER_OPENING_VALUATION_DESCRIPTION } from "../../src/domain/investments";
+import { investmentPositionResult, ROLLOVER_OPENING_VALUATION_DESCRIPTION } from "../../src/domain/investments";
 
 const timestamp = "2026-01-01T10:00:00.000Z";
 
@@ -79,6 +79,36 @@ describe("asset percentage returns", () => {
     );
 
     expect(investmentReturnSeries(data, investment, "2026-02-28").monthly.map((point) => point.rate)).toEqual([0, 0]);
+  });
+
+  it("keeps a pre-existing loss after a later 1,000-euro contribution in investments and pensions", () => {
+    const data = createEmptyFinanceData(2026);
+    const pensionId = crypto.randomUUID();
+    const investment = { id: crypto.randomUUID(), name: "Synthetic fund", kind: "fund" as const,
+      provider: "", currency: "EUR", active: true, openedAt: "2026-01-01", notes: "" };
+    const compartment = { ...investment, id: crypto.randomUUID(), name: "Synthetic compartment",
+      kind: "pension" as const, parentInvestmentId: pensionId };
+    data.investments.push(investment, {
+      id: pensionId, name: "Synthetic pension", kind: "pension", provider: "", currency: "EUR",
+      active: true, openedAt: "2026-01-01", notes: "",
+    }, compartment);
+    for (const position of [investment, compartment]) {
+      data.investmentEntries.push(
+        { id: crypto.randomUUID(), investmentId: position.id, date: "2026-01-01", kind: "contribution", amount: 1_000,
+          description: "Initial contribution", categoryId: data.categories[8].id, paymentMethodId: data.paymentMethods[0].id, notes: "" },
+        { id: crypto.randomUUID(), investmentId: position.id, date: "2026-01-31", kind: "valuation", amount: 900,
+          description: "Loss observation", notes: "" },
+        { id: crypto.randomUUID(), investmentId: position.id, date: "2026-02-15", kind: "contribution", amount: 1_000,
+          description: "Later contribution", categoryId: data.categories[8].id, paymentMethodId: data.paymentMethods[0].id, notes: "" },
+        { id: crypto.randomUUID(), investmentId: position.id, date: "2026-02-28", kind: "valuation", amount: 1_900,
+          description: "Flow-matched observation", notes: "" },
+      );
+      const returns = investmentReturnSeries(data, position, "2026-02-28");
+      expect(returns.monthly.map((point) => point.rate)).toEqual([-0.1, 0]);
+      expect(investmentPositionResult(data, position)).toEqual({ amount: -100, rate: -0.05 });
+    }
+    expect(investmentPositionResult(data, data.investments.find((item) => item.id === pensionId)!))
+      .toEqual({ amount: -100, rate: -0.05 });
   });
 
   it("uses the first contribution as opening capital instead of an annual cash flow", () => {

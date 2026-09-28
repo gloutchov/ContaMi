@@ -125,11 +125,15 @@ export const WORKBOOK_TABLES_V11: WorkbookTableDefinition[] = WORKBOOK_TABLES_V1
   }
   : definition);
 
-export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_V11.map((definition) => definition.key === "investments"
+export const WORKBOOK_TABLES_V12: WorkbookTableDefinition[] = WORKBOOK_TABLES_V11.map((definition) => definition.key === "investments"
   ? {
       ...definition,
       columns: definition.columns.flatMap((column) => column === "name" ? [column, "isin"] : [column]),
     }
+  : definition);
+
+export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_V12.map((definition) => definition.key === "investmentEntries"
+  ? { ...definition, columns: definition.columns.flatMap((column) => column === "amount" ? [column, "quantity"] : [column]) }
   : definition);
 
 export const WORKBOOK_TABLES_V2: WorkbookTableDefinition[] = [
@@ -161,4 +165,4 @@ export const WORKBOOK_TABLES_V1: WorkbookTableDefinition[] = [
   { key: "annualSummaries", sheet: "Annual Summaries", columns: ["year", "income", "expenses", "netCashFlow", "closingNetWorth"] },
 ];
 
-export const WORKBOOK_SCHEMA_VERSION = 12;
+export const WORKBOOK_SCHEMA_VERSION = 13;
