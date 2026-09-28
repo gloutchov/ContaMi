@@ -52,6 +52,7 @@ ContaMì/
 │   │   ├── assetReturns.ts              # Modified Dietz, rendimento locativo, copertura e portafogli aggregati puri
 │   │   ├── commands.ts                 # comandi validati, inclusi bundle atomici per condivisione, ISIN e quote
 │   │   ├── finance.ts                  # aggregazioni, KPI incluso patrimonio senza immobili, saldi Conto/Cassa e comandi
+│   │   ├── investmentUnitOpening.ts     # inferenza prudente della base quote dal primo acquisto
 │   │   ├── investments.ts              # classificazione, correzioni, risultati complessivi e quote datate
 │   │   ├── isin.ts                     # normalizzazione e validazione locale ISO 6166 con cifra di controllo
 │   │   ├── investmentTransactionSync.ts # coppie movimento/Transazione e riconciliazione idempotente
@@ -192,6 +193,7 @@ ContaMì/
 │       ├── taxTypes.test.ts              # CRUD, archiviazione e vincoli del catalogo tasse
 │       ├── linkedRecords.test.ts         # collegamenti, limiti e chiusura delle ricorrenze
 │       ├── migrations.test.ts            # compatibilità schema v1–v12 → v13 e idempotenza
+│       ├── investmentUnitChart.test.tsx   # grafico quote e messaggio saldo sconosciuto IT/EN
 │       ├── investmentUnits.test.ts       # quote datate, movimenti, rollover e confini monetari
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
 │       ├── vehicleEntries.test.ts         # contachilometri precedente, distanza e litri calcolati
