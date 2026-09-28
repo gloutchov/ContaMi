@@ -23,7 +23,7 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** M27–M30 sono completate e pubblicate rispettivamente come `v1.17.0`, `v1.18.0`, `v1.19.0` e `v1.20.0`. La sorgente della patch `1.19.1`, dedicata al dominio canonico della landing e al collegamento verso il sito principale, è confluita in `v1.20.0` senza un tag desktop separato. La release M30 e la successiva patch `v1.20.1` dello storico quote hanno CI, packaging e smoke macOS/Windows verdi e checksum verificati. Le sezioni **Attività pianificate** delle milestone già chiuse conservano il perimetro originario e non rappresentano lavoro ancora da eseguire.
+**Stato corrente:** M27–M30 sono completate e pubblicate rispettivamente come `v1.17.0`, `v1.18.0`, `v1.19.0` e `v1.20.0`. La sorgente della patch `1.19.1`, dedicata al dominio canonico della landing e al collegamento verso il sito principale, è confluita in `v1.20.0` senza un tag desktop separato. La release M30 e la successiva patch `v1.20.1` dello storico quote hanno CI, packaging e smoke macOS/Windows verdi e checksum verificati. M31 pianifica la revisione degli aggiornamenti Dependabot successivi, senza averli ancora integrati. Le sezioni **Attività pianificate** delle milestone già chiuse conservano il perimetro originario e non rappresentano lavoro ancora da eseguire.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -66,6 +66,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | Patch dominio canonico e link al sito principale | `patch/1.19.1-canonical-landing-home-link` | sorgente desktop `1.19.1` / web `landing-v1.0.5` | Verificata; sorgente desktop inclusa in `v1.20.0` |
 | M30 — Verifica rendimenti e quantità di quote | `milestone/30-investment-returns-and-quantities` | `1.20.0` | Rilasciata; CI/release macOS e Windows verdi; checksum verificati |
 | Patch storico quote da primo acquisto | `patch/1.20.1-investment-unit-history` | `1.20.1` | Rilasciata; CI/release macOS e Windows verdi; checksum verificati |
+| M31 — Manutenzione dipendenze e catena di rilascio | `milestone/31-dependency-maintenance` | `1.21.0` previsto | Pianificata; aggiornamenti da rivalutare su `main` corrente |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
@@ -1054,6 +1055,36 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 **Integrazione 2026-09-28:** la PR [#98](https://github.com/gloutchov/ContaMi/pull/98) è stata integrata nel commit `6f82fb1`. Sono verdi le CI macOS e Windows del [branch](https://github.com/gloutchov/ContaMi/actions/runs/36466139311), della [PR](https://github.com/gloutchov/ContaMi/actions/runs/36466289825) e di [main](https://github.com/gloutchov/ContaMi/actions/runs/36466799052). Il packaging locale macOS ARM64/x64 ha prodotto DMG e ZIP; l'ispezione dei due `app.asar` non ha trovato file sensibili e i checksum SHA-256 locali sono stati calcolati. Lo smoke locale ARM64 termina con `SIGABRT` prima del codice applicativo, come già documentato per bundle non firmati su questa macchina. Restano da verificare packaging e smoke del workflow macOS/Windows, artifact e checksum prima del tag e della pubblicazione di `v1.20.0`; nessuna release M30 è stata pubblicata.
 
 **Release 2026-09-28:** il tag annotato [`v1.20.0`](https://github.com/gloutchov/ContaMi/releases/tag/v1.20.0) punta a `51906ec`, dopo la chiusura documentale della PR #99. Sono verdi la CI di `main` e del [tag](https://github.com/gloutchov/ContaMi/actions/runs/36469107367), la [prova di packaging senza tag](https://github.com/gloutchov/ContaMi/actions/runs/36468127035) e il [workflow Release](https://github.com/gloutchov/ContaMi/actions/runs/36469107305): ispezione `app.asar`, avvio del pacchetto, installazione, avvio e rimozione su macOS/Windows. La release pubblica DMG e ZIP ARM64/x64 per macOS, installer e ZIP x64 per Windows, più `SHA256SUMS.txt`. Tutti e sei i pacchetti scaricati dalla release superano la verifica SHA-256 contro quel file; il suo digest coincide con quello registrato da GitHub. I pacchetti restano non firmati e la release include le istruzioni Gatekeeper/SmartScreen. Nessun workbook o dato privato è stato incluso negli artifact.
+
+## M31 — Manutenzione dipendenze e catena di rilascio
+
+**Obiettivo:** valutare e integrare in modo controllato gli aggiornamenti npm e GitHub Actions proposti da Dependabot dopo `v1.20.1`, mantenendo riproducibili build, test e pacchetti su macOS e Windows. Checkpoint desktop previsto `1.21.0`; pianificazione e chiusura delle vecchie PR non costituiscono una release.
+
+**Proposte da rivalutare sulla versione corrente, senza riutilizzare ciecamente i diff del 2026-09-19**
+
+- [#97](https://github.com/gloutchov/ContaMi/pull/97): `@testing-library/jest-dom` `7.0.0` → `7.0.1`; verificare test React e peer dependency Vitest.
+- [#95](https://github.com/gloutchov/ContaMi/pull/95): `eslint` `10.8.0` → `10.10.0` e `globals` `17.8.0` → `17.12.0`; controllare configurazione, lint e regole effettive.
+- [#94](https://github.com/gloutchov/ContaMi/pull/94): Playwright e `@playwright/test` `1.62.0` → `1.63.0`; verificare runner, browser installati e flussi desktop/landing.
+- [#93](https://github.com/gloutchov/ContaMi/pull/93): `react` e `react-dom` `19.2.8` → `19.3.0`; controllare rendering, interazioni e accessibilità.
+- [#96](https://github.com/gloutchov/ContaMi/pull/96): `lucide-react` `1.27.0` → `1.46.0`; trattare separatamente il salto di versione e controllare icone, dimensioni e resa in entrambe le lingue e i temi.
+- [#92](https://github.com/gloutchov/ContaMi/pull/92): `softprops/action-gh-release` `3.0.2` → `3.0.3`; verificare il commit SHA nel repository ufficiale e provare packaging, pubblicazione e checksum senza spostare tag pubblicati.
+
+**Attività pianificate**
+
+- Rileggere versioni disponibili, changelog, requisiti Node.js e advisory al momento dell'implementazione. Applicare aggiornamenti separati per area, riesaminando ogni modifica al lockfile e la allowlist degli script npm.
+- Eseguire installazione pulita da `package-lock.json`, controllo della baseline Node.js 24 e `npm audit`; risolvere eventuali advisory senza override non verificati.
+- Verificare che gli aggiornamenti runtime non alterino dati, schema workbook v13, IPC, CSP, sandbox, blocchi di rete o capacità del renderer. Aggiornare `SECURITY_MODEL.md` se cambia la superficie di rischio o la catena di rilascio.
+- Riesaminare la configurazione Dependabot e il ciclo delle PR automatiche, così da mantenere visibili gli avvisi di sicurezza ed evitare aggiornamenti duplicati non tracciati.
+
+**Criteri di accettazione**
+
+- Ogni dipendenza scelta è compatibile con la baseline Node.js documentata; `package.json` e lockfile sono coerenti, l'installazione pulita è riproducibile e `npm audit` non segnala vulnerabilità note non risolte.
+- CI macOS/Windows, lint, typecheck, test, build e Playwright sono verdi sulla base aggiornata. UI controllata in IT/EN, chiaro/scuro e a 1080 px, con attenzione a icone, focus e stati vuoto/errore.
+- Il workflow Release mantiene Action fissate a SHA verificati, package inspection, smoke installato e `SHA256SUMS.txt` riconciliato con gli artifact su macOS e Windows. Il tag e la release `v1.21.0` si creano solo dopo questi gate.
+
+**Test richiesti:** `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `node scripts/check-required-docs.mjs`, `npm audit`, Playwright CLI IT/EN e chiaro/scuro; CI e packaging/smoke macOS/Windows, con verifica dei checksum prima della pubblicazione.
+
+**Documentazione:** aggiornare `PLAN.md`, README e manuali IT/EN all'implementazione; `MAP.md` e `SECURITY_MODEL.md` quando cambiano struttura, dipendenze di sicurezza o pipeline. Usare soltanto dati sintetici per test e artifact.
 
 ## Patch grafici, menu release e integrità UUID
 
