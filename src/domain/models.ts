@@ -5,6 +5,8 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected an ISO date");
 const isoTimestamp = z.string().datetime();
 const id = z.string().uuid();
 const money = z.number().finite().nonnegative().max(1_000_000_000_000);
+export const investmentQuantitySchema = z.number().finite().nonnegative().max(1_000_000_000_000)
+  .refine((value) => value === Number(value.toFixed(8)), "At most eight decimal places");
 const signedMoney = z.number().finite().min(-1_000_000_000_000).max(1_000_000_000_000);
 const text = z.string().trim().min(1).max(240);
 const notes = z.string().trim().max(2_000).default("");
@@ -167,8 +169,9 @@ export const investmentEntrySchema = z.object({
   id,
   investmentId: id,
   date: isoDate,
-  kind: z.enum(["contribution", "withdrawal", "valuation", "contribution_correction", "withdrawal_correction"]),
+  kind: z.enum(["contribution", "withdrawal", "valuation", "contribution_correction", "withdrawal_correction", "unit_snapshot"]),
   amount: money,
+  quantity: investmentQuantitySchema.optional(),
   description: text,
   categoryId: id.optional(),
   paymentMethodId: id.optional(),
@@ -177,13 +180,20 @@ export const investmentEntrySchema = z.object({
   notes,
 }).superRefine((value, context) => {
   const correction = value.kind === "contribution_correction" || value.kind === "withdrawal_correction";
+  const snapshot = value.kind === "unit_snapshot";
+  if (snapshot && (value.quantity === undefined || value.amount !== 0 || value.categoryId || value.paymentMethodId || value.accountId || value.transactionId)) {
+    context.addIssue({ code: "custom", message: "A unit snapshot needs only a non-negative quantity", path: ["quantity"] });
+  }
+  if (!snapshot && value.quantity !== undefined && (value.kind === "valuation" || correction || value.quantity <= 0)) {
+    context.addIssue({ code: "custom", message: "Only contributions and withdrawals can carry a positive unit quantity", path: ["quantity"] });
+  }
   if (correction && value.amount <= 0) {
     context.addIssue({ code: "custom", message: "An investment correction must be positive", path: ["amount"] });
   }
   if (correction && (value.categoryId || value.paymentMethodId || value.accountId || value.transactionId)) {
     context.addIssue({ code: "custom", message: "An investment correction cannot carry transaction fields", path: ["transactionId"] });
   }
-  if (!correction && value.kind !== "valuation" && (!value.paymentMethodId || !value.categoryId)) {
+  if (!correction && !snapshot && value.kind !== "valuation" && (!value.paymentMethodId || !value.categoryId)) {
     context.addIssue({ code: "custom", message: "Category and payment method are required for investment movements", path: ["paymentMethodId"] });
   }
 });
@@ -354,7 +364,7 @@ export const vehicleAnnualSummarySchema = z.object({
 
 export const financeDataSchema = z.object({
   meta: z.object({
-    schemaVersion: z.literal(12),
+    schemaVersion: z.literal(13),
     activeYear: z.number().int().min(1900).max(9999),
     createdAt: isoTimestamp,
     updatedAt: isoTimestamp,
@@ -390,6 +400,40 @@ export const financeDataSchema = z.object({
       context.addIssue({ code: "custom", message: "A recurring item cannot have overlapping rate changes", path: ["recurringRateChanges", index, "effectiveFrom"] });
     }
     effectiveMonths.add(key);
+  }
+  const investments = new Set(value.investments.map((item) => item.id));
+  const plannedTransactions = new Set(value.transactions.filter((item) => item.planned).map((item) => item.id));
+  const entriesByInvestment = new Map<string, Array<{ entry: InvestmentEntry; index: number }>>();
+  for (const [index, entry] of value.investmentEntries.entries()) {
+    if (entry.kind === "unit_snapshot" && !investments.has(entry.investmentId)) {
+      context.addIssue({ code: "custom", message: "A unit snapshot needs an investment", path: ["investmentEntries", index, "investmentId"] });
+    }
+    if (entry.kind !== "unit_snapshot" && entry.kind !== "contribution" && entry.kind !== "withdrawal") continue;
+    if (entry.transactionId && plannedTransactions.has(entry.transactionId)) continue;
+    const entries = entriesByInvestment.get(entry.investmentId) ?? [];
+    entries.push({ entry, index });
+    entriesByInvestment.set(entry.investmentId, entries);
+  }
+  for (const entries of entriesByInvestment.values()) {
+    if (!entries.some(({ entry }) => entry.kind === "unit_snapshot")) continue;
+    entries.sort((left, right) => left.entry.date.localeCompare(right.entry.date)
+      || Number(left.entry.kind === "unit_snapshot") - Number(right.entry.kind === "unit_snapshot")
+      || left.entry.id.localeCompare(right.entry.id));
+    let quantity: number | undefined;
+    const snapshotDates = new Set<string>();
+    for (const { entry, index } of entries) {
+      if (entry.kind === "unit_snapshot") {
+        if (snapshotDates.has(entry.date)) context.addIssue({ code: "custom", message: "Duplicate unit snapshot date", path: ["investmentEntries", index, "date"] });
+        snapshotDates.add(entry.date);
+        quantity = entry.quantity;
+      } else if (quantity !== undefined) {
+        quantity = entry.quantity === undefined ? undefined
+          : quantity + (entry.kind === "contribution" ? entry.quantity : -entry.quantity);
+        if (quantity !== undefined && quantity < -0.000_000_01) {
+          context.addIssue({ code: "custom", message: "Unit quantity cannot be negative", path: ["investmentEntries", index, "quantity"] });
+        }
+      }
+    }
   }
 });
 

@@ -4,6 +4,7 @@ import path from "node:path";
 import ExcelJS from "exceljs";
 import { afterEach, describe, expect, it } from "vitest";
 import { applyFinanceCommand, createEmptyFinanceData } from "../../src/domain/finance";
+import { investmentUnitBalance, portfolioValues } from "../../src/domain/investments";
 import { ExcelWorkbookRepository } from "../../src/infrastructure/spreadsheet/ExcelWorkbookRepository";
 import { WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V7 } from "../../src/infrastructure/spreadsheet/workbookSchema";
 
@@ -15,6 +16,57 @@ function withoutId(value: object): Record<string, unknown> {
 }
 
 describe("ExcelWorkbookRepository", () => {
+  it("round-trips dated investment units without changing money or creating transactions", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-units-")); directories.push(directory);
+    const filePath = path.join(directory, "ContaMi-units.xlsx");
+    const data = createEmptyFinanceData(2026);
+    const investmentId = crypto.randomUUID();
+    data.investments.push({ id: investmentId, name: "Synthetic units fund", kind: "fund", provider: "",
+      currency: "EUR", active: true, openedAt: "2026-01-01", notes: "" });
+    data.investmentEntries.push(
+      { id: crypto.randomUUID(), investmentId, date: "2026-01-01", kind: "valuation",
+        amount: 1_000, description: "Synthetic value", notes: "" },
+      { id: crypto.randomUUID(), investmentId, date: "2026-01-01", kind: "unit_snapshot",
+        amount: 0, quantity: 12.3456789, description: "Synthetic units", notes: "" },
+    );
+    const repository = new ExcelWorkbookRepository();
+    await repository.save(filePath, data);
+    const loaded = await repository.load(filePath);
+    expect(loaded.meta.schemaVersion).toBe(13);
+    expect(investmentUnitBalance(loaded, investmentId)).toBe(12.3456789);
+    expect(portfolioValues(loaded).investments).toBe(1_000);
+    expect(loaded.transactions).toEqual([]);
+    expect(loaded.investmentEntries).toHaveLength(2);
+  });
+
+  it("migrates a v12 workbook without inventing unit quantities and reopens idempotently", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-v12-units-")); directories.push(directory);
+    const filePath = path.join(directory, "ContaMi-v12.xlsx");
+    const data = createEmptyFinanceData(2026);
+    const investmentId = crypto.randomUUID();
+    data.investments.push({ id: investmentId, name: "Synthetic legacy fund", kind: "fund", provider: "",
+      currency: "EUR", active: true, openedAt: "2025-01-01", notes: "" });
+    data.investmentEntries.push({ id: crypto.randomUUID(), investmentId, date: "2026-07-01", kind: "valuation",
+      amount: 900, description: "Synthetic valuation", notes: "" });
+    const repository = new ExcelWorkbookRepository();
+    await repository.save(filePath, data);
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+    workbook.getWorksheet("_Meta")!.getCell("B2").value = 12;
+    workbook.getWorksheet("Investment Entries")!.spliceColumns(6, 1);
+    await workbook.xlsx.writeFile(filePath);
+
+    const migrated = await repository.loadWithUuidRepair(filePath);
+    expect(migrated.migratedSchema).toBe(true);
+    expect(migrated.data.meta.schemaVersion).toBe(13);
+    expect(migrated.data.investmentEntries[0]).not.toHaveProperty("quantity");
+    expect(portfolioValues(migrated.data).investments).toBe(900);
+    expect((await readdir(path.join(directory, ".contami-backups"))).length).toBeGreaterThan(0);
+    const reopened = await repository.loadWithUuidRepair(filePath);
+    expect(reopened.migratedSchema).toBe(false);
+    expect(reopened.data.investmentEntries).toEqual(migrated.data.investmentEntries);
+  });
+
   it("round-trips an in-place correction to a legacy historical investment movement", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-historical-investment-edit-")); directories.push(directory);
     const filePath = path.join(directory, "ContaMi-historical-investment.xlsx");
@@ -95,7 +147,7 @@ describe("ExcelWorkbookRepository", () => {
     await repository.save(filePath, data);
     const loaded = await repository.load(filePath);
 
-    expect(loaded.meta.schemaVersion).toBe(12);
+    expect(loaded.meta.schemaVersion).toBe(13);
     expect(loaded.investmentEntries).toMatchObject([{
       investmentId, kind: "contribution_correction", amount: 42,
     }]);
@@ -270,7 +322,7 @@ describe("ExcelWorkbookRepository", () => {
     const migrated = await repository.loadWithUuidRepair(filePath);
 
     expect(migrated.migratedSchema).toBe(true);
-    expect(migrated.data.meta.schemaVersion).toBe(12);
+    expect(migrated.data.meta.schemaVersion).toBe(13);
     expect(migrated.data.recurringRateChanges).toEqual([]);
     expect(migrated.data.recurringItems[0]).toMatchObject({ id: recurringId, amount: 75 });
     expect(migrated.data.transactions.find((item) => item.id === transactionId)).toMatchObject({ amount: 75, planned: true });
@@ -318,7 +370,7 @@ describe("ExcelWorkbookRepository", () => {
 
     const migrated = await repository.load(filePath);
 
-    expect(migrated.meta.schemaVersion).toBe(12);
+    expect(migrated.meta.schemaVersion).toBe(13);
     expect(migrated.transactions.find((item) => item.id === plannedTransactionId)?.dueDate).toBe("2026-08-15");
     expect(migrated.propertyEntries.find((item) => item.id === plannedEntryId)?.dueDate).toBe("2026-08-15");
     expect(migrated.transactions.find((item) => item.id === confirmedTransactionId)?.dueDate).toBeUndefined();
@@ -580,7 +632,7 @@ describe("ExcelWorkbookRepository", () => {
 
     const migrated = await repository.load(filePath);
     const imu = migrated.taxTypes.find((item) => item.name === "IMU")!;
-    expect(migrated.meta.schemaVersion).toBe(12);
+    expect(migrated.meta.schemaVersion).toBe(13);
     expect(migrated.propertyEntries[0]).toMatchObject({ taxTypeId: imu.id, taxInstallmentNumber: 2, amount: 350 });
   });
 
@@ -621,7 +673,7 @@ describe("ExcelWorkbookRepository", () => {
     await workbook.xlsx.writeFile(filePath);
 
     const migrated = await repository.load(filePath);
-    expect(migrated.meta.schemaVersion).toBe(12);
+    expect(migrated.meta.schemaVersion).toBe(13);
     expect(migrated.propertyAnnualSummaries[0]).toMatchObject({ phoneInternetCost: 0, condominiumCost: 0 });
   });
 });

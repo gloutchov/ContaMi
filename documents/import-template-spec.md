@@ -6,6 +6,8 @@ Questo documento specifica i file `.xlsx` v3 generati e importati da **Impostazi
 
 This document specifies the v3 `.xlsx` files generated and imported under **Settings → Data import**. Version 2 made the account or cash register explicit on every monetary record and added the destination of internal transfers; version 3 adds an optional ISIN to investment positions and pension compartments.
 
+I template v3 non hanno un campo per le quote degli investimenti: un’importazione lascia la quantità ignota. Dopo l’importazione, registra una rilevazione datata in **Modifica investimento**; i Versamenti/Liquidazioni successivi possono includere le quote acquistate o cedute. / Version 3 templates do not include investment units: an import leaves quantity unknown. After import, record a dated observation in **Edit investment**; later Contributions/Liquidations can include units bought or sold.
+
 ## Struttura comune / Common structure
 
 - Un solo foglio visibile, `Dati - Data`, con titolo e istruzioni bilingui nelle righe 1–3, descrizioni delle colonne alla riga 4, intestazioni tecniche stabili alla riga 5 e dati dalla riga 6.

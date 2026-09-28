@@ -240,6 +240,35 @@ describe("v0.8 review forms", () => {
     }
   });
 
+  it("saves a dated unit snapshot with a new investment and updates units from Edit", async () => {
+    const data = createEmptyFinanceData(2026);
+    const onSave = vi.fn<(command: FinanceCommand) => Promise<void>>().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    const view = renderIt(<InvestmentForm data={data} onClose={() => undefined} onSave={onSave} />);
+    await user.type(screen.getByLabelText("Nome"), "Fondo con quote");
+    await user.type(screen.getByLabelText(/^Quote\/Quantità/), "12.3456789");
+    await user.type(screen.getByLabelText(/^Versamento iniziale/), "1000");
+    await user.click(screen.getByRole("button", { name: "Salva" }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    const first = onSave.mock.calls[0][0];
+    expect(first).toMatchObject({ type: "addInvestmentWithUnits", value: {
+      initialContribution: { amount: 1_000 },
+      unitSnapshot: { kind: "unit_snapshot", quantity: 12.3456789, amount: 0 },
+    } });
+    if (first.type !== "addInvestmentWithUnits") throw new Error("Expected bundled investment command");
+    const saved = applyFinanceCommand(data, first);
+    view.unmount();
+    onSave.mockClear();
+    renderIt(<InvestmentForm data={saved} value={saved.investments[0]} onClose={() => undefined} onSave={onSave} />);
+    expect(screen.getByLabelText(/^Quote\/Quantità/)).toHaveValue(12.3456789);
+    await user.clear(screen.getByLabelText(/^Quote\/Quantità/));
+    await user.type(screen.getByLabelText(/^Quote\/Quantità/), "13.5");
+    await user.click(screen.getByRole("button", { name: "Salva" }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave.mock.calls[0][0]).toMatchObject({ type: "updateInvestmentWithUnits",
+      value: { unitSnapshot: { kind: "unit_snapshot", quantity: 13.5 } } });
+  });
+
   it("supports an optional ISIN for pension compartments but not for the collector", async () => {
     const data = createEmptyFinanceData(2026);
     const pensionId = crypto.randomUUID();

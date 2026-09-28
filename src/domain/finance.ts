@@ -15,7 +15,7 @@ import {
   upsertVehicleEntryWithAutomaticSharedExpense,
   upsertVehicleEntryWithLinks,
 } from "./linkedRecords";
-import { isInvestmentCorrectionKind, portfolioValues } from "./investments";
+import { investmentUnitTimeline, isInvestmentCorrectionKind, portfolioValues } from "./investments";
 import type { AnnualSummary, FinanceData } from "./models";
 import { financeDataSchema } from "./models";
 import { repairOperationalData } from "./operationalDataRepair";
@@ -42,7 +42,7 @@ export function createEmptyFinanceData(year = new Date().getFullYear()): Finance
   const category = (nameIt: string, nameEn: string, kind: "income" | "expense" | "both") => ({ id: randomUUID(), nameIt, nameEn, kind, active: true });
   const payment = (name: string, kind: "cash" | "card" | "bank_transfer" | "direct_debit" | "digital_wallet" | "other") => ({ id: randomUUID(), name, kind, active: true });
   return financeDataSchema.parse({
-    meta: { schemaVersion: 12, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
+    meta: { schemaVersion: 13, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
     categories: [
       category("Stipendio", "Salary", "income"), category("Affitti", "Rent income", "income"),
       category("Alimentari", "Groceries", "expense"), category("Casa", "Home", "expense"),
@@ -187,7 +187,7 @@ function investmentEntryAnnualMovementEffect(
   data: FinanceData,
   entry: FinanceData["investmentEntries"][number] | undefined,
 ): InvestmentAnnualMovementEffect | undefined {
-  if (!entry || isInvestmentCorrectionKind(entry.kind)) return undefined;
+  if (!entry || isInvestmentCorrectionKind(entry.kind) || entry.kind === "unit_snapshot") return undefined;
   const transaction = entry.transactionId
     ? data.transactions.find((item) => item.id === entry.transactionId)
     : data.transactions.find((item) => item.investmentEntryId === entry.id);
@@ -227,6 +227,17 @@ function adjustInvestmentAnnualSummary(
         summary.returnCoverage = undefined;
         summary.returnPartialPeriod = undefined;
       });
+  }
+}
+
+function saveInvestmentUnitSnapshot(data: FinanceData, snapshot: FinanceData["investmentEntries"][number] | undefined): void {
+  if (!snapshot) return;
+  const previous = data.investmentEntries.find((entry) => entry.investmentId === snapshot.investmentId
+    && entry.kind === "unit_snapshot" && entry.date === snapshot.date);
+  if (previous) replace(data.investmentEntries, { ...snapshot, id: previous.id });
+  else {
+    ensureUnique(data.investmentEntries, snapshot.id);
+    data.investmentEntries.push(snapshot);
   }
 }
 
@@ -457,6 +468,21 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       upsertInvestmentEntryWithLinks(next, command.value.initialContribution);
       adjustInvestmentAnnualSummary(next, undefined, investmentEntryAnnualMovementEffect(next, command.value.initialContribution));
       break;
+    case "addInvestmentWithUnits":
+      ensureUnique(next.investments, command.value.investment.id);
+      ensureInvestmentPlanAccount(next, command.value.investment);
+      if (command.value.initialContribution) {
+        ensureUnique(next.investmentEntries, command.value.initialContribution.id);
+        ensureEntryAccount(next, command.value.initialContribution, true, command.value.investment.currency);
+      }
+      next.investments.push(command.value.investment);
+      syncInvestmentPlan(next, command.value.investment);
+      if (command.value.initialContribution) {
+        upsertInvestmentEntryWithLinks(next, command.value.initialContribution);
+        adjustInvestmentAnnualSummary(next, undefined, investmentEntryAnnualMovementEffect(next, command.value.initialContribution));
+      }
+      saveInvestmentUnitSnapshot(next, command.value.unitSnapshot);
+      break;
     case "updateInvestment": {
       ensureInvestmentPlanAccount(next, command.value);
       const existingPlan = next.recurringItems.find((item) => item.investmentId === command.value.id && item.kind === "investment");
@@ -464,6 +490,19 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       if (existingPlan && previous?.periodicAmount !== command.value.periodicAmount
         && recurringBaseAmountIsLocked(next, existingPlan.id)) throw new Error("RECURRING_BASE_AMOUNT_LOCKED");
       replace(next.investments, command.value); syncInvestmentPlan(next, command.value); break;
+    }
+    case "updateInvestmentWithUnits": {
+      if (command.value.initialContribution) throw new Error("INITIAL_CONTRIBUTION_ON_UPDATE");
+      ensureInvestmentPlanAccount(next, command.value.investment);
+      const existingPlan = next.recurringItems.find((item) => item.investmentId === command.value.investment.id && item.kind === "investment");
+      const previous = next.investments.find((item) => item.id === command.value.investment.id);
+      if (!previous) throw new Error("ENTITY_NOT_FOUND");
+      if (existingPlan && previous.periodicAmount !== command.value.investment.periodicAmount
+        && recurringBaseAmountIsLocked(next, existingPlan.id)) throw new Error("RECURRING_BASE_AMOUNT_LOCKED");
+      replace(next.investments, command.value.investment);
+      syncInvestmentPlan(next, command.value.investment);
+      saveInvestmentUnitSnapshot(next, command.value.unitSnapshot);
+      break;
     }
     case "addInvestmentEntry":
       ensureUnique(next.investmentEntries, command.value.id);
@@ -703,6 +742,9 @@ export function applyFinanceCommands(data: FinanceData, commands: readonly Finan
     applyFinanceCommandInPlace(next, financeCommandSchema.parse(rawCommand));
   }
   const repaired = repairOperationalData(next);
+  for (const id of new Set(repaired.data.investmentEntries
+    .filter((entry) => entry.kind === "unit_snapshot" || entry.quantity !== undefined)
+    .map((entry) => entry.investmentId))) investmentUnitTimeline(repaired.data, id);
   repaired.data.meta.updatedAt = nowIso();
   return financeDataSchema.parse(repaired.data);
 }

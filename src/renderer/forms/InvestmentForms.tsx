@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import type { FinanceCommand } from "../../domain/commands";
 import { normalizeOptionalIsin, validateOptionalIsin } from "../../domain/isin";
-import { regularInvestments, selectableFinancialPositions } from "../../domain/investments";
+import { investmentUnitBalance, regularInvestments, selectableFinancialPositions } from "../../domain/investments";
 import type { FinanceData, Investment, InvestmentEntry } from "../../domain/models";
 import { Field, Modal } from "../components/Modal";
 import { IsinField } from "../components/IsinField";
@@ -21,6 +21,10 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
   const defaultType = value?.typeId ?? availableTypes.find((item) => item.active)?.id ?? "";
   const [name, setName] = useState(value?.name ?? ""); const [provider, setProvider] = useState(value?.provider ?? ""); const [openedAt, setOpenedAt] = useState(value?.openedAt ?? todayIso()); const [notes, setNotes] = useState(value?.notes ?? "");
   const [isin, setIsin] = useState(value?.isin ?? "");
+  const [unitQuantity, setUnitQuantity] = useState(value ? String(investmentUnitBalance(data, value.id) ?? "") : "");
+  const [unitDate, setUnitDate] = useState(todayIso());
+  const [unitTouched, setUnitTouched] = useState(false);
+  const [unitDateTouched, setUnitDateTouched] = useState(false);
   const [typeId, setTypeId] = useState(defaultType); const [parentInvestmentId, setParentInvestmentId] = useState(value?.parentInvestmentId ?? "");
   const [periodic, setPeriodic] = useState(Boolean(value?.periodicAmount)); const [periodicAmount, setPeriodicAmount] = useState(value?.periodicAmount ? String(value.periodicAmount) : "");
   const [periodicFrequency, setPeriodicFrequency] = useState<"monthly" | "yearly">(value?.periodicFrequency ?? "monthly");
@@ -34,7 +38,12 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
   const [initialPaymentMethodId, setInitialPaymentMethodId] = useState(data.paymentMethods.find((item) => item.active)?.id ?? "");
   const [initialAccountId, setInitialAccountId] = useState(data.accounts.find((item) => item.active)?.id ?? "");
   const hasInitialContribution = !value && Number(initialContribution) > 0;
+  const hasUnitSnapshot = (unitTouched || unitDateTouched) && unitQuantity.trim() !== "";
+  const validUnits = !hasUnitSnapshot || (Number.isFinite(Number(unitQuantity)) && Number(unitQuantity) >= 0
+    && Number(unitQuantity) <= 1_000_000_000_000 && Number(unitQuantity) === Number(Number(unitQuantity).toFixed(8))
+    && Boolean(unitDate));
   const valid = Boolean(name.trim() && typeId && !validateOptionalIsin(isin)
+    && validUnits
     && (!periodic || (Number(periodicAmount) > 0 && periodicCategoryId && periodicPaymentMethodId && periodicAccountId && periodicNextDueDate))
     && (!hasInitialContribution || (initialCategoryId && initialPaymentMethodId && initialAccountId)));
   const submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -50,19 +59,25 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
       periodicPaymentMethodId: periodic ? periodicPaymentMethodId : undefined,
       periodicAccountId: periodic ? periodicAccountId : undefined, notes,
     };
-    const command: FinanceCommand = value
+    const initialEntry: InvestmentEntry | undefined = hasInitialContribution ? {
+      id: crypto.randomUUID(), investmentId, date: openedAt, kind: "contribution",
+      amount: Number(initialContribution), description: initialDescription.trim() || `${t("initialContribution")} — ${name.trim()}`,
+      categoryId: initialCategoryId, paymentMethodId: initialPaymentMethodId, accountId: initialAccountId, notes: "",
+    } : undefined;
+    const unitSnapshot: InvestmentEntry | undefined = hasUnitSnapshot ? {
+      id: crypto.randomUUID(), investmentId, date: unitDate, kind: "unit_snapshot", amount: 0,
+      quantity: Number(unitQuantity), description: t("unit_snapshot"), notes: "",
+    } : undefined;
+    const command: FinanceCommand = value && unitSnapshot
+      ? { type: "updateInvestmentWithUnits", value: { investment: item, unitSnapshot } }
+      : value
       ? { type: "updateInvestment", value: item }
-      : hasInitialContribution
+      : unitSnapshot
+        ? { type: "addInvestmentWithUnits", value: { investment: item, initialContribution: initialEntry, unitSnapshot } }
+      : initialEntry
         ? {
           type: "addInvestmentWithInitialContribution",
-          value: {
-            investment: item,
-            initialContribution: {
-              id: crypto.randomUUID(), investmentId, date: openedAt, kind: "contribution",
-              amount: Number(initialContribution), description: initialDescription.trim() || `${t("initialContribution")} — ${name.trim()}`,
-              categoryId: initialCategoryId, paymentMethodId: initialPaymentMethodId, accountId: initialAccountId, notes: "",
-            },
-          },
+          value: { investment: item, initialContribution: initialEntry },
         }
         : { type: "addInvestment", value: item };
     await saveAndClose(onSave, command, onClose);
@@ -73,7 +88,9 @@ export function InvestmentForm({ data, value, onClose, onSave }: { data: Finance
     <IsinField value={isin} onChange={setIsin} />
     <Field label={t("investmentGroup")}><select value={parentInvestmentId} onChange={(event) => setParentInvestmentId(event.target.value)}><option value="">—</option>{regularInvestments(data).filter((item) => item.id !== value?.id && !item.parentInvestmentId).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field>
     <Field label={t("provider")}><input value={provider} maxLength={120} onChange={(event) => setProvider(event.target.value)} /></Field>
-    <Field label={t("date")}><input required type="date" value={openedAt} onChange={(event) => setOpenedAt(event.target.value)} /></Field>
+    <Field label={t("date")}><input required type="date" value={openedAt} onChange={(event) => { setOpenedAt(event.target.value); if (!value && !unitDateTouched) setUnitDate(event.target.value); }} /></Field>
+    <Field label={t("investmentUnits")} hint={validUnits ? t("investmentUnitsHelp") : t("investmentUnitsInvalid")}><input type="number" min="0" max="1000000000000" step="0.00000001" value={unitQuantity} aria-invalid={!validUnits} onChange={(event) => { setUnitQuantity(event.target.value); setUnitTouched(true); }} /></Field>
+    <Field label={t("investmentUnitsDate")}><input type="date" required={hasUnitSnapshot} value={unitDate} onChange={(event) => { setUnitDate(event.target.value); setUnitDateTouched(true); }} /></Field>
     {!value && <><Field label={t("initialContribution")} hint={t("initialContributionHelp")}><input type="number" min="0" step="0.01" value={initialContribution} onChange={(event) => setInitialContribution(event.target.value)} /></Field>{hasInitialContribution && <><Field label={t("initialContributionDescription")} wide><input value={initialDescription} maxLength={240} placeholder={`${t("initialContribution")} — ${name}`} onChange={(event) => setInitialDescription(event.target.value)} /></Field><Field label={t("category")}><select required value={initialCategoryId} onChange={(event) => setInitialCategoryId(event.target.value)}>{data.categories.filter((item) => item.active && item.kind !== "income").map((item) => <option key={item.id} value={item.id}>{language === "it" ? item.nameIt : item.nameEn}</option>)}</select></Field><Field label={t("paymentMethod")}><select required value={initialPaymentMethodId} onChange={(event) => setInitialPaymentMethodId(event.target.value)}>{data.paymentMethods.filter((item) => item.active).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field><PaymentAccountField data={data} paymentMethodId={initialPaymentMethodId} date={openedAt} currency="EUR" value={initialAccountId} onChange={setInitialAccountId} /></>}</>}
     <Field label={t("periodicContribution")} wide><span className="check-field"><input type="checkbox" checked={periodic} onChange={(event) => setPeriodic(event.target.checked)} />{t("periodicContributionHelp")}</span></Field>
     {periodic && <><Field label={t("amount")}><input required type="number" min="0.01" step="0.01" value={periodicAmount} onChange={(event) => setPeriodicAmount(event.target.value)} /></Field><Field label={t("frequency")}><select value={periodicFrequency} onChange={(event) => setPeriodicFrequency(event.target.value as "monthly" | "yearly")}><option value="monthly">{t("monthly")}</option><option value="yearly">{t("yearly")}</option></select></Field><Field label={t("nextDue")}><input required type="date" value={periodicNextDueDate} onChange={(event) => setPeriodicNextDueDate(event.target.value)} /></Field><Field label={t("category")}><select required value={periodicCategoryId} onChange={(event) => setPeriodicCategoryId(event.target.value)}>{data.categories.filter((item) => item.active && item.kind !== "income").map((item) => <option key={item.id} value={item.id}>{language === "it" ? item.nameIt : item.nameEn}</option>)}</select></Field><Field label={t("paymentMethod")}><select required value={periodicPaymentMethodId} onChange={(event) => setPeriodicPaymentMethodId(event.target.value)}>{data.paymentMethods.filter((item) => item.active).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field><PaymentAccountField data={data} paymentMethodId={periodicPaymentMethodId} date={periodicNextDueDate} currency={value?.currency ?? "EUR"} value={periodicAccountId} onChange={setPeriodicAccountId} /></>}
@@ -91,19 +108,24 @@ export function InvestmentEntryForm({ data, value, initialInvestmentId, initialK
   const [accountId, setAccountId] = useState(value?.accountId ?? linkedTransaction?.accountId ?? data.accounts.find((item) => item.active)?.id ?? "");
   const [categoryId, setCategoryId] = useState(value?.categoryId ?? data.categories.find((item) => item.active && item.kind === "both")?.id ?? data.categories.find((item) => item.active && item.kind !== "income")?.id ?? "");
   const [kind, setKind] = useState<InvestmentEntry["kind"]>(value?.kind ?? initialKind);
+  const [quantity, setQuantity] = useState(value?.quantity === undefined ? "" : String(value.quantity));
   const monetary = kind !== "valuation";
-  const valid = Boolean(investmentId && description.trim() && (monetary ? Number(amount) > 0 : Number(amount) >= 0) && (!monetary || (paymentMethodId && categoryId && accountId)));
+  const validQuantity = quantity === "" || (Number(quantity) > 0 && Number(quantity) <= 1_000_000_000_000
+    && Number(quantity) === Number(Number(quantity).toFixed(8)));
+  const valid = Boolean(investmentId && description.trim() && (monetary ? Number(amount) > 0 : Number(amount) >= 0) && (!monetary || (paymentMethodId && categoryId && accountId))
+    && (!monetary || validQuantity));
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); if (!valid) return;
-    const item: InvestmentEntry = { ...value, id: value?.id ?? crypto.randomUUID(), investmentId, date, kind, amount: Number(amount), description, categoryId: monetary ? categoryId : undefined, paymentMethodId: monetary ? paymentMethodId : undefined, accountId: monetary ? accountId : undefined, transactionId: value?.transactionId, notes };
+    const item: InvestmentEntry = { ...value, id: value?.id ?? crypto.randomUUID(), investmentId, date, kind, amount: Number(amount), quantity: monetary && quantity !== "" ? Number(quantity) : undefined, description, categoryId: monetary ? categoryId : undefined, paymentMethodId: monetary ? paymentMethodId : undefined, accountId: monetary ? accountId : undefined, transactionId: value?.transactionId, notes };
     await saveAndClose(onSave, { type: value ? "updateInvestmentEntry" : "addInvestmentEntry", value: item }, onClose);
   };
-  const kinds: InvestmentEntry["kind"][] = value?.kind === "valuation" || initialKind === "valuation" ? ["valuation"] : ["contribution", "withdrawal"];
+  const kinds: Array<"valuation" | "contribution" | "withdrawal"> = value?.kind === "valuation" || initialKind === "valuation" ? ["valuation"] : ["contribution", "withdrawal"];
   return <Modal title={kind === "valuation" ? t("newValuation") : value ? t("editInvestmentEntry") : t("newInvestmentEntry")} onClose={onClose} onSubmit={submit} submitDisabled={!valid}>
     <Field label={t(targetLabel)}><select required value={investmentId} onChange={(event) => setInvestmentId(event.target.value)}>{data.investments.filter((item) => (item.active || item.id === investmentId) && (positions.some((position) => position.id === item.id) || item.id === investmentId)).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field>
     <Field label={t("date")}><input required type="date" value={date} onChange={(event) => setDate(event.target.value)} /></Field>
     <Field label={t("type")}><select value={kind} onChange={(event) => setKind(event.target.value as InvestmentEntry["kind"])}>{kinds.map((item) => <option key={item} value={item}>{item === "withdrawal" ? t("liquidation") : t(item)}</option>)}</select></Field>
     <Field label={t("amount")}><input required type="number" min="0" step="0.01" value={amount} onChange={(event) => setAmount(event.target.value)} /></Field>
+    {monetary && targetLabel === "investment" && <Field label={t("investmentUnitsChange")} hint={validQuantity ? undefined : t("investmentUnitsChangeInvalid")}><input type="number" min="0.00000001" max="1000000000000" step="0.00000001" value={quantity} aria-invalid={!validQuantity} onChange={(event) => setQuantity(event.target.value)} /></Field>}
     <Field label={t("description")} wide><input required value={description} maxLength={240} onChange={(event) => setDescription(event.target.value)} /></Field>
     {monetary && <><Field label={t("category")}><select required value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>{data.categories.filter((item) => item.active && (item.kind === (kind === "withdrawal" ? "income" : "expense") || item.kind === "both")).map((item) => <option key={item.id} value={item.id}>{language === "it" ? item.nameIt : item.nameEn}</option>)}</select></Field><Field label={t("paymentMethod")}><select required value={paymentMethodId} onChange={(event) => setPaymentMethodId(event.target.value)}><option value="">—</option>{data.paymentMethods.filter((item) => item.active).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field><PaymentAccountField data={data} paymentMethodId={paymentMethodId} date={date} currency={data.investments.find((item) => item.id === investmentId)?.currency} value={accountId} onChange={setAccountId} /></>}
     <Field label={t("notes")} wide><textarea value={notes} maxLength={2000} onChange={(event) => setNotes(event.target.value)} /></Field>

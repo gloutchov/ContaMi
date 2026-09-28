@@ -98,6 +98,43 @@ export function confirmedInvestmentEntries(data: FinanceData, investmentId?: str
     && (!entry.transactionId || !plannedTransactionIds.has(entry.transactionId)));
 }
 
+export interface InvestmentUnitPoint {
+  date: string;
+  quantity: number | null;
+  variation: number | null;
+}
+
+export function investmentUnitTimeline(data: FinanceData, investmentId: string): InvestmentUnitPoint[] {
+  const entries = confirmedInvestmentEntries(data, investmentId)
+    .filter((entry) => entry.kind === "unit_snapshot" || entry.kind === "contribution" || entry.kind === "withdrawal")
+    .sort((left, right) => left.date.localeCompare(right.date)
+      || Number(left.kind === "unit_snapshot") - Number(right.kind === "unit_snapshot")
+      || left.id.localeCompare(right.id));
+  let quantity: number | null = null;
+  const points: InvestmentUnitPoint[] = [];
+  for (const entry of entries) {
+    const before = quantity;
+    if (entry.kind === "unit_snapshot") quantity = entry.quantity ?? null;
+    else if (quantity !== null) quantity = entry.quantity === undefined
+      ? null
+      : Math.round((quantity + (entry.kind === "contribution" ? entry.quantity : -entry.quantity)) * 100_000_000) / 100_000_000;
+    if (entry.kind !== "unit_snapshot" && before === null) continue;
+    if (quantity !== null && quantity < -0.000_000_01) throw new Error("NEGATIVE_INVESTMENT_QUANTITY");
+    const variation = before === null || quantity === null ? null
+      : Math.round((quantity - before) * 100_000_000) / 100_000_000;
+    const last = points.at(-1);
+    const point = { date: entry.date, quantity, variation };
+    if (last?.date === entry.date) points[points.length - 1] = point;
+    else points.push(point);
+  }
+  return points;
+}
+
+export function investmentUnitBalance(data: FinanceData, investmentId: string): number | undefined {
+  const last = investmentUnitTimeline(data, investmentId).at(-1);
+  return last?.quantity ?? undefined;
+}
+
 export function investmentMovementEvents(data: FinanceData, investmentId: string): InvestmentMovementEvent[] {
   const annualByYear = new Map(data.investmentAnnualSummaries
     .filter((item) => item.investmentId === investmentId)
@@ -106,7 +143,7 @@ export function investmentMovementEvents(data: FinanceData, investmentId: string
     .filter((entry) => investmentEntryMovementKind(entry.kind));
   const detailedKindsByYear = new Map<number, Set<LinkedInvestmentMovementKind>>();
   for (const entry of detailed) {
-    if (isInvestmentCorrectionKind(entry.kind)) continue;
+    if (isInvestmentCorrectionKind(entry.kind) || entry.kind === "unit_snapshot") continue;
     const kind = investmentEntryMovementKind(entry.kind);
     if (!kind) continue;
     const year = Number(entry.date.slice(0, 4));
@@ -223,6 +260,12 @@ export function investmentPositionIsLoss(data: FinanceData, investment: Investme
   return investmentPositionValue(data, investment) < investmentPositionInvestedCapital(data, investment);
 }
 
+export function investmentPositionResult(data: FinanceData, investment: Investment): { amount: number; rate?: number } {
+  const capital = investmentPositionMovementTotals(data, investment).balance;
+  const amount = investmentPositionValue(data, investment) - capital;
+  return { amount, rate: capital > 0 ? amount / capital : undefined };
+}
+
 export function pensionPlans(data: FinanceData): Investment[] {
   const pensionIds = pensionInvestmentIds(data);
   return data.investments.filter((item) => pensionIds.has(item.id)
@@ -257,7 +300,7 @@ export function portfolioValues(data: FinanceData): { investments: number; pensi
   const entriesByInvestment = new Map<string, typeof data.investmentEntries>();
   for (const entry of data.investmentEntries) {
     if (entry.transactionId && plannedTransactionIds.has(entry.transactionId)) continue;
-    if (isInvestmentCorrectionKind(entry.kind)) continue;
+    if (isInvestmentCorrectionKind(entry.kind) || entry.kind === "unit_snapshot") continue;
     const entries = entriesByInvestment.get(entry.investmentId) ?? [];
     entries.push(entry);
     entriesByInvestment.set(entry.investmentId, entries);

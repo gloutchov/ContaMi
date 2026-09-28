@@ -16,7 +16,7 @@ import {
   type WorkbookRevisionState,
 } from "./WorkbookRevisionGuard";
 import { preflightXlsxWorkbook } from "./XlsxWorkbookPreflight";
-import { WORKBOOK_SCHEMA_VERSION, WORKBOOK_TABLES, WORKBOOK_TABLES_V1, WORKBOOK_TABLES_V10, WORKBOOK_TABLES_V11, WORKBOOK_TABLES_V2, WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V5, WORKBOOK_TABLES_V6, WORKBOOK_TABLES_V7, WORKBOOK_TABLES_V8, WORKBOOK_TABLES_V9, type WorkbookTableDefinition } from "./workbookSchema";
+import { WORKBOOK_SCHEMA_VERSION, WORKBOOK_TABLES, WORKBOOK_TABLES_V1, WORKBOOK_TABLES_V10, WORKBOOK_TABLES_V11, WORKBOOK_TABLES_V12, WORKBOOK_TABLES_V2, WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V5, WORKBOOK_TABLES_V6, WORKBOOK_TABLES_V7, WORKBOOK_TABLES_V8, WORKBOOK_TABLES_V9, type WorkbookTableDefinition } from "./workbookSchema";
 
 const HEADER_FILL = "FF073B4C";
 const ACCENT_FILL = "FF74D6B1";
@@ -144,7 +144,7 @@ function addSchemaSheet(workbook: ExcelJS.Workbook): void {
     Properties: ["Anagrafica degli immobili.", "Property registry."],
     "Property Entries": ["Entrate, spese, valutazioni e consumi degli immobili.", "Property income, expenses, valuations and consumption."],
     Investments: ["Anagrafica di investimenti e pensioni integrative, con pensioni raccoglitore e comparti collegati.", "Investment and private-pension registry, including pension collectors and linked compartments."],
-    "Investment Entries": ["Versamenti, liquidazioni e valutazioni di investimenti e comparti pensione.", "Contributions, liquidations, and valuations for investments and pension compartments."],
+    "Investment Entries": ["Versamenti, liquidazioni, valutazioni e rilevazioni delle quote di investimenti e comparti pensione.", "Contributions, liquidations, valuations, and unit snapshots for investments and pension compartments."],
     "Recurring Items": ["Abbonamenti, servizi, rate e versamenti periodici.", "Subscriptions, services, installments and recurring contributions."],
     "Recurring Rate Changes": ["Cronologia degli importi ricorrenti con decorrenza mensile.", "Recurring amount history with monthly effective dates."],
     "Shared Expenses": ["Spese condivise e relativo saldo.", "Shared expenses and related balance."],
@@ -235,9 +235,11 @@ export class ExcelWorkbookRepository {
                         ? WORKBOOK_TABLES_V10
                         : schemaVersion === 11
                           ? WORKBOOK_TABLES_V11
-                          : schemaVersion === WORKBOOK_SCHEMA_VERSION
-                            ? WORKBOOK_TABLES
-                            : undefined;
+                          : schemaVersion === 12
+                            ? WORKBOOK_TABLES_V12
+                            : schemaVersion === WORKBOOK_SCHEMA_VERSION
+                              ? WORKBOOK_TABLES
+                              : undefined;
     if (!definitions) throw new Error("INVALID_WORKBOOK_SCHEMA");
     const physicalRows = new Map<WorkbookTableDefinition["key"], number[]>();
     for (const definition of definitions) {

@@ -20,6 +20,11 @@ export const formatPercent = (rate: number, language: Language) => new Intl.Numb
   { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 2, signDisplay: "exceptZero" },
 ).format(rate);
 
+export const formatQuantity = (quantity: number, language: Language, signed = false) => new Intl.NumberFormat(
+  language === "it" ? "it-IT" : "en-GB",
+  { maximumFractionDigits: 8, signDisplay: signed ? "exceptZero" : "auto" },
+).format(quantity);
+
 export const todayIso = () => {
   const today = new Date();
   return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;

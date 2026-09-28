@@ -8,7 +8,7 @@ import {
   propertyAnnualSummariesWithLateIncome,
 } from "./annualHistory";
 import { investmentReturnSeries } from "./assetReturns";
-import { isInvestmentCorrectionKind, ROLLOVER_OPENING_VALUATION_DESCRIPTION } from "./investments";
+import { investmentUnitBalance, isInvestmentCorrectionKind, ROLLOVER_OPENING_VALUATION_DESCRIPTION } from "./investments";
 import { recurrenceAnchorDay, syncRecurringLink, syncRecurringTransactions, upsertTransactionWithLinks } from "./linkedRecords";
 import type { FinanceData, InvestmentEntry, PropertyEntry, RecurringItem } from "./models";
 
@@ -117,8 +117,14 @@ export function createRolloverFinanceData(current: FinanceData, nextYear = curre
     if (entry) next.propertyEntries.push({ ...structuredClone(entry), id: randomUUID(), date: `${nextYear}-01-01`, description: ROLLOVER_OPENING_VALUATION_DESCRIPTION });
   }
   for (const investment of next.investments) {
-    const entry = latestEntry(current.investmentEntries, investment.id, "investmentId");
+    const entry = latestEntry(current.investmentEntries.filter((candidate) => candidate.kind === "valuation"
+      || candidate.kind === "contribution" || candidate.kind === "withdrawal"), investment.id, "investmentId");
     if (entry) next.investmentEntries.push({ ...structuredClone(entry), id: randomUUID(), date: `${nextYear}-01-01`, description: ROLLOVER_OPENING_VALUATION_DESCRIPTION });
+    const quantity = investmentUnitBalance(current, investment.id);
+    if (quantity !== undefined) next.investmentEntries.push({
+      id: randomUUID(), investmentId: investment.id, date: `${nextYear}-01-01`, kind: "unit_snapshot",
+      amount: 0, quantity, description: "Opening unit balance / Saldo iniziale quote", notes: "",
+    });
   }
   const nextInvestmentIds = new Set(next.investments.map((item) => item.id));
   next.investmentEntries.push(...structuredClone(current.investmentEntries.filter((entry) => (
