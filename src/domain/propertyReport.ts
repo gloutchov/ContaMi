@@ -1,5 +1,6 @@
 import { isCondominiumCost, propertyConsumptionQuantity, propertyUtilityKind } from "./propertyMetrics";
-import type { FinanceData, Property, PropertyAnnualSummary, PropertyEntry, Transaction } from "./models";
+import type { FinanceData, Property, PropertyAnnualSummary, PropertyEntry, PropertyWaterReading, Transaction } from "./models";
+import { propertyWaterConsumption } from "./propertyWater";
 
 export type PropertyReportScope = "current-year" | "lifetime";
 
@@ -13,6 +14,9 @@ export interface PropertyReportUtilityTotals {
   waterCost: number;
   waterConsumption: number;
   phoneInternetCost: number;
+  condominiumColdWaterConsumption: number;
+  condominiumHotWaterConsumption: number;
+  condominiumWaterCost: number;
 }
 
 export interface PropertyReportPeriod extends PropertyReportUtilityTotals {
@@ -82,6 +86,9 @@ const ZERO_UTILITIES: PropertyReportUtilityTotals = {
   waterCost: 0,
   waterConsumption: 0,
   phoneInternetCost: 0,
+  condominiumColdWaterConsumption: 0,
+  condominiumHotWaterConsumption: 0,
+  condominiumWaterCost: 0,
 };
 
 function roundMoney(value: number): number {
@@ -118,6 +125,16 @@ function utilitiesForEntries(entries: readonly PropertyEntry[]): PropertyReportU
   return result;
 }
 
+function condominiumWaterForReadings(data: FinanceData, readings: readonly PropertyWaterReading[]): Pick<PropertyReportUtilityTotals, "condominiumColdWaterConsumption" | "condominiumHotWaterConsumption" | "condominiumWaterCost"> {
+  return readings.reduce((result, reading) => {
+    const consumption = propertyWaterConsumption(data, reading);
+    result.condominiumColdWaterConsumption += consumption.coldCubicMeters ?? 0;
+    result.condominiumHotWaterConsumption += consumption.hotCubicMeters ?? 0;
+    result.condominiumWaterCost += reading.totalCost;
+    return result;
+  }, { condominiumColdWaterConsumption: 0, condominiumHotWaterConsumption: 0, condominiumWaterCost: 0 });
+}
+
 function marketObservations(data: FinanceData, property: Property): Array<{ date: string; value: number }> {
   const observations: Array<{ date: string; value: number }> = [];
   if (property.purchaseDate && property.purchasePrice > 0) observations.push({ date: property.purchaseDate, value: property.purchasePrice });
@@ -150,6 +167,7 @@ function monthPeriods(data: FinanceData, property: Property, entries: readonly P
     const month = index + 1;
     const key = `${data.meta.activeYear}-${String(month).padStart(2, "0")}`;
     const periodEntries = entries.filter((entry) => entry.date.startsWith(key));
+    const periodWaterReadings = data.propertyWaterReadings.filter((reading) => reading.propertyId === property.id && reading.periodEnd.startsWith(key));
     const monthEnd = endOfMonth(data.meta.activeYear, month);
     const marketCutoff = key === asOf.slice(0, 7) ? asOf : monthEnd;
     return {
@@ -158,6 +176,7 @@ function monthPeriods(data: FinanceData, property: Property, entries: readonly P
       expenses: total(periodEntries.filter((entry) => entry.kind === "expense").map((entry) => entry.amount)),
       condominiumCost: total(periodEntries.filter(isCondominiumCost).map((entry) => entry.amount)),
       ...utilitiesForEntries(periodEntries),
+      ...condominiumWaterForReadings(data, periodWaterReadings),
       marketValue: key <= asOf.slice(0, 7) ? marketValueAt(observations, marketCutoff) : undefined,
       historicalAggregate: false,
     };
@@ -173,6 +192,9 @@ function annualSummaryUtilities(summary: PropertyAnnualSummary): PropertyReportU
     waterCost: summary.waterCost,
     waterConsumption: summary.waterCubicMeters,
     phoneInternetCost: summary.phoneInternetCost,
+    condominiumColdWaterConsumption: summary.condominiumColdWaterCubicMeters,
+    condominiumHotWaterConsumption: summary.condominiumHotWaterCubicMeters,
+    condominiumWaterCost: summary.condominiumWaterCost,
   };
 }
 
@@ -181,6 +203,7 @@ function reportYears(data: FinanceData, property: Property, entries: readonly Pr
     data.meta.activeYear,
     ...data.propertyAnnualSummaries.filter((item) => item.propertyId === property.id).map((item) => item.year),
     ...entries.map((item) => Number(item.date.slice(0, 4))),
+    ...data.propertyWaterReadings.filter((item) => item.propertyId === property.id).map((item) => Number(item.periodStart.slice(0, 4))),
     ...(property.purchaseDate ? [Number(property.purchaseDate.slice(0, 4))] : []),
   ].filter((year) => Number.isInteger(year) && year >= 1900 && year <= 9999);
   const firstYear = Math.min(...years);
@@ -204,7 +227,12 @@ function annualPeriods(data: FinanceData, property: Property, entries: readonly 
   return reportYears(data, property, entries).map((year) => {
     const historicalSummary = year === data.meta.activeYear ? undefined : summaries.get(year);
     const periodEntries = entriesByYear.get(year) ?? [];
-    const utilities = historicalSummary ? annualSummaryUtilities(historicalSummary) : utilitiesForEntries(periodEntries);
+    const utilities = historicalSummary
+      ? annualSummaryUtilities(historicalSummary)
+      : {
+          ...utilitiesForEntries(periodEntries),
+          ...condominiumWaterForReadings(data, data.propertyWaterReadings.filter((reading) => reading.propertyId === property.id && reading.periodStart.startsWith(String(year)))),
+        };
     const periodEnd = `${year}-12-31`;
     const marketCutoff = year === data.meta.activeYear && asOf < periodEnd ? asOf : periodEnd;
     while (observationIndex < observations.length && observations[observationIndex]!.date <= marketCutoff) {

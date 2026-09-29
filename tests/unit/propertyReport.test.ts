@@ -37,6 +37,11 @@ function reportFixture(): { data: FinanceData; propertyId: string } {
     expense("2026-03-12", "Condominium installment", 500),
     expense("2026-04-08", "Water bill", 60, { detailKind: "utility_water", quantity: 12, unit: "m³" }),
   );
+  data.propertyWaterReadings.push({
+    id: crypto.randomUUID(), propertyId, periodStart: "2026-04-01", periodEnd: "2026-04-30", readingDate: "2026-05-02",
+    measurementMode: "period_consumption", coldCubicMeters: 7.5, hotCubicMeters: 3.25, totalCost: 48,
+    coldStartsNewCycle: false, hotStartsNewCycle: false, notes: "Synthetic statistical reading",
+  });
   const plannedTransactionId = crypto.randomUUID();
   data.propertyEntries.push(expense("2026-09-15", "Planned maintenance", 240, { transactionId: plannedTransactionId }));
   data.transactions.push({
@@ -60,7 +65,7 @@ describe("property owner reports", () => {
     expect(report.periods).toHaveLength(12);
     expect(report.periods[1]).toMatchObject({ key: "2026-02", income: 1_000, expenses: 120, electricityCost: 120, electricityConsumption: 300, marketValue: 210_000 });
     expect(report.periods[2]).toMatchObject({ condominiumCost: 500 });
-    expect(report.periods[3]).toMatchObject({ waterCost: 60, waterConsumption: 12 });
+    expect(report.periods[3]).toMatchObject({ waterCost: 60, waterConsumption: 12, condominiumColdWaterConsumption: 7.5, condominiumHotWaterConsumption: 3.25, condominiumWaterCost: 48 });
     expect(report.periods[7]?.marketValue).toBe(220_000);
     expect(report.periods[8]?.marketValue).toBeUndefined();
     expect(report).toMatchObject({ actualIncome: 1_000, actualExpenses: 680, forecastExpenseTotal: 240, projectedExpenseTotal: 920, currentMarketValue: 220_000 });
@@ -80,7 +85,7 @@ describe("property owner reports", () => {
     expect(report.periods.map((item) => item.key)).toEqual(["2024", "2025", "2026"]);
     expect(report.periods[0]).toMatchObject({ expenses: 1_000, electricityConsumption: 900, condominiumCost: 350, marketValue: 190_000, historicalAggregate: true });
     expect(report.periods[1]).toMatchObject({ income: 200, expenses: 1_100, marketValue: 205_000, historicalAggregate: true });
-    expect(report.periods[2]).toMatchObject({ income: 1_000, expenses: 680, marketValue: 220_000, historicalAggregate: false });
+    expect(report.periods[2]).toMatchObject({ income: 1_000, expenses: 680, condominiumWaterCost: 48, condominiumColdWaterConsumption: 7.5, condominiumHotWaterConsumption: 3.25, marketValue: 220_000, historicalAggregate: false });
     expect(report.actualIncome).toBe(1_200);
     expect(report.actualExpenses).toBe(2_780);
     expect(report.costTrend).toEqual([{ year: 2024, expenses: 1_000 }, { year: 2025, expenses: 1_100 }, { year: 2026, expenses: 680 }]);

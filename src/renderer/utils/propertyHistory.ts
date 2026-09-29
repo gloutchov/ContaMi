@@ -9,9 +9,11 @@ export function calculatePropertyValuation(property: Property | undefined, mode:
 export function propertyHistory(data: FinanceData, propertyId: string) {
   const current = createPropertyAnnualSummaries(data).find((item) => item.propertyId === propertyId);
   const byYear = new Map(data.propertyAnnualSummaries.filter((item) => item.propertyId === propertyId).map((item) => [item.year, item]));
-  const hasCurrentEntries = data.propertyEntries.some((item) => item.propertyId === propertyId
+  const hasCurrentEntries = (data.propertyEntries.some((item) => item.propertyId === propertyId
     && item.date.startsWith(String(data.meta.activeYear))
-    && !data.transactions.find((transaction) => transaction.id === item.transactionId)?.planned);
+    && !data.transactions.find((transaction) => transaction.id === item.transactionId)?.planned))
+    || data.propertyWaterReadings.some((item) => item.propertyId === propertyId
+      && item.periodStart.startsWith(String(data.meta.activeYear)));
   if (current && hasCurrentEntries) byYear.set(current.year, current);
   return [...byYear.values()].sort((a, b) => a.year - b.year);
 }

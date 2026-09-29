@@ -1,8 +1,8 @@
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, Building2, FileText, Pencil, Plus, ReceiptText, Trash2, Zap } from "lucide-react";
+import { AlertTriangle, ArrowDownRight, ArrowUpRight, Building2, Droplets, FileText, Pencil, Plus, ReceiptText, Trash2, Zap } from "lucide-react";
 import { useState } from "react";
 import { rentalPropertyReturnSeries } from "../../domain/assetReturns";
 import type { FinanceCommand } from "../../domain/commands";
-import type { FinanceData, Property, PropertyEntry } from "../../domain/models";
+import type { FinanceData, Property, PropertyEntry, PropertyWaterReading } from "../../domain/models";
 import type { PropertyReportRequest, PropertyReportResult } from "../../shared/propertyReportContracts";
 import { propertyHasOverdueRent } from "../../domain/rent";
 import { DetailDialog } from "../components/DetailDialog";
@@ -15,6 +15,7 @@ import { PropertyReportDialog } from "../components/PropertyReportDialog";
 import { ReturnChart } from "../components/ReturnChart";
 import { PropertyEntryForm, PropertyForm } from "../forms/PropertyForms";
 import { PropertyExpenseForm } from "../forms/PropertyExpenseForms";
+import { PropertyWaterReadingForm } from "../forms/PropertyWaterReadingForm";
 import { useI18n } from "../i18n/I18nContext";
 import { filterDatedEntries } from "../utils/detailFilters";
 import { formatCurrency, formatDate, todayIso } from "../utils/format";
@@ -25,8 +26,10 @@ export function PropertiesView({ data, onSave, onGenerateReport }: { data: Finan
   const [editingProperty, setEditingProperty] = useState<Property | null | undefined>();
   const [editingEntry, setEditingEntry] = useState<PropertyEntry | null | undefined>();
   const [editingPropertyExpense, setEditingPropertyExpense] = useState<PropertyEntry | null | undefined>();
+  const [editingWaterReading, setEditingWaterReading] = useState<PropertyWaterReading | null | undefined>();
   const [propertyExpenseMode, setPropertyExpenseMode] = useState<"utility" | "tax">("utility");
   const [entryPropertyId, setEntryPropertyId] = useState<string>();
+  const [waterReadingPropertyId, setWaterReadingPropertyId] = useState<string>();
   const [selected, setSelected] = useState<Property>();
   const [reportProperty, setReportProperty] = useState<Property>();
   const [commonExpenseSearch, setCommonExpenseSearch] = useState("");
@@ -45,12 +48,15 @@ export function PropertiesView({ data, onSave, onGenerateReport }: { data: Finan
   const remove = (entity: "property" | "propertyEntry", id: string) => { if (window.confirm(t("deleteConfirm"))) runUiAction(() => onSave({ type: "deleteEntity", entity, id })); };
   const openNewEntry = (id: string) => { setEntryPropertyId(id); setEditingEntry(null); };
   const openPropertyExpense = (mode: "utility" | "tax", propertyId?: string, value: PropertyEntry | null = null) => { setPropertyExpenseMode(mode); setEntryPropertyId(propertyId); setEditingPropertyExpense(value); };
+  const openWaterReading = (propertyId?: string, value: PropertyWaterReading | null = null) => { setWaterReadingPropertyId(propertyId); setEditingWaterReading(value); };
   const editPropertyEntry = (item: PropertyEntry) => {
     if (item.detailKind?.startsWith("utility_")) openPropertyExpense("utility", item.propertyId, item);
     else if (item.detailKind?.startsWith("tax_")) openPropertyExpense("tax", item.propertyId, item);
     else { setEditingEntry(item); setEntryPropertyId(item.propertyId); }
     setSelected(undefined);
   };
+  const editWaterReading = (item: PropertyWaterReading) => { openWaterReading(item.propertyId, item); setSelected(undefined); };
+  const deleteWaterReading = (id: string) => { if (window.confirm(t("deleteWaterReadingConfirm"))) runUiAction(() => onSave({ type: "deleteEntity", entity: "propertyWaterReading", id })); };
   const firstActivePropertyId = data.properties.find((item) => item.active)?.id ?? "";
   return <><PageHeader title={t("properties")} subtitle={t("propertiesSubtitle")} actionLabel={t("newProperty")} onAction={() => setEditingProperty(null)} secondary={<div className="page-actions"><button className="secondary-button" onClick={() => openNewEntry(firstActivePropertyId)} disabled={!firstActivePropertyId}><Plus size={16}/>{t("newPropertyEntry")}</button><button className="secondary-button" onClick={() => openPropertyExpense("utility", firstActivePropertyId)} disabled={!firstActivePropertyId}><Zap size={16}/>{t("utilities")}</button><button className="secondary-button" onClick={() => openPropertyExpense("tax", firstActivePropertyId)} disabled={!firstActivePropertyId}><ReceiptText size={16}/>{t("propertyTaxes")}</button></div>} />
     <section className="view-kpi-grid"><KpiCard label={t("propertyValue")} value={formatCurrency(totalValue, language)} icon={Building2} tone="gold"/><KpiCard label={t("propertyIncome")} value={formatCurrency(income, language)} icon={ArrowUpRight} tone="mint"/><KpiCard label={t("propertyCosts")} value={formatCurrency(costs, language)} icon={ArrowDownRight} tone="coral"/></section>
@@ -65,12 +71,13 @@ export function PropertiesView({ data, onSave, onGenerateReport }: { data: Finan
         {filteredCommonExpenses.length ? <table className="data-table"><thead><tr><th>{t("date")}</th><th>{t("property")}</th><th>{t("description")}</th><th>{t("amount")}</th></tr></thead><tbody>{filteredCommonExpenses.map((item) => <tr key={item.id}><td>{formatDate(item.date, language)}</td><td>{data.properties.find((property) => property.id === item.propertyId)?.name}</td><td>{item.description}</td><td>{formatCurrency(item.amount, language)}</td></tr>)}</tbody></table> : <p className="empty-inline">{t("noFilteredEntries")}</p>}
       </> : <p className="empty-inline">{t("noCommonExpenses")}</p>}
     </section>
-    {selected && <DetailDialog title={selected.name} onClose={() => setSelected(undefined)} actions={<><button className="secondary-button" onClick={() => { setReportProperty(selected); setSelected(undefined); }}><FileText size={16}/>{t("propertyReport")}</button><button className="secondary-button" onClick={() => { openPropertyExpense("utility", selected.id); setSelected(undefined); }}>{t("utilities")}</button><button className="secondary-button" onClick={() => { openPropertyExpense("tax", selected.id); setSelected(undefined); }}>{t("propertyTaxes")}</button><button className="secondary-button" onClick={() => { setEditingProperty(selected); setSelected(undefined); }}>{t("editProperty")}</button><button className="primary-button" onClick={() => { openNewEntry(selected.id); setSelected(undefined); }}>{t("newPropertyEntry")}</button></>}>
-      <PropertyDetail data={data} property={selected} onEditEntry={editPropertyEntry} onDeleteEntry={(id) => remove("propertyEntry", id)} />
+    {selected && <DetailDialog title={selected.name} onClose={() => setSelected(undefined)} actions={<><button className="secondary-button" onClick={() => { setReportProperty(selected); setSelected(undefined); }}><FileText size={16}/>{t("propertyReport")}</button>{selected.usage === "residence" && <button className="secondary-button" onClick={() => { openWaterReading(selected.id); setSelected(undefined); }}><Droplets size={16}/>{t("waterReading")}</button>}<button className="secondary-button" onClick={() => { openPropertyExpense("utility", selected.id); setSelected(undefined); }}>{t("utilities")}</button><button className="secondary-button" onClick={() => { openPropertyExpense("tax", selected.id); setSelected(undefined); }}>{t("propertyTaxes")}</button><button className="secondary-button" onClick={() => { setEditingProperty(selected); setSelected(undefined); }}>{t("editProperty")}</button><button className="primary-button" onClick={() => { openNewEntry(selected.id); setSelected(undefined); }}>{t("newPropertyEntry")}</button></>}>
+      <PropertyDetail data={data} property={selected} onEditEntry={editPropertyEntry} onDeleteEntry={(id) => remove("propertyEntry", id)} onEditWaterReading={editWaterReading} onDeleteWaterReading={deleteWaterReading} />
     </DetailDialog>}
     {editingProperty !== undefined && <PropertyForm value={editingProperty ?? undefined} onClose={() => setEditingProperty(undefined)} onSave={onSave} />}
     {editingEntry !== undefined && <PropertyEntryForm data={data} value={editingEntry ?? undefined} initialPropertyId={entryPropertyId} onClose={() => { setEditingEntry(undefined); setEntryPropertyId(undefined); }} onSave={onSave} />}
     {editingPropertyExpense !== undefined && <PropertyExpenseForm data={data} mode={propertyExpenseMode} value={editingPropertyExpense ?? undefined} initialPropertyId={entryPropertyId} onClose={() => { setEditingPropertyExpense(undefined); setEntryPropertyId(undefined); }} onSave={onSave} />}
+    {editingWaterReading !== undefined && <PropertyWaterReadingForm data={data} value={editingWaterReading ?? undefined} initialPropertyId={waterReadingPropertyId} onClose={() => { setEditingWaterReading(undefined); setWaterReadingPropertyId(undefined); }} onSave={onSave} />}
     {reportProperty && <PropertyReportDialog property={reportProperty} onClose={() => setReportProperty(undefined)} onGenerate={onGenerateReport} />}
   </>;
 }
