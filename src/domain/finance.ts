@@ -19,6 +19,7 @@ import { investmentUnitTimeline, isInvestmentCorrectionKind, portfolioValues } f
 import type { AnnualSummary, FinanceData } from "./models";
 import { financeDataSchema } from "./models";
 import { repairOperationalData } from "./operationalDataRepair";
+import { waterReadingOverlaps } from "./propertyWater";
 import {
   assertConfirmedRatesUnchanged,
   recurringRateChangesFor,
@@ -42,7 +43,7 @@ export function createEmptyFinanceData(year = new Date().getFullYear()): Finance
   const category = (nameIt: string, nameEn: string, kind: "income" | "expense" | "both") => ({ id: randomUUID(), nameIt, nameEn, kind, active: true });
   const payment = (name: string, kind: "cash" | "card" | "bank_transfer" | "direct_debit" | "digital_wallet" | "other") => ({ id: randomUUID(), name, kind, active: true });
   return financeDataSchema.parse({
-    meta: { schemaVersion: 13, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
+    meta: { schemaVersion: 14, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
     categories: [
       category("Stipendio", "Salary", "income"), category("Affitti", "Rent income", "income"),
       category("Alimentari", "Groceries", "expense"), category("Casa", "Home", "expense"),
@@ -56,7 +57,7 @@ export function createEmptyFinanceData(year = new Date().getFullYear()): Finance
     ],
     investmentTypes: structuredClone(DEFAULT_INVESTMENT_TYPES),
     taxTypes: structuredClone(DEFAULT_TAX_TYPES),
-    accounts: [], transactions: [], properties: [], propertyEntries: [], investments: [], investmentEntries: [],
+    accounts: [], transactions: [], properties: [], propertyEntries: [], propertyWaterReadings: [], investments: [], investmentEntries: [],
     recurringItems: [], recurringRateChanges: [], sharedExpenses: [], vehicles: [], vehicleEntries: [], annualSummaries: [],
     propertyAnnualSummaries: [], investmentAnnualSummaries: [], vehicleAnnualSummaries: [],
   });
@@ -64,6 +65,16 @@ export function createEmptyFinanceData(year = new Date().getFullYear()): Finance
 
 function ensureUnique(collection: Array<{ id: string }>, id: string): void {
   if (collection.some((item) => item.id === id)) throw new Error("DUPLICATE_ID");
+}
+
+function ensureValidPropertyWaterReading(
+  data: FinanceData,
+  reading: FinanceData["propertyWaterReadings"][number],
+): void {
+  const property = data.properties.find((item) => item.id === reading.propertyId);
+  if (!property) throw new Error("PROPERTY_NOT_FOUND");
+  if (property.usage !== "residence") throw new Error("PROPERTY_NOT_RESIDENCE");
+  if (waterReadingOverlaps(data.propertyWaterReadings, reading)) throw new Error("PROPERTY_WATER_PERIOD_OVERLAP");
 }
 
 function replace<T extends { id: string }>(collection: T[], value: T): void {
@@ -401,7 +412,12 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
     case "addAccount": ensureUnique(next.accounts, command.value.id); validateAccount(next, command.value); next.accounts.push(command.value); break;
     case "updateAccount": validateAccount(next, command.value); replace(next.accounts, command.value); break;
     case "addProperty": ensureUnique(next.properties, command.value.id); next.properties.push(command.value); break;
-    case "updateProperty": replace(next.properties, command.value); break;
+    case "updateProperty":
+      if (command.value.usage !== "residence"
+        && next.propertyWaterReadings.some((reading) => reading.propertyId === command.value.id)) {
+        throw new Error("PROPERTY_WATER_READING_IN_USE");
+      }
+      replace(next.properties, command.value); break;
     case "addPropertyEntry":
       ensureUnique(next.propertyEntries, command.value.id);
       if (!next.properties.some((item) => item.id === command.value.propertyId)) throw new Error("PROPERTY_NOT_FOUND");
@@ -433,6 +449,16 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       ensureValidPropertyTax(next, command.value, true);
       ensureEntryAccount(next, command.value, command.value.kind === "income" || command.value.kind === "expense");
       upsertPropertyEntryWithLinks(next, command.value); break;
+    case "addPropertyWaterReading":
+      ensureUnique(next.propertyWaterReadings, command.value.id);
+      ensureValidPropertyWaterReading(next, command.value);
+      next.propertyWaterReadings.push(command.value);
+      break;
+    case "updatePropertyWaterReading":
+      ensureExists(next.propertyWaterReadings, command.value.id);
+      ensureValidPropertyWaterReading(next, command.value);
+      replace(next.propertyWaterReadings, command.value);
+      break;
     case "addPropertyEntryWithSharedExpense":
       ensureUnique(next.propertyEntries, command.value.entry.id);
       if (!next.properties.some((item) => item.id === command.value.entry.propertyId)) throw new Error("PROPERTY_NOT_FOUND");

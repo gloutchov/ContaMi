@@ -132,8 +132,38 @@ export const WORKBOOK_TABLES_V12: WorkbookTableDefinition[] = WORKBOOK_TABLES_V1
     }
   : definition);
 
-export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_V12.map((definition) => definition.key === "investmentEntries"
+export const WORKBOOK_TABLES_V13: WorkbookTableDefinition[] = WORKBOOK_TABLES_V12.map((definition) => definition.key === "investmentEntries"
   ? { ...definition, columns: definition.columns.flatMap((column) => column === "amount" ? [column, "quantity"] : [column]) }
+  : definition);
+
+const WORKBOOK_TABLES_WITH_WATER_READINGS: WorkbookTableDefinition[] = WORKBOOK_TABLES_V13.flatMap((definition) => definition.key === "propertyEntries"
+  ? [
+      definition,
+      {
+        key: "propertyWaterReadings",
+        sheet: "Property Water Readings",
+        columns: [
+          "id", "propertyId", "periodStart", "periodEnd", "readingDate", "measurementMode",
+          "coldCubicMeters", "hotCubicMeters", "totalCost", "coldCost", "hotCost",
+          "coldStartsNewCycle", "hotStartsNewCycle", "notes",
+        ],
+        dateColumns: ["periodStart", "periodEnd", "readingDate"],
+      },
+    ]
+  : [definition]);
+
+export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_WITH_WATER_READINGS.map((definition) => definition.key === "propertyAnnualSummaries"
+  ? {
+      ...definition,
+      columns: [
+        ...definition.columns,
+        "condominiumColdWaterCubicMeters", "condominiumHotWaterCubicMeters",
+        "condominiumColdWaterCoverage", "condominiumHotWaterCoverage",
+        "condominiumWaterCost", "condominiumColdWaterCost", "condominiumHotWaterCost",
+        "condominiumClosingReadingDate", "condominiumColdClosingMeterReading", "condominiumHotClosingMeterReading",
+      ],
+      dateColumns: [...(definition.dateColumns ?? []), "condominiumClosingReadingDate"],
+    }
   : definition);
 
 export const WORKBOOK_TABLES_V2: WorkbookTableDefinition[] = [
@@ -165,4 +195,4 @@ export const WORKBOOK_TABLES_V1: WorkbookTableDefinition[] = [
   { key: "annualSummaries", sheet: "Annual Summaries", columns: ["year", "income", "expenses", "netCashFlow", "closingNetWorth"] },
 ];
 
-export const WORKBOOK_SCHEMA_VERSION = 13;
+export const WORKBOOK_SCHEMA_VERSION = 14;

@@ -564,6 +564,11 @@ export function deleteLinkedEntity(data: FinanceData, entity: string, id: string
     else data.propertyEntries = data.propertyEntries.filter((candidate) => candidate.id !== id);
     return;
   }
+  if (entity === "propertyWaterReading") {
+    if (!data.propertyWaterReadings.some((candidate) => candidate.id === id)) throw new Error("ENTITY_NOT_FOUND");
+    data.propertyWaterReadings = data.propertyWaterReadings.filter((candidate) => candidate.id !== id);
+    return;
+  }
   if (entity === "investmentEntry") {
     const item = data.investmentEntries.find((candidate) => candidate.id === id);
     if (!item) throw new Error("ENTITY_NOT_FOUND");
@@ -591,6 +596,7 @@ export function deleteLinkedEntity(data: FinanceData, entity: string, id: string
     const transactionIds = data.transactions.filter((item) => item.propertyId === id || (item.propertyEntryId && entryIds.has(item.propertyEntryId))).map((item) => item.id);
     transactionIds.forEach((transactionId) => deleteLinkedEntity(data, "transaction", transactionId));
     data.propertyEntries = data.propertyEntries.filter((item) => item.propertyId !== id);
+    data.propertyWaterReadings = data.propertyWaterReadings.filter((item) => item.propertyId !== id);
     data.recurringItems = data.recurringItems.filter((item) => item.propertyId !== id);
     data.recurringRateChanges = data.recurringRateChanges.filter((item) => !recurringIds.has(item.recurringId));
     data.properties = data.properties.filter((item) => item.id !== id);

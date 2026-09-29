@@ -6,6 +6,10 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected an ISO date");
 const isoTimestamp = z.string().datetime();
 const id = z.string().uuid();
 const money = z.number().finite().nonnegative().max(1_000_000_000_000);
+const waterCubicMeters = z.number().finite().nonnegative().max(1_000_000_000)
+  .refine((value) => Math.abs(value * 1_000 - Math.round(value * 1_000)) < 1e-7, "At most three decimal places");
+const waterMoney = money
+  .refine((value) => Math.abs(value * 100 - Math.round(value * 100)) < 1e-7, "At most two decimal places");
 export const investmentQuantitySchema = z.number().finite().nonnegative().max(1_000_000_000_000)
   .refine((value) => value === Number(value.toFixed(8)), "At most eight decimal places");
 const signedMoney = z.number().finite().min(-1_000_000_000_000).max(1_000_000_000_000);
@@ -138,6 +142,42 @@ export const propertyEntrySchema = z.object({
   }
   if (value.taxInstallmentNumber && !value.taxTypeId) {
     context.addIssue({ code: "custom", message: "A tax installment requires a tax type", path: ["taxInstallmentNumber"] });
+  }
+});
+
+export const propertyWaterReadingSchema = z.object({
+  id,
+  propertyId: id,
+  periodStart: isoDate,
+  periodEnd: isoDate,
+  readingDate: isoDate,
+  measurementMode: z.enum(["period_consumption", "meter_reading"]),
+  coldCubicMeters: waterCubicMeters,
+  hotCubicMeters: waterCubicMeters,
+  totalCost: waterMoney,
+  coldCost: waterMoney.optional(),
+  hotCost: waterMoney.optional(),
+  coldStartsNewCycle: z.boolean().default(false),
+  hotStartsNewCycle: z.boolean().default(false),
+  notes,
+}).superRefine((value, context) => {
+  if (value.periodStart > value.periodEnd) {
+    context.addIssue({ code: "custom", message: "The water-reading period cannot end before it starts", path: ["periodEnd"] });
+  }
+  if (value.periodStart.slice(0, 4) !== value.periodEnd.slice(0, 4)) {
+    context.addIssue({ code: "custom", message: "A water-reading period must stay within one calendar year", path: ["periodEnd"] });
+  }
+  const hasColdCost = value.coldCost !== undefined;
+  const hasHotCost = value.hotCost !== undefined;
+  if (hasColdCost !== hasHotCost) {
+    context.addIssue({ code: "custom", message: "Cold and hot water costs must be provided together", path: [hasColdCost ? "hotCost" : "coldCost"] });
+  }
+  if (value.coldCost !== undefined && value.hotCost !== undefined
+    && Math.abs(value.coldCost + value.hotCost - value.totalCost) > 0.01) {
+    context.addIssue({ code: "custom", message: "Cold and hot water costs must match the total cost", path: ["hotCost"] });
+  }
+  if (value.measurementMode === "period_consumption" && (value.coldStartsNewCycle || value.hotStartsNewCycle)) {
+    context.addIssue({ code: "custom", message: "A period consumption cannot start a meter cycle", path: ["measurementMode"] });
   }
 });
 
@@ -307,6 +347,16 @@ export const propertyAnnualSummarySchema = z.object({
   electricityCost: money.default(0),
   gasCost: money.default(0),
   waterCost: money.default(0),
+  condominiumColdWaterCubicMeters: waterCubicMeters.default(0),
+  condominiumHotWaterCubicMeters: waterCubicMeters.default(0),
+  condominiumColdWaterCoverage: z.enum(["none", "partial", "complete"]).default("none"),
+  condominiumHotWaterCoverage: z.enum(["none", "partial", "complete"]).default("none"),
+  condominiumWaterCost: money.default(0),
+  condominiumColdWaterCost: money.optional(),
+  condominiumHotWaterCost: money.optional(),
+  condominiumClosingReadingDate: isoDate.optional(),
+  condominiumColdClosingMeterReading: waterCubicMeters.optional(),
+  condominiumHotClosingMeterReading: waterCubicMeters.optional(),
   phoneInternetCost: money.default(0),
   condominiumCost: money.default(0),
 });
@@ -365,7 +415,7 @@ export const vehicleAnnualSummarySchema = z.object({
 
 export const financeDataSchema = z.object({
   meta: z.object({
-    schemaVersion: z.literal(13),
+    schemaVersion: z.literal(14),
     activeYear: z.number().int().min(1900).max(9999),
     createdAt: isoTimestamp,
     updatedAt: isoTimestamp,
@@ -378,6 +428,7 @@ export const financeDataSchema = z.object({
   transactions: z.array(transactionSchema).max(1_000_000),
   properties: z.array(propertySchema).max(10_000),
   propertyEntries: z.array(propertyEntrySchema).max(1_000_000),
+  propertyWaterReadings: z.array(propertyWaterReadingSchema).max(1_000_000),
   investments: z.array(investmentSchema).max(100_000),
   investmentEntries: z.array(investmentEntrySchema).max(1_000_000),
   recurringItems: z.array(recurringItemSchema).max(100_000),
@@ -390,6 +441,48 @@ export const financeDataSchema = z.object({
   investmentAnnualSummaries: z.array(investmentAnnualSummarySchema).max(1_000_000),
   vehicleAnnualSummaries: z.array(vehicleAnnualSummarySchema).max(100_000),
 }).superRefine((value, context) => {
+  const properties = new Map(value.properties.map((property) => [property.id, property]));
+  const waterReadingsByProperty = new Map<string, Array<{ reading: PropertyWaterReading; index: number }>>();
+  for (const [index, reading] of value.propertyWaterReadings.entries()) {
+    const property = properties.get(reading.propertyId);
+    if (!property) {
+      context.addIssue({ code: "custom", message: "A water reading must reference an existing property", path: ["propertyWaterReadings", index, "propertyId"] });
+    } else if (property.usage !== "residence") {
+      context.addIssue({ code: "custom", message: "Water readings are allowed only for residences", path: ["propertyWaterReadings", index, "propertyId"] });
+    }
+    const readings = waterReadingsByProperty.get(reading.propertyId) ?? [];
+    readings.push({ reading, index });
+    waterReadingsByProperty.set(reading.propertyId, readings);
+  }
+  for (const readings of waterReadingsByProperty.values()) {
+    readings.sort((left, right) => left.reading.periodStart.localeCompare(right.reading.periodStart)
+      || left.reading.periodEnd.localeCompare(right.reading.periodEnd)
+      || left.reading.id.localeCompare(right.reading.id));
+    for (let index = 1; index < readings.length; index += 1) {
+      const previous = readings[index - 1]!;
+      const current = readings[index]!;
+      if (current.reading.periodStart <= previous.reading.periodEnd) {
+        context.addIssue({ code: "custom", message: "Water-reading periods cannot overlap", path: ["propertyWaterReadings", current.index, "periodStart"] });
+      }
+    }
+    const progressive = readings
+      .filter(({ reading }) => reading.measurementMode === "meter_reading")
+      .sort((left, right) => left.reading.readingDate.localeCompare(right.reading.readingDate)
+        || left.reading.id.localeCompare(right.reading.id));
+    for (let index = 1; index < progressive.length; index += 1) {
+      const previous = progressive[index - 1]!;
+      const current = progressive[index]!;
+      if (current.reading.readingDate === previous.reading.readingDate) {
+        context.addIssue({ code: "custom", message: "Progressive water readings need distinct dates", path: ["propertyWaterReadings", current.index, "readingDate"] });
+      }
+      if (!current.reading.coldStartsNewCycle && current.reading.coldCubicMeters < previous.reading.coldCubicMeters) {
+        context.addIssue({ code: "custom", message: "A progressive cold-water reading cannot decrease without a new meter cycle", path: ["propertyWaterReadings", current.index, "coldCubicMeters"] });
+      }
+      if (!current.reading.hotStartsNewCycle && current.reading.hotCubicMeters < previous.reading.hotCubicMeters) {
+        context.addIssue({ code: "custom", message: "A progressive hot-water reading cannot decrease without a new meter cycle", path: ["propertyWaterReadings", current.index, "hotCubicMeters"] });
+      }
+    }
+  }
   const recurringIds = new Set(value.recurringItems.map((item) => item.id));
   const effectiveMonths = new Set<string>();
   for (const [index, change] of value.recurringRateChanges.entries()) {
@@ -448,6 +541,7 @@ export type Account = z.infer<typeof accountSchema>;
 export type Transaction = z.infer<typeof transactionSchema>;
 export type Property = z.infer<typeof propertySchema>;
 export type PropertyEntry = z.infer<typeof propertyEntrySchema>;
+export type PropertyWaterReading = z.infer<typeof propertyWaterReadingSchema>;
 export type Investment = z.infer<typeof investmentSchema>;
 export type InvestmentEntry = z.infer<typeof investmentEntrySchema>;
 export type RecurringItem = z.infer<typeof recurringItemSchema>;

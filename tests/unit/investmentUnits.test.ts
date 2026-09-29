@@ -151,7 +151,7 @@ describe("investment unit history", () => {
     legacy.meta.schemaVersion = 12 as 13;
     legacy.investments.push(fixture.investment);
     const migrated = migrateFinanceData(legacy);
-    expect(migrated.meta.schemaVersion).toBe(13);
+    expect(migrated.meta.schemaVersion).toBe(14);
     expect(migrated.investmentEntries).toEqual([]);
     expect(migrateFinanceData(migrated)).toEqual(migrated);
 
