@@ -296,4 +296,6 @@ See [SECURITY_MODEL.md](SECURITY_MODEL.md) for technical controls and residual r
 
 Close ContaMì and keep a workbook copy before updating, then install the new release over the old one.
 
+Version 1.21.0 updates the runtime, libraries, and verification tools without changing workbook schema v13 or financial data. Keeping a copy first remains recommended for every update.
+
 To remove the app on macOS, close ContaMì and move `Contami` from **Applications** to the Trash. On Windows open **Settings → Apps → Installed apps**, find `Contami`, and choose **Uninstall**. Removing the app does not delete user-selected workbooks or `.contami-backups`; they stay in their folders and should be removed only manually after reviewing their contents.

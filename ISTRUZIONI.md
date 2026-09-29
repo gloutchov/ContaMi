@@ -329,4 +329,6 @@ Vedi [SECURITY_MODEL.md](SECURITY_MODEL.md) per dettagli tecnici e rischi residu
 
 Prima di aggiornare, chiudi ContaMì e conserva una copia del workbook. Installa la nuova release sopra la precedente.
 
+La versione 1.21.0 aggiorna runtime, librerie e strumenti di verifica senza cambiare lo schema workbook v13 o i dati finanziari. La copia preventiva resta raccomandata come per ogni aggiornamento.
+
 Per rimuovere l’app su macOS, chiudi ContaMì e sposta `Contami` da **Applicazioni** al Cestino. Su Windows apri **Impostazioni → App → App installate**, cerca `Contami` e scegli **Disinstalla**. La rimozione dell’app non elimina i workbook scelti né `.contami-backups`: restano nelle cartelle dell’utente e vanno eliminati solo manualmente dopo averne verificato il contenuto.
