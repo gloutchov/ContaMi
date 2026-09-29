@@ -10,6 +10,13 @@ function demoData(): FinanceData {
   const payment = data.paymentMethods[1].id;
   const accountId = crypto.randomUUID();
   const recurringId = crypto.randomUUID();
+  const noCondominiumWater = {
+    condominiumColdWaterCubicMeters: 0,
+    condominiumHotWaterCubicMeters: 0,
+    condominiumColdWaterCoverage: "none" as const,
+    condominiumHotWaterCoverage: "none" as const,
+    condominiumWaterCost: 0,
+  };
   data.accounts.push({ id: accountId, name: "Main account", kind: "bank", currency: "EUR", openingBalance: 32_800, active: true, openedAt: `${data.meta.activeYear}-01-01`, notes: "" });
   data.transactions.push(
     { id: crypto.randomUUID(), date: `${data.meta.activeYear}-01-04`, description: "Salary", categoryId: category("Salary"), paymentMethodId: payment, accountId, kind: "income", amount: 3_250, currency: "EUR", notes: "", createdAt: now, updatedAt: now },
@@ -36,9 +43,15 @@ function demoData(): FinanceData {
     { id: crypto.randomUUID(), propertyId, date: `${data.meta.activeYear}-01-31`, kind: "expense", category: "Canone TV", categoryId: category("Home"), description: "Canone TV", amount: 90, paymentMethodId: payment, notes: "" },
   );
   data.propertyAnnualSummaries.push(
-    { propertyId, year: data.meta.activeYear - 2, income: 0, expenses: 1_850, closingValue: 260_000, electricityKwh: 1_280, gasCubicMeters: 920, waterCubicMeters: 104, electricityCost: 520, gasCost: 610, waterCost: 145, phoneInternetCost: 210, condominiumCost: 540 },
-    { propertyId, year: data.meta.activeYear - 1, income: 0, expenses: 1_920, closingValue: 270_000, electricityKwh: 1_210, gasCubicMeters: 860, waterCubicMeters: 98, electricityCost: 495, gasCost: 570, waterCost: 138, phoneInternetCost: 216, condominiumCost: 560 },
+    { propertyId, year: data.meta.activeYear - 2, income: 0, expenses: 1_850, closingValue: 260_000, electricityKwh: 1_280, gasCubicMeters: 920, waterCubicMeters: 104, electricityCost: 520, gasCost: 610, waterCost: 145, condominiumColdWaterCubicMeters: 82, condominiumHotWaterCubicMeters: 31, condominiumColdWaterCoverage: "complete", condominiumHotWaterCoverage: "complete", condominiumWaterCost: 186, condominiumColdWaterCost: 108, condominiumHotWaterCost: 78, phoneInternetCost: 210, condominiumCost: 540 },
+    { propertyId, year: data.meta.activeYear - 1, income: 0, expenses: 1_920, closingValue: 270_000, electricityKwh: 1_210, gasCubicMeters: 860, waterCubicMeters: 98, electricityCost: 495, gasCost: 570, waterCost: 138, condominiumColdWaterCubicMeters: 78, condominiumHotWaterCubicMeters: 29, condominiumColdWaterCoverage: "complete", condominiumHotWaterCoverage: "complete", condominiumWaterCost: 174, condominiumColdWaterCost: 101, condominiumHotWaterCost: 73, phoneInternetCost: 216, condominiumCost: 560 },
   );
+  data.propertyWaterReadings.push({
+    id: crypto.randomUUID(), propertyId, periodStart: `${data.meta.activeYear}-01-01`, periodEnd: `${data.meta.activeYear}-03-31`,
+    readingDate: `${data.meta.activeYear}-04-08`, measurementMode: "period_consumption",
+    coldCubicMeters: 19.4, hotCubicMeters: 7.8, totalCost: 46.2, coldCost: 27.1, hotCost: 19.1,
+    coldStartsNewCycle: false, hotStartsNewCycle: false, notes: "",
+  });
   const rentalId = crypto.randomUUID();
   const rentRecurringId = crypto.randomUUID();
   data.properties.push({ id: rentalId, name: "Rental apartment", kind: "apartment", usage: "rental", address: "Via Demo 8, Milano", areaSqm: 68, ownershipShare: 0.5, cadastralValue: 88_000, expectedMonthlyRent: 750, rentDueDay: 5, purchasePrice: 180_000, active: true, notes: "" });
@@ -69,8 +82,8 @@ function demoData(): FinanceData {
     propertyId: rentalId, nextDueDate: `${data.meta.activeYear}-07-05`, active: true, notes: "",
   });
   data.propertyAnnualSummaries.push(
-    { propertyId: rentalId, year: data.meta.activeYear - 2, income: 8_400, expenses: 1_250, closingValue: 195_000, electricityKwh: 0, gasCubicMeters: 0, waterCubicMeters: 0, electricityCost: 0, gasCost: 0, waterCost: 0, phoneInternetCost: 0, condominiumCost: 0 },
-    { propertyId: rentalId, year: data.meta.activeYear - 1, income: 8_700, expenses: 980, closingValue: 202_000, electricityKwh: 0, gasCubicMeters: 0, waterCubicMeters: 0, electricityCost: 0, gasCost: 0, waterCost: 0, phoneInternetCost: 0, condominiumCost: 0 },
+    { propertyId: rentalId, year: data.meta.activeYear - 2, income: 8_400, expenses: 1_250, closingValue: 195_000, electricityKwh: 0, gasCubicMeters: 0, waterCubicMeters: 0, electricityCost: 0, gasCost: 0, waterCost: 0, ...noCondominiumWater, phoneInternetCost: 0, condominiumCost: 0 },
+    { propertyId: rentalId, year: data.meta.activeYear - 1, income: 8_700, expenses: 980, closingValue: 202_000, electricityKwh: 0, gasCubicMeters: 0, waterCubicMeters: 0, electricityCost: 0, gasCost: 0, waterCost: 0, ...noCondominiumWater, phoneInternetCost: 0, condominiumCost: 0 },
   );
   const investmentId = crypto.randomUUID();
   data.investments.push({ id: investmentId, name: "Balanced portfolio", kind: "fund", typeId: data.investmentTypes.find((item) => item.code === "fund")?.id, provider: "", currency: "EUR", active: true, openedAt: `${data.meta.activeYear - 4}-01-01`, notes: "" });

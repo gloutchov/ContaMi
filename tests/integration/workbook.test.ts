@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { applyFinanceCommand, createEmptyFinanceData } from "../../src/domain/finance";
 import { investmentUnitBalance, portfolioValues } from "../../src/domain/investments";
 import { ExcelWorkbookRepository } from "../../src/infrastructure/spreadsheet/ExcelWorkbookRepository";
-import { WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V7 } from "../../src/infrastructure/spreadsheet/workbookSchema";
+import { WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V7, WORKBOOK_TABLES_V13 } from "../../src/infrastructure/spreadsheet/workbookSchema";
 
 const directories: string[] = [];
 afterEach(async () => { await Promise.all(directories.splice(0).map((directory) => rm(directory, { recursive: true, force: true }))); });
@@ -16,6 +16,63 @@ function withoutId(value: object): Record<string, unknown> {
 }
 
 describe("ExcelWorkbookRepository", () => {
+  it("round-trips residence water readings without creating financial movements", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-water-readings-")); directories.push(directory);
+    const filePath = path.join(directory, "ContaMi-water-readings.xlsx");
+    let data = createEmptyFinanceData(2026);
+    const propertyId = crypto.randomUUID();
+    data.properties.push({
+      id: propertyId, name: "Synthetic residence", kind: "apartment", usage: "residence",
+      ownershipShare: 1, purchasePrice: 200_000, active: true, notes: "",
+    });
+    data = applyFinanceCommand(data, {
+      type: "addPropertyWaterReading",
+      value: {
+        id: crypto.randomUUID(), propertyId, periodStart: "2026-01-01", periodEnd: "2026-03-31",
+        readingDate: "2026-04-05", measurementMode: "period_consumption",
+        coldCubicMeters: 18.25, hotCubicMeters: 7.5, totalCost: 48, coldCost: 28, hotCost: 20,
+        coldStartsNewCycle: false, hotStartsNewCycle: false, notes: "Synthetic condominium statement",
+      },
+    });
+    const repository = new ExcelWorkbookRepository();
+
+    await repository.save(filePath, data);
+    const loaded = await repository.load(filePath);
+
+    expect(loaded.meta.schemaVersion).toBe(14);
+    expect(loaded.propertyWaterReadings).toEqual(data.propertyWaterReadings);
+    expect(loaded.transactions).toEqual([]);
+    expect(loaded.propertyEntries).toEqual([]);
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+    expect(workbook.getWorksheet("Property Water Readings")?.getRow(2).getCell(6).value).toBe("period_consumption");
+  });
+
+  it("migrates a version 13 workbook to an empty water-reading table and reopens idempotently", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-v13-water-")); directories.push(directory);
+    const filePath = path.join(directory, "ContaMi-v13.xlsx");
+    const repository = new ExcelWorkbookRepository();
+    await repository.save(filePath, createEmptyFinanceData(2026));
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+    workbook.getWorksheet("_Meta")!.getCell("B2").value = 13;
+    const waterSheet = workbook.getWorksheet("Property Water Readings")!;
+    workbook.removeWorksheet(waterSheet.id);
+    const history = workbook.getWorksheet("Property History")!;
+    const legacyColumns = WORKBOOK_TABLES_V13.find((item) => item.key === "propertyAnnualSummaries")!.columns.length;
+    history.spliceColumns(legacyColumns + 1, history.columnCount - legacyColumns);
+    await workbook.xlsx.writeFile(filePath);
+
+    const migrated = await repository.loadWithUuidRepair(filePath);
+
+    expect(migrated.migratedSchema).toBe(true);
+    expect(migrated.data.meta.schemaVersion).toBe(14);
+    expect(migrated.data.propertyWaterReadings).toEqual([]);
+    const reopened = await repository.loadWithUuidRepair(filePath);
+    expect(reopened.migratedSchema).toBe(false);
+    expect(reopened.data).toEqual(migrated.data);
+  });
+
   it("round-trips an initial purchase of 75 units followed by another 25 without a snapshot", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-unit-purchases-")); directories.push(directory);
     const filePath = path.join(directory, "ContaMi-unit-purchases.xlsx");
@@ -54,7 +111,7 @@ describe("ExcelWorkbookRepository", () => {
     const repository = new ExcelWorkbookRepository();
     await repository.save(filePath, data);
     const loaded = await repository.load(filePath);
-    expect(loaded.meta.schemaVersion).toBe(13);
+    expect(loaded.meta.schemaVersion).toBe(14);
     expect(investmentUnitBalance(loaded, investmentId)).toBe(12.3456789);
     expect(portfolioValues(loaded).investments).toBe(1_000);
     expect(loaded.transactions).toEqual([]);
@@ -80,7 +137,7 @@ describe("ExcelWorkbookRepository", () => {
 
     const migrated = await repository.loadWithUuidRepair(filePath);
     expect(migrated.migratedSchema).toBe(true);
-    expect(migrated.data.meta.schemaVersion).toBe(13);
+    expect(migrated.data.meta.schemaVersion).toBe(14);
     expect(migrated.data.investmentEntries[0]).not.toHaveProperty("quantity");
     expect(portfolioValues(migrated.data).investments).toBe(900);
     expect((await readdir(path.join(directory, ".contami-backups"))).length).toBeGreaterThan(0);
@@ -169,7 +226,7 @@ describe("ExcelWorkbookRepository", () => {
     await repository.save(filePath, data);
     const loaded = await repository.load(filePath);
 
-    expect(loaded.meta.schemaVersion).toBe(13);
+    expect(loaded.meta.schemaVersion).toBe(14);
     expect(loaded.investmentEntries).toMatchObject([{
       investmentId, kind: "contribution_correction", amount: 42,
     }]);
@@ -344,7 +401,7 @@ describe("ExcelWorkbookRepository", () => {
     const migrated = await repository.loadWithUuidRepair(filePath);
 
     expect(migrated.migratedSchema).toBe(true);
-    expect(migrated.data.meta.schemaVersion).toBe(13);
+    expect(migrated.data.meta.schemaVersion).toBe(14);
     expect(migrated.data.recurringRateChanges).toEqual([]);
     expect(migrated.data.recurringItems[0]).toMatchObject({ id: recurringId, amount: 75 });
     expect(migrated.data.transactions.find((item) => item.id === transactionId)).toMatchObject({ amount: 75, planned: true });
@@ -392,7 +449,7 @@ describe("ExcelWorkbookRepository", () => {
 
     const migrated = await repository.load(filePath);
 
-    expect(migrated.meta.schemaVersion).toBe(13);
+    expect(migrated.meta.schemaVersion).toBe(14);
     expect(migrated.transactions.find((item) => item.id === plannedTransactionId)?.dueDate).toBe("2026-08-15");
     expect(migrated.propertyEntries.find((item) => item.id === plannedEntryId)?.dueDate).toBe("2026-08-15");
     expect(migrated.transactions.find((item) => item.id === confirmedTransactionId)?.dueDate).toBeUndefined();
@@ -654,7 +711,7 @@ describe("ExcelWorkbookRepository", () => {
 
     const migrated = await repository.load(filePath);
     const imu = migrated.taxTypes.find((item) => item.name === "IMU")!;
-    expect(migrated.meta.schemaVersion).toBe(13);
+    expect(migrated.meta.schemaVersion).toBe(14);
     expect(migrated.propertyEntries[0]).toMatchObject({ taxTypeId: imu.id, taxInstallmentNumber: 2, amount: 350 });
   });
 
@@ -695,7 +752,7 @@ describe("ExcelWorkbookRepository", () => {
     await workbook.xlsx.writeFile(filePath);
 
     const migrated = await repository.load(filePath);
-    expect(migrated.meta.schemaVersion).toBe(13);
+    expect(migrated.meta.schemaVersion).toBe(14);
     expect(migrated.propertyAnnualSummaries[0]).toMatchObject({ phoneInternetCost: 0, condominiumCost: 0 });
   });
 });

@@ -168,8 +168,8 @@ export function migrateFinanceData(rawValue: unknown): FinanceData {
   const raw = structuredClone(rawValue) as RawRecord;
   const meta = raw.meta as RawRecord | undefined;
   const version = Number(meta?.schemaVersion);
-  if (version === 13) return financeDataSchema.parse(raw);
-  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11 && version !== 12) || !meta) throw new Error("INVALID_WORKBOOK_SCHEMA");
+  if (version === 14) return financeDataSchema.parse(raw);
+  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11 && version !== 12 && version !== 13) || !meta) throw new Error("INVALID_WORKBOOK_SCHEMA");
 
   if (version === 1) {
     const categories = list(raw.categories);
@@ -235,8 +235,14 @@ export function migrateFinanceData(rawValue: unknown): FinanceData {
   raw.propertyAnnualSummaries = list(raw.propertyAnnualSummaries).map((item) => ({
     phoneInternetCost: 0,
     condominiumCost: 0,
+    condominiumColdWaterCubicMeters: 0,
+    condominiumHotWaterCubicMeters: 0,
+    condominiumColdWaterCoverage: "none",
+    condominiumHotWaterCoverage: "none",
+    condominiumWaterCost: 0,
     ...item,
   }));
+  raw.propertyWaterReadings = [];
   if (version <= 7) {
     migrateInvestmentCashAccounts(raw);
     migrateLinkedRecordAccounts(raw);
@@ -246,6 +252,6 @@ export function migrateFinanceData(rawValue: unknown): FinanceData {
   if (version <= 11) {
     raw.investments = list(raw.investments).map((item) => ({ ...item, isin: undefined }));
   }
-  meta.schemaVersion = 13;
+  meta.schemaVersion = 14;
   return financeDataSchema.parse(raw);
 }

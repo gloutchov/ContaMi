@@ -16,7 +16,7 @@ import {
   type WorkbookRevisionState,
 } from "./WorkbookRevisionGuard";
 import { preflightXlsxWorkbook } from "./XlsxWorkbookPreflight";
-import { WORKBOOK_SCHEMA_VERSION, WORKBOOK_TABLES, WORKBOOK_TABLES_V1, WORKBOOK_TABLES_V10, WORKBOOK_TABLES_V11, WORKBOOK_TABLES_V12, WORKBOOK_TABLES_V2, WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V5, WORKBOOK_TABLES_V6, WORKBOOK_TABLES_V7, WORKBOOK_TABLES_V8, WORKBOOK_TABLES_V9, type WorkbookTableDefinition } from "./workbookSchema";
+import { WORKBOOK_SCHEMA_VERSION, WORKBOOK_TABLES, WORKBOOK_TABLES_V1, WORKBOOK_TABLES_V10, WORKBOOK_TABLES_V11, WORKBOOK_TABLES_V12, WORKBOOK_TABLES_V13, WORKBOOK_TABLES_V2, WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V5, WORKBOOK_TABLES_V6, WORKBOOK_TABLES_V7, WORKBOOK_TABLES_V8, WORKBOOK_TABLES_V9, type WorkbookTableDefinition } from "./workbookSchema";
 
 const HEADER_FILL = "FF073B4C";
 const ACCENT_FILL = "FF74D6B1";
@@ -84,7 +84,7 @@ function configureDataSheet(sheet: ExcelJS.Worksheet, definition: WorkbookTableD
     }
   });
   for (const column of definition.dateColumns ?? []) sheet.getColumn(column).numFmt = "yyyy-mm-dd";
-  for (const column of ["amount", "openingBalance", "purchasePrice", "salePrice", "fuelUnitPrice", "cadastralValue", "expectedMonthlyRent", "periodicAmount", "ownerShare", "partnerShare", "income", "expenses", "netCashFlow", "closingNetWorth", "liquidBalance", "propertyValue", "investmentValue", "pensionValue", "monthlyRecurring", "vehicleCosts", "closingValue", "contributions", "withdrawals", "totalCosts", "fuelCosts", "installments", "taxes", "insurance", "tires", "maintenance", "repairs", "electricityCost", "gasCost", "waterCost", "phoneInternetCost", "condominiumCost", "valuePerSqm"]) {
+  for (const column of ["amount", "openingBalance", "purchasePrice", "salePrice", "fuelUnitPrice", "cadastralValue", "expectedMonthlyRent", "periodicAmount", "ownerShare", "partnerShare", "income", "expenses", "netCashFlow", "closingNetWorth", "liquidBalance", "propertyValue", "investmentValue", "pensionValue", "monthlyRecurring", "vehicleCosts", "closingValue", "contributions", "withdrawals", "totalCosts", "fuelCosts", "installments", "taxes", "insurance", "tires", "maintenance", "repairs", "electricityCost", "gasCost", "waterCost", "phoneInternetCost", "condominiumCost", "valuePerSqm", "totalCost", "coldCost", "hotCost", "condominiumWaterCost", "condominiumColdWaterCost", "condominiumHotWaterCost"]) {
     if (definition.columns.includes(column)) sheet.getColumn(column).numFmt = '#,##0.00 [$€-it-IT]';
   }
   if (definition.columns.includes("ownershipShare")) sheet.getColumn("ownershipShare").numFmt = "0%";
@@ -143,6 +143,7 @@ function addSchemaSheet(workbook: ExcelJS.Workbook): void {
     Transactions: ["Entrate, uscite e trasferimenti, inclusi quelli interni tra conto e Cassa.", "Income, expenses, and transfers, including internal account-to-cash-register transfers."],
     Properties: ["Anagrafica degli immobili.", "Property registry."],
     "Property Entries": ["Entrate, spese, valutazioni e consumi degli immobili.", "Property income, expenses, valuations and consumption."],
+    "Property Water Readings": ["Letture statistiche di acqua fredda e calda già incluse nelle spese condominiali.", "Statistical cold and hot water readings already included in condominium charges."],
     Investments: ["Anagrafica di investimenti e pensioni integrative, con pensioni raccoglitore e comparti collegati.", "Investment and private-pension registry, including pension collectors and linked compartments."],
     "Investment Entries": ["Versamenti, liquidazioni, valutazioni e rilevazioni delle quote di investimenti e comparti pensione.", "Contributions, liquidations, valuations, and unit snapshots for investments and pension compartments."],
     "Recurring Items": ["Abbonamenti, servizi, rate e versamenti periodici.", "Subscriptions, services, installments and recurring contributions."],
@@ -237,6 +238,8 @@ export class ExcelWorkbookRepository {
                           ? WORKBOOK_TABLES_V11
                           : schemaVersion === 12
                             ? WORKBOOK_TABLES_V12
+                          : schemaVersion === 13
+                            ? WORKBOOK_TABLES_V13
                             : schemaVersion === WORKBOOK_SCHEMA_VERSION
                               ? WORKBOOK_TABLES
                               : undefined;

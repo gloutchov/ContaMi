@@ -8,6 +8,7 @@ import {
   investmentTypeSchema,
   paymentMethodSchema,
   propertyEntrySchema,
+  propertyWaterReadingSchema,
   propertySchema,
   recurringItemSchema,
   recurringRateChangeSchema,
@@ -148,6 +149,8 @@ export const financeCommandSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("updateProperty"), value: propertySchema }),
   z.object({ type: z.literal("addPropertyEntry"), value: propertyEntrySchema }),
   z.object({ type: z.literal("updatePropertyEntry"), value: propertyEntrySchema }),
+  z.object({ type: z.literal("addPropertyWaterReading"), value: propertyWaterReadingSchema }),
+  z.object({ type: z.literal("updatePropertyWaterReading"), value: propertyWaterReadingSchema }),
   z.object({ type: z.literal("addPropertyEntryWithSharedExpense"), value: propertyEntryWithSharedExpenseSchema }),
   z.object({ type: z.literal("updatePropertyEntryWithSharedExpense"), value: propertyEntryWithSharedExpenseSchema }),
   z.object({ type: z.literal("addPropertyRentRecurring"), value: propertyRentRecurringBundleSchema }),
@@ -189,7 +192,7 @@ export const financeCommandSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("updateTaxType"), value: taxTypeSchema }),
   z.object({
     type: z.literal("deleteEntity"),
-    entity: z.enum(["transaction", "account", "property", "propertyEntry", "investment", "investmentEntry", "recurringItem", "sharedExpense", "vehicle", "vehicleEntry", "category", "paymentMethod", "investmentType", "taxType"]),
+    entity: z.enum(["transaction", "account", "property", "propertyEntry", "propertyWaterReading", "investment", "investmentEntry", "recurringItem", "sharedExpense", "vehicle", "vehicleEntry", "category", "paymentMethod", "investmentType", "taxType"]),
     id: entityId,
   }),
   z.object({

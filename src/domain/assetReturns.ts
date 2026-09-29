@@ -478,6 +478,11 @@ function currentPropertySummary(data: FinanceData, propertyId: string, asOf: str
     electricityCost: 0,
     gasCost: 0,
     waterCost: 0,
+    condominiumColdWaterCubicMeters: 0,
+    condominiumHotWaterCubicMeters: 0,
+    condominiumColdWaterCoverage: "none",
+    condominiumHotWaterCoverage: "none",
+    condominiumWaterCost: 0,
     phoneInternetCost: 0,
     condominiumCost: 0,
   };

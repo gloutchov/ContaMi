@@ -6,6 +6,7 @@ import type {
 } from "./models";
 import { confirmedInvestmentEntries, isRolloverOpeningValuation, latestInvestmentValue } from "./investments";
 import { isCondominiumCost, isPropertyUtilityCost, propertyConsumptionQuantity } from "./propertyMetrics";
+import { propertyWaterStatistics } from "./propertyWater";
 
 const total = (values: number[]) => values.reduce((sum, value) => sum + value, 0);
 
@@ -39,6 +40,7 @@ export function createPropertyAnnualSummaries(data: FinanceData): PropertyAnnual
     const utilityCost = (kind: "electricity" | "gas" | "water" | "phoneInternet") => total(entries
       .filter((entry) => isPropertyUtilityCost(entry, kind))
       .map((entry) => entry.amount));
+    const water = propertyWaterStatistics(data, property.id, year);
     return {
       propertyId: property.id,
       year,
@@ -51,6 +53,16 @@ export function createPropertyAnnualSummaries(data: FinanceData): PropertyAnnual
       electricityCost: utilityCost("electricity"),
       gasCost: utilityCost("gas"),
       waterCost: utilityCost("water"),
+      condominiumColdWaterCubicMeters: water.coldCubicMeters,
+      condominiumHotWaterCubicMeters: water.hotCubicMeters,
+      condominiumColdWaterCoverage: water.coldCoverage,
+      condominiumHotWaterCoverage: water.hotCoverage,
+      condominiumWaterCost: water.totalCost,
+      condominiumColdWaterCost: water.coldCost,
+      condominiumHotWaterCost: water.hotCost,
+      condominiumClosingReadingDate: water.closingReadingDate,
+      condominiumColdClosingMeterReading: water.coldClosingMeterReading,
+      condominiumHotClosingMeterReading: water.hotClosingMeterReading,
       phoneInternetCost: utilityCost("phoneInternet"),
       condominiumCost: total(entries.filter((entry) => isCondominiumCost(entry)).map((entry) => entry.amount)),
     };
