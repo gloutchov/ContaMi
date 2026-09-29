@@ -62,12 +62,13 @@ ContaMì/
 │   │   ├── operationalDataRepair.ts     # riparazione conservativa conti mancanti e piani rateali conclusi
 │   │   ├── propertyMetrics.ts          # classificazione utenze/condominio per immobili
 │   │   ├── propertyReport.ts           # aggregazioni mensili/annuali, previsioni e quote dei report immobili
+│   │   ├── propertyWater.ts            # consumi progressivi, copertura e statistiche acqua condominiale
 │   │   ├── rent.ts                     # stato rate affitto da competenza e incasso effettivo
 │   │   ├── recurringRates.ts           # tariffa per decorrenza, anteprima e protezione dello storico
 │   │   ├── vehicleEntries.ts           # lettura precedente, percorrenza e litri suggeriti per le registrazioni Automobile
 │   │   ├── vehicleInstallments.ts      # unicità, ciclo di vita e protezione dello storico dei finanziamenti auto
-│   │   ├── migrations.ts               # migrazione workbook v1–v12 → v13, con quote precedenti ignote
-│   │   ├── models.ts                   # schema Zod v13 e modello finanziario
+│   │   ├── migrations.ts               # migrazione workbook v1–v13 → v14, inclusi valori acqua conservativi
+│   │   ├── models.ts                   # schema Zod v14 e modello finanziario
 │   │   ├── uuidRepair.ts               # unicità UUID e riallineamento conservativo dei collegamenti
 │   │   └── rollover.ts                 # passaggio d’anno, rendimenti e saldo quote noti, rate e affitti
 │   ├── infrastructure/
@@ -117,6 +118,7 @@ ContaMì/
 │   │   │   ├── PensionForms.tsx     # pensioni-raccoglitore e comparti associati
 │   │   │   ├── PropertyForms.tsx   # immobili e registrazioni generiche, incluse spese condivise automatiche
 │   │   │   ├── PropertyExpenseForms.tsx # utenze/tasse, consumi e quote condivise
+│   │   │   ├── PropertyWaterReadingForm.tsx # letture acqua statistiche senza movimenti finanziari
 │   │   │   ├── CatalogForms.tsx     # categorie, metodi, tipi investimento e tasse configurabili
 │   │   │   └── VehicleForms.tsx     # anagrafica automobile e costi/consumi
 │   │   ├── i18n/                       # dizionari IT/EN e provider lingua
@@ -192,7 +194,7 @@ ContaMì/
 │       ├── import-preview-dialog.test.tsx # riepilogo IT/EN e conferma accessibile
 │       ├── taxTypes.test.ts              # CRUD, archiviazione e vincoli del catalogo tasse
 │       ├── linkedRecords.test.ts         # collegamenti, limiti e chiusura delle ricorrenze
-│       ├── migrations.test.ts            # compatibilità schema v1–v12 → v13 e idempotenza
+│       ├── migrations.test.ts            # compatibilità schema v1–v13 → v14 e idempotenza
 │       ├── investmentUnitChart.test.tsx   # grafico quote e messaggio saldo sconosciuto IT/EN
 │       ├── investmentUnits.test.ts       # quote datate, movimenti, rollover e confini monetari
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
@@ -246,7 +248,7 @@ Renderer UI ──typed bridge──> Preload ──validated IPC──> Main se
      └── shared contracts <── Domain rules ───────────────┤
                                                           ├── Settings
                                                           └── Spreadsheet adapters
-                                                               ├── canonical .xlsx v9 + migrations
+                                                               ├── canonical .xlsx v14 + migrations
                                                                └── optional .numbers mirror
 ```
 
