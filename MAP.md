@@ -222,8 +222,8 @@ ContaMì/
 ├── eslint.config.js                     # qualità TypeScript/React
 ├── playwright.config.ts                 # browser QA riproducibile a 1080 px
 ├── playwright.landing.config.ts         # QA landing su server statico senza live reload
-├── tsconfig.json                        # compilazione e tipi
-├── vite.config.ts                       # build renderer
+├── tsconfig.json                        # compilazione, tipi e import TypeScript espliciti nella configurazione
+├── vite.config.ts                       # build renderer, CSP e caricamento Vite nativo compatibile
 └── vitest.config.ts                     # test unitari e integrazione
 
 Generati, non versionati / Generated, not versioned:

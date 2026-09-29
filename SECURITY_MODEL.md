@@ -1,6 +1,6 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-09-29 · Applicazione / Application: 1.22.0
+Versione del documento / Document version: 2026-09-29 · Applicazione / Application: 1.22.1
 
 ## Italiano
 
@@ -47,6 +47,7 @@ Non sono risolvibili dall’app, da soli, un sistema operativo compromesso, malw
 
 - In produzione la sessione Electron annulla richieste `http`, `https`, `ws` e `wss`.
 - La Content Security Policy di produzione consente script, fogli di stile, immagini e font soltanto locali; `style-src-attr 'none'` rifiuta ogni attributo di stile, `connect-src 'none'` rifiuta le connessioni e `object-src`, `base-uri`, `form-action` e `frame-src` sono disabilitati. In sviluppo la sola eccezione aggiuntiva è `style-src-elem 'unsafe-inline'`, necessaria ai fogli iniettati da Vite, insieme alla connessione al server locale; gli attributi `style` restano negati.
+- La patch 1.22.1 rende esplicita l'estensione TypeScript dell'import CSP usato soltanto dalla configurazione Vite e abilita il relativo controllo `noEmit`. Il loader standard e quello nativo caricano la stessa funzione; policy, renderer di produzione, privilegi e capacità di rete non cambiano.
 - Popup, nuove finestre e tentativi di collegare `webview` sono negati; navigazioni fuori dalla pagina corrente, drag-and-drop navigabile e download avviati dal renderer sono bloccati.
 - Tutte le richieste e le verifiche di permesso Electron sono negate.
 - Non vengono caricati font, immagini, script o analytics remoti.
@@ -221,6 +222,8 @@ Threats considered include malformed `.xlsx` input, a compromised renderer attem
 ### 4. Network and active content
 
 Production Electron sessions cancel HTTP/HTTPS and WS/WSS requests. The production CSP allows only local scripts, stylesheets, images, and fonts; `style-src-attr 'none'` rejects style attributes, `connect-src 'none'` rejects connections, and objects, base URLs, form submissions, and frames are disabled. Development adds only `style-src-elem 'unsafe-inline'` for Vite-injected styles and the local Vite connection; style attributes remain denied. Popups, webviews, external navigation, navigable drag-and-drop, renderer downloads, permission requests, and permission checks are denied. No remote font, image, script, or analytics endpoint is loaded.
+
+Patch 1.22.1 makes the TypeScript extension explicit for the CSP import used only by the Vite configuration and enables the matching `noEmit` type check. The standard and native loaders load the same function; the policy, production renderer, privileges, and network capabilities do not change.
 
 Themes, bars, and dynamic charts need no inline styles: the theme uses a `data-theme` attribute with local classes, while local SVG charts use validated geometry and presentation attributes, monotone curves, local gradients, responsive dimensions, and local-stylesheet animations that honor `prefers-reduced-motion`. Recharts, which generated runtime styles, has been removed. Source scanning, production-HTML validation, and `app.asar` inspection prevent style attributes or a broader policy from being reintroduced.
 
