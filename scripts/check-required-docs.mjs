@@ -24,7 +24,7 @@ if (lockfile.version !== manifest.version || lockfile.packages?.[""]?.version !=
   throw new Error(`Manifest/lockfile version mismatch for ${manifest.version}`);
 }
 const approvedInstallScripts = Object.entries(manifest.allowScripts ?? {}).filter(([, approved]) => approved).map(([name]) => name).sort();
-const expectedInstallScripts = ["electron-winstaller@5.4.0", "esbuild@0.28.1"];
+const expectedInstallScripts = ["electron-winstaller@5.4.0", "esbuild@0.28.2"];
 if (JSON.stringify(approvedInstallScripts) !== JSON.stringify(expectedInstallScripts)) {
   throw new Error(`Install-script allowlist mismatch: ${JSON.stringify(approvedInstallScripts)}`);
 }

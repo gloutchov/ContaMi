@@ -7,8 +7,8 @@ ContaMì/
 ├── .github/
 │   ├── dependabot.yml                 # aggiornamenti dipendenze / dependency updates
 │   └── workflows/
-│       ├── ci.yml                     # qualità macOS + Windows / cross-platform quality
-│       └── release.yml                # pacchetti, checksum e release / packages and release
+│       ├── ci.yml                     # qualità e audit completo macOS + Windows
+│       └── release.yml                # audit, pacchetti, smoke, checksum e release
 ├── assets/
 │   ├── icon.ico                       # icona Windows / Windows icon
 │   ├── icon.png                       # icona RGBA canonica per macOS, UI e landing
