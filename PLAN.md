@@ -23,7 +23,7 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** M27–M30 sono completate e pubblicate rispettivamente come `v1.17.0`, `v1.18.0`, `v1.19.0` e `v1.20.0`. La sorgente della patch `1.19.1`, dedicata al dominio canonico della landing e al collegamento verso il sito principale, è confluita in `v1.20.0` senza un tag desktop separato. La release M30 e la successiva patch `v1.20.1` dello storico quote hanno CI, packaging e smoke macOS/Windows verdi e checksum verificati. M31 pianifica la revisione degli aggiornamenti Dependabot successivi, senza averli ancora integrati. Le sezioni **Attività pianificate** delle milestone già chiuse conservano il perimetro originario e non rappresentano lavoro ancora da eseguire.
+**Stato corrente:** M27–M30 sono completate e pubblicate rispettivamente come `v1.17.0`, `v1.18.0`, `v1.19.0` e `v1.20.0`. La sorgente della patch `1.19.1`, dedicata al dominio canonico della landing e al collegamento verso il sito principale, è confluita in `v1.20.0` senza un tag desktop separato. La release M30 e la successiva patch `v1.20.1` dello storico quote hanno CI, packaging e smoke macOS/Windows verdi e checksum verificati. M31 pianifica la revisione degli aggiornamenti Dependabot successivi, senza averli ancora integrati. M32 pianifica letture statistiche di acqua fredda e calda per gli immobili di residenza, separate dai movimenti finanziari. Le sezioni **Attività pianificate** delle milestone già chiuse conservano il perimetro originario e non rappresentano lavoro ancora da eseguire.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -67,6 +67,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | M30 — Verifica rendimenti e quantità di quote | `milestone/30-investment-returns-and-quantities` | `1.20.0` | Rilasciata; CI/release macOS e Windows verdi; checksum verificati |
 | Patch storico quote da primo acquisto | `patch/1.20.1-investment-unit-history` | `1.20.1` | Rilasciata; CI/release macOS e Windows verdi; checksum verificati |
 | M31 — Manutenzione dipendenze e catena di rilascio | `milestone/31-dependency-maintenance` | `1.21.0` previsto | Pianificata; aggiornamenti da rivalutare su `main` corrente |
+| M32 — Letture acqua per gli immobili di residenza | `milestone/32-residence-water-readings` | `1.22.0` previsto | Pianificata; nessuna modifica applicativa ancora realizzata |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
@@ -1069,6 +1070,8 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 - [#96](https://github.com/gloutchov/ContaMi/pull/96): `lucide-react` `1.27.0` → `1.46.0`; trattare separatamente il salto di versione e controllare icone, dimensioni e resa in entrambe le lingue e i temi.
 - [#92](https://github.com/gloutchov/ContaMi/pull/92): `softprops/action-gh-release` `3.0.2` → `3.0.3`; verificare il commit SHA nel repository ufficiale e provare packaging, pubblicazione e checksum senza spostare tag pubblicati.
 
+**Verifica locale 2026-09-29:** `npm audit` segnala una vulnerabilità moderata `GHSA-3wwx-pv8p-q78v` in tre versioni transitive di `undici` (`6.28.0` via `node-gyp`, `7.29.0` via Electron e `8.10.0` via `jsdom`). M31 deve rivalutare e risolvere l'advisory sulle dipendenze correnti prima del proprio gate di rilascio; questa pianificazione non modifica `package.json` né il lockfile.
+
 **Attività pianificate**
 
 - Rileggere versioni disponibili, changelog, requisiti Node.js e advisory al momento dell'implementazione. Applicare aggiornamenti separati per area, riesaminando ogni modifica al lockfile e la allowlist degli script npm.
@@ -1085,6 +1088,30 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 **Test richiesti:** `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `node scripts/check-required-docs.mjs`, `npm audit`, Playwright CLI IT/EN e chiaro/scuro; CI e packaging/smoke macOS/Windows, con verifica dei checksum prima della pubblicazione.
 
 **Documentazione:** aggiornare `PLAN.md`, README e manuali IT/EN all'implementazione; `MAP.md` e `SECURITY_MODEL.md` quando cambiano struttura, dipendenze di sicurezza o pipeline. Usare soltanto dati sintetici per test e artifact.
+
+## M32 — Letture acqua per gli immobili di residenza
+
+**Obiettivo:** consentire di annotare acqua fredda e acqua calda, con i relativi costi conoscitivi, quando l'acqua è fornita e addebitata dal condominio. Rendere consultabili consumi e costi per anno senza generare una seconda spesa: la rata condominiale resta l'unico movimento finanziario. L'acqua con utenza autonoma continua a essere registrata tramite **Utenze**.
+
+**Attività pianificate**
+
+- Aggiungere **Lettura Acqua** nelle azioni del dettaglio di un immobile con destinazione **Residenza**. Il modulo registra immobile, periodo di riferimento e data, m³ di acqua fredda e calda, costo totale e, quando il riparto è noto, costi distinti per le due componenti. Non attribuire importi a una componente senza un riparto esplicito. Consentire consultazione, modifica e rimozione con conferma, anche dopo la riapertura del workbook.
+- Conservare queste osservazioni in dati di dominio validati e in una tabella `.xlsx` riconoscibile e documentata, separata da `Transactions` e dagli importi delle `Property Entries` economiche. Nessuna lettura crea o modifica Transazioni, saldi di Conto/Cassa, entrate/uscite, patrimonio, rate condominiali o Spese condivise. Non richiedere categoria, metodo di pagamento o conto. Il salvataggio usa le protezioni esistenti di temporaneo, rilettura, backup, controllo di modifiche esterne e rollback.
+- Definire esplicitamente nel modulo se i m³ immessi rappresentano consumi del periodo o valori progressivi di contatore; per questi ultimi ricavare il consumo solo da due letture compatibili e segnalare prime letture, sostituzioni del contatore e lacune senza inventare m³. Impedire intervalli duplicati o sovrapposti che gonfierebbero i consuntivi e imporre limiti di precisione e grandezza a quantità e costi.
+- Nel dettaglio **Residenza**, mostrare grafici e totali annuali distinti per acqua fredda e calda. Trattare il campo storico **Acqua** delle utenze autonome come **acqua fredda**; non reinterpretare i dati storici come acqua calda. Mostrare chiaramente la provenienza dei costi: **Utenze** è una spesa contabilizzata, **Lettura Acqua** è un costo già incluso nel Condominio. Se nello stesso anno sono presenti entrambe le fonti, evitare sovrapposizioni e non sommare il costo informativo alle spese finanziarie.
+- Estendere i consuntivi annuali e il passaggio d'anno per conservare separatamente m³ freddi, m³ caldi e costi statistici senza duplicare gli aggregati finanziari. Migrare in modo conservativo i workbook precedenti: `waterCubicMeters` e `waterCost` restano riferiti all'acqua fredda dell'utenza; l'acqua calda e i costi condominiali storici restano sconosciuti finché non sono registrati. Verificare anche la presentazione nei report immobili già esistenti.
+- Aggiungere etichette e spiegazioni in italiano e inglese, con stati vuoto, errore e disabilitato leggibili in tema chiaro/scuro, navigazione da tastiera e larghezza minima 1080 px. Nessuna fonte remota di dati o nuovo privilegio al renderer.
+
+**Criteri di accettazione**
+
+- In una Residenza con acqua condominiale, una Lettura Acqua salvata riappare dopo il riavvio; i grafici e i consuntivi mostrano separatamente m³ freddi e caldi e i costi disponibili nell'anno corretto. La stessa registrazione non appare in Transazioni e lascia invariati Conto, Cassa, entrate, uscite e spese condominiali.
+- In una Residenza con utenza autonoma, **Utenze → Acqua** mantiene l'attuale flusso contabile; consumo e costo già presenti compaiono come acqua fredda. In assenza di letture calde, il grafico indica dati mancanti senza suggerire che il consumo sia zero.
+- Dove i costi dell'acqua sono già inclusi nelle rate condominiali, i totali finanziari contano solo la rata; i costi informativi restano visibili separatamente e non alterano nemmeno i report per proprietari. Letture sovrapposte, numeri non validi e assenze di baseline non generano consumi inventati.
+- Migrazione, seconda apertura, round-trip `.xlsx`, copia `.numbers` ove disponibile e rollover preservano dati e separazione contabile. La UI funziona in IT/EN, chiaro/scuro e a 1080 px.
+
+**Test richiesti:** unit test sintetici per quantità, costi, periodi sovrapposti e invarianti dei saldi; integrazione per migrazione, persistenza, round-trip workbook e rollover; regressione dei consuntivi e dei report immobili; Playwright CLI su inserimento, modifica, grafici e stati in IT/EN e chiaro/scuro; `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `node scripts/check-required-docs.mjs` e `npm audit`, seguiti dai gate CI e packaging macOS/Windows prima del rilascio.
+
+**Documentazione:** aggiornare `PLAN.md`, README, manuali IT/EN, specifica workbook, MAP e `SECURITY_MODEL.md` all'implementazione per nuovo schema, migrazione e persistenza. Checkpoint desktop previsto `1.22.0` dopo M31; usare solo dati sintetici in test, documentazione e artifact.
 
 ## Patch grafici, menu release e integrità UUID
 
