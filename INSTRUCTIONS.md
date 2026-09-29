@@ -298,6 +298,6 @@ See [SECURITY_MODEL.md](SECURITY_MODEL.md) for technical controls and residual r
 
 Close ContaMì and keep a workbook copy before updating, then install the new release over the old one.
 
-Version 1.22.0 adds statistical Residence Water readings and migrates the workbook to schema v14. Their costs stay separate from financial movements. Keeping a copy first remains recommended for every update.
+Version 1.22.1 fixes a Vite development-configuration warning and does not change app data, workbooks, or features. Version 1.22.0 adds statistical Residence Water readings and migrates the workbook to schema v14. Their costs stay separate from financial movements. Keeping a copy first remains recommended for every update.
 
 To remove the app on macOS, close ContaMì and move `Contami` from **Applications** to the Trash. On Windows open **Settings → Apps → Installed apps**, find `Contami`, and choose **Uninstall**. Removing the app does not delete user-selected workbooks or `.contami-backups`; they stay in their folders and should be removed only manually after reviewing their contents.

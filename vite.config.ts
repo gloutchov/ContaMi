@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { buildRendererContentSecurityPolicy } from "./src/config/rendererCsp";
+import { buildRendererContentSecurityPolicy } from "./src/config/rendererCsp.ts";
 
 export default defineConfig(({ command }) => ({
   plugins: [
