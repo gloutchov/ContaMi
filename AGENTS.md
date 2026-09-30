@@ -54,7 +54,8 @@ npm audit
 ## Git, milestone e release
 
 - Usa branch `milestone/<numero>-<slug>` o `patch/<versione>-<slug>` e commit piccoli, intenzionali.
-- Il proprietario ha autorizzato la progressione autonoma tra milestone; chiedi conferma soltanto per credenziali, permessi di sistema o altre azioni sensibili non già autorizzate.
+- Usa l'account GitHub privato `gloutchov` e l'email autore `gloutchov@gmail.com` per questo repository. Se l'email Git configurata è diversa, imposta `user.email` a `gloutchov@gmail.com` nella configurazione locale del repository prima di commit, push, PR, tag o release; questo riferimento esplicito vale anche in caso di discrepanza. Se l'account GitHub autenticato non è `gloutchov` o non può essere verificato, fermati e chiedi conferma.
+- Il proprietario ha autorizzato la progressione autonoma tra milestone. Alla chiusura di una milestone o patch, congela il branch sul commit finale locale e presenta hash, diff, test ed eventuali limiti: merge, tag, push, release e rimozione del branch richiedono il controllo personale di quel preciso commit e l'approvazione esplicita del proprietario. Una modifica successiva richiede un nuovo controllo e una nuova approvazione.
 - Aggiorna insieme codice, test, `PLAN.md`, manuali, `MAP.md` e `SECURITY_MODEL.md` quando pertinenti.
 - Non pubblicare release finché CI macOS/Windows, artifact e checksum non sono verificati.
 - Le build restano non firmate finché non esiste un processo documentato con credenziali fornite esplicitamente.
