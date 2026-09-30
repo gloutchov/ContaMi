@@ -12,10 +12,18 @@ function roundToThousandths(value: number): number {
   return Math.round((value + Number.EPSILON) * 1_000) / 1_000;
 }
 
-function entryIsConfirmed(data: FinanceData, entry: FinanceData["vehicleEntries"][number]): boolean {
-  return !data.transactions.find((transaction) => (
+export function isConfirmedVehicleEntry(data: FinanceData, entry: FinanceData["vehicleEntries"][number]): boolean {
+  return !data.transactions.some((transaction) => transaction.planned && (
     transaction.id === entry.transactionId || transaction.vehicleEntryId === entry.id
-  ))?.planned;
+  ));
+}
+
+export function confirmedVehicleEntries(data: FinanceData): FinanceData["vehicleEntries"] {
+  const plannedTransactions = data.transactions.filter((transaction) => transaction.planned);
+  const plannedTransactionIds = new Set(plannedTransactions.map((transaction) => transaction.id));
+  const plannedEntryIds = new Set(plannedTransactions.map((transaction) => transaction.vehicleEntryId));
+  return data.vehicleEntries.filter((entry) => !plannedTransactionIds.has(entry.transactionId ?? "")
+    && !plannedEntryIds.has(entry.id));
 }
 
 export function previousVehicleOdometer(
@@ -29,7 +37,7 @@ export function previousVehicleOdometer(
     && entry.date < date
     && entry.odometerKm !== undefined
     && finiteInRange(entry.odometerKm, 0, MAX_ODOMETER_KM)
-    && entryIsConfirmed(data, entry));
+    && isConfirmedVehicleEntry(data, entry));
 
   if (datedReadings.length > 0) {
     const latestDate = datedReadings.reduce(

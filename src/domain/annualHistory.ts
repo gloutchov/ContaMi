@@ -7,6 +7,7 @@ import type {
 import { confirmedInvestmentEntries, isRolloverOpeningValuation, latestInvestmentValue } from "./investments";
 import { isCondominiumCost, isPropertyUtilityCost, propertyConsumptionQuantity } from "./propertyMetrics";
 import { propertyWaterStatistics } from "./propertyWater";
+import { confirmedVehicleEntries } from "./vehicleEntries";
 
 const total = (values: number[]) => values.reduce((sum, value) => sum + value, 0);
 
@@ -92,8 +93,10 @@ export function createInvestmentAnnualSummaries(data: FinanceData): InvestmentAn
 
 export function createVehicleAnnualSummaries(data: FinanceData): VehicleAnnualSummary[] {
   const year = data.meta.activeYear;
+  const confirmedEntries = confirmedVehicleEntries(data);
   return data.vehicles.map((vehicle) => {
-    const entries = data.vehicleEntries.filter((entry) => entry.vehicleId === vehicle.id && entry.date.startsWith(String(year)));
+    const entries = confirmedEntries.filter((entry) => entry.vehicleId === vehicle.id
+      && entry.date.startsWith(String(year)));
     const costs = entries.filter((entry) => entry.kind !== "valuation");
     const byKind = (kind: typeof costs[number]["kind"]) => total(costs.filter((entry) => entry.kind === kind).map((entry) => entry.amount));
     const fuelLiters = total(entries.map((entry) => entry.fuelLiters ?? 0));
