@@ -331,6 +331,6 @@ Vedi [SECURITY_MODEL.md](SECURITY_MODEL.md) per dettagli tecnici e rischi residu
 
 Prima di aggiornare, chiudi ContaMì e conserva una copia del workbook. Installa la nuova release sopra la precedente.
 
-La versione 1.22.1 corregge un avviso della configurazione di sviluppo Vite e non modifica dati, workbook o funzioni dell'app. La versione 1.22.0 introduce le Letture Acqua statistiche delle Residenze e migra il workbook allo schema v14. I costi registrati qui restano separati dai movimenti finanziari. La copia preventiva resta raccomandata come per ogni aggiornamento.
+La versione 1.22.2 mostra il totale e le categorie che compongono il costo/km dell'Automobile, separa gli eventuali costi storici non dettagliati ed esclude le rate pianificate dai costi sostenuti. Non modifica automaticamente i dati storici né lo schema del workbook. La versione 1.22.1 corregge un avviso della configurazione di sviluppo Vite. La copia preventiva resta raccomandata come per ogni aggiornamento.
 
 Per rimuovere l’app su macOS, chiudi ContaMì e sposta `Contami` da **Applicazioni** al Cestino. Su Windows apri **Impostazioni → App → App installate**, cerca `Contami` e scegli **Disinstalla**. La rimozione dell’app non elimina i workbook scelti né `.contami-backups`: restano nelle cartelle dell’utente e vanno eliminati solo manualmente dopo averne verificato il contenuto.
