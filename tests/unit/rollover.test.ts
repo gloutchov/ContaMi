@@ -144,6 +144,15 @@ describe("createRolloverFinanceData", () => {
     current.investmentEntries.push({ id: crypto.randomUUID(), investmentId, date: "2026-12-20", kind: "valuation", amount: 20_000, description: "Year end", notes: "" });
     current.vehicles.push({ id: vehicleId, name: "Synthetic car", manufacturer: "Example", model: "One", fuelType: "hybrid", active: true, notes: "" });
     current.vehicleEntries.push({ id: crypto.randomUUID(), vehicleId, date: "2026-05-10", kind: "fuel", description: "Fuel", amount: 60, distanceKm: 700, fuelLiters: 35, odometerKm: 15_000, notes: "" });
+    const plannedVehicleEntryId = crypto.randomUUID();
+    const plannedVehicleTransactionId = crypto.randomUUID();
+    current.vehicleEntries.push({ id: plannedVehicleEntryId, vehicleId, date: "2026-12-10", kind: "installment", description: "Planned car rate", amount: 150, transactionId: plannedVehicleTransactionId, notes: "" });
+    current.transactions.push({
+      id: plannedVehicleTransactionId, date: "2026-12-10", description: "Planned car rate",
+      categoryId: current.categories[2].id, paymentMethodId: current.paymentMethods[0].id,
+      accountId, vehicleId, vehicleEntryId: plannedVehicleEntryId, kind: "expense", amount: 150,
+      currency: "EUR", planned: true, notes: "", createdAt: now, updatedAt: now,
+    });
     current.recurringItems.push(
       { id: activeRecurringId, name: "Active", kind: "subscription", amount: 10, frequency: "monthly", categoryId: current.categories[7].id, paymentMethodId: current.paymentMethods[0].id, nextDueDate: "2026-12-10", active: true, notes: "" },
       { id: crypto.randomUUID(), name: "Finished", kind: "installment", amount: 10, frequency: "monthly", categoryId: current.categories[7].id, paymentMethodId: current.paymentMethods[0].id, nextDueDate: "2026-12-10", remainingInstallments: 0, active: true, notes: "" },
@@ -167,7 +176,7 @@ describe("createRolloverFinanceData", () => {
     expect(next.recurringItems[0].nextDueDate.startsWith("2027-")).toBe(true);
     expect(next.sharedExpenses.map((item) => item.description)).toEqual(["Pending"]);
     expect(next.taxTypes[0]).toMatchObject({ name: "Legacy TV levy", active: false });
-    expect(next.annualSummaries).toMatchObject([{ year: 2026, income: 500, expenses: 125, netCashFlow: 375 }]);
+    expect(next.annualSummaries).toMatchObject([{ year: 2026, income: 500, expenses: 125, netCashFlow: 375, vehicleCosts: 60 }]);
     expect(next.propertyAnnualSummaries).toMatchObject([{ propertyId, year: 2026, electricityKwh: 1250 }]);
     expect(next.investmentAnnualSummaries).toMatchObject([{ investmentId, year: 2026, closingValue: 20_000 }]);
     expect(next.vehicleAnnualSummaries).toMatchObject([{ vehicleId, year: 2026, totalCosts: 60, fuelCosts: 60, distanceKm: 700, fuelLiters: 35, averageKmPerLiter: 20 }]);

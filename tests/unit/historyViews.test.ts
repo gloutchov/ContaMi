@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createEmptyFinanceData } from "../../src/domain/finance";
 import { investmentValueHistory, investmentValueTimeline } from "../../src/renderer/utils/investmentHistory";
 import { calculatePropertyValuation, filterPropertyEntries, propertyCashFlowTimeline, propertyEntryMonths, propertyValueTimeline } from "../../src/renderer/utils/propertyHistory";
-import { vehicleCostComparison, vehicleHistory, vehicleLifetimeSummary } from "../../src/renderer/utils/vehicleHistory";
+import { vehicleCostComparison, vehicleHistory, vehicleLifetimeSummary, vehicleUnitemizedCosts } from "../../src/renderer/utils/vehicleHistory";
 
 describe("historical view helpers", () => {
   it("filters property entries by month and description", () => {
@@ -145,5 +145,34 @@ describe("historical view helpers", () => {
     expect(vehicleHistory(data, vehicleId)).toHaveLength(2);
     expect(vehicleLifetimeSummary(data, vehicleId)).toMatchObject({ totalCosts: 1_250, fuelCosts: 600, distanceKm: 5_400, closingOdometer: 90_900 });
     expect(vehicleCostComparison(data)).toEqual([{ vehicleId, label: "Previous car", costPerKm: 1_250 / 5_400, totalCosts: 1_250, distanceKm: 5_400 }]);
+  });
+
+  it("reconciles the cost-per-kilometre numerator with unitemized history and excludes plans", () => {
+    const data = createEmptyFinanceData(2026);
+    const vehicleId = crypto.randomUUID();
+    const plannedEntryId = crypto.randomUUID();
+    const transactionId = crypto.randomUUID();
+    const timestamp = new Date().toISOString();
+    data.vehicles.push({ id: vehicleId, name: "Synthetic car", manufacturer: "", model: "", fuelType: "petrol", active: true, notes: "" });
+    data.vehicleAnnualSummaries.push({
+      vehicleId, year: 2025, totalCosts: 1_000, fuelCosts: 200, installments: 300, taxes: 100,
+      insurance: 100, tires: 0, maintenance: 0, repairs: 0, fuelLiters: 100, distanceKm: 2_000,
+    });
+    data.vehicleEntries.push(
+      { id: crypto.randomUUID(), vehicleId, date: "2026-03-10", kind: "fuel", description: "Fuel", amount: 50, distanceKm: 500, fuelLiters: 25, notes: "" },
+      { id: crypto.randomUUID(), vehicleId, date: "2026-04-10", kind: "other", description: "Other", amount: 25, notes: "" },
+      { id: plannedEntryId, vehicleId, date: "2026-10-10", kind: "installment", description: "Plan", amount: 200, transactionId, notes: "" },
+    );
+    data.transactions.push({
+      id: transactionId, date: "2026-10-10", description: "Plan", kind: "expense",
+      categoryId: data.categories.find((item) => item.kind === "expense")!.id,
+      paymentMethodId: data.paymentMethods[0].id, vehicleId, vehicleEntryId: plannedEntryId,
+      amount: 200, currency: "EUR", planned: true, notes: "", createdAt: timestamp, updatedAt: timestamp,
+    });
+
+    const summary = vehicleLifetimeSummary(data, vehicleId);
+    expect(summary).toMatchObject({ totalCosts: 1_075, fuelCosts: 250, installments: 300, distanceKm: 2_500 });
+    expect(vehicleUnitemizedCosts(summary)).toBe(325);
+    expect(vehicleCostComparison(data)[0].costPerKm).toBe(1_075 / 2_500);
   });
 });

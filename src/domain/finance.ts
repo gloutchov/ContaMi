@@ -20,6 +20,7 @@ import type { AnnualSummary, FinanceData } from "./models";
 import { financeDataSchema } from "./models";
 import { repairOperationalData } from "./operationalDataRepair";
 import { waterReadingOverlaps } from "./propertyWater";
+import { confirmedVehicleEntries } from "./vehicleEntries";
 import {
   assertConfirmedRatesUnchanged,
   recurringRateChangesFor,
@@ -933,6 +934,7 @@ export function createAnnualSummary(data: FinanceData): AnnualSummary {
     netCashFlow: metrics.yearIncome - metrics.yearExpenses, closingNetWorth: metrics.netWorth,
     liquidBalance: metrics.liquidBalance, propertyValue: metrics.propertyValue,
     investmentValue: metrics.investmentValue, pensionValue: metrics.pensionValue, monthlyRecurring: metrics.monthlyRecurring,
-    vehicleCosts: data.vehicleEntries.filter((item) => item.date.startsWith(String(data.meta.activeYear)) && item.kind !== "valuation").reduce((sum, item) => sum + item.amount, 0),
+    vehicleCosts: confirmedVehicleEntries(data).filter((item) => item.date.startsWith(String(data.meta.activeYear))
+      && item.kind !== "valuation").reduce((sum, item) => sum + item.amount, 0),
   };
 }

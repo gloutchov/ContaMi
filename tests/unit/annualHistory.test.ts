@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createPropertyAnnualSummaries, createVehicleAnnualSummaries } from "../../src/domain/annualHistory";
-import { createEmptyFinanceData } from "../../src/domain/finance";
+import { createAnnualSummary, createEmptyFinanceData } from "../../src/domain/finance";
 
 describe("annual detailed history", () => {
   it("aggregates residence utilities and vehicle cost categories", () => {
@@ -34,5 +34,27 @@ describe("annual detailed history", () => {
       condominiumCost: 120,
     });
     expect(createVehicleAnnualSummaries(data)[0]).toMatchObject({ totalCosts: 450, fuelCosts: 50, insurance: 400, averageKmPerLiter: 20 });
+  });
+
+  it("excludes planned vehicle instalments from current and rollover actuals", () => {
+    const data = createEmptyFinanceData(2026);
+    const vehicleId = crypto.randomUUID();
+    const plannedEntryId = crypto.randomUUID();
+    const transactionId = crypto.randomUUID();
+    const timestamp = new Date().toISOString();
+    data.vehicles.push({ id: vehicleId, name: "Synthetic car", manufacturer: "", model: "", fuelType: "petrol", active: true, notes: "" });
+    data.vehicleEntries.push(
+      { id: crypto.randomUUID(), vehicleId, date: "2026-03-10", kind: "fuel", description: "Confirmed fuel", amount: 50, distanceKm: 600, fuelLiters: 30, notes: "" },
+      { id: plannedEntryId, vehicleId, date: "2026-10-10", kind: "installment", description: "Planned instalment", amount: 200, transactionId, notes: "" },
+    );
+    data.transactions.push({
+      id: transactionId, date: "2026-10-10", description: "Planned instalment", kind: "expense",
+      categoryId: data.categories.find((item) => item.kind === "expense")!.id,
+      paymentMethodId: data.paymentMethods[0].id, vehicleId, vehicleEntryId: plannedEntryId,
+      amount: 200, currency: "EUR", planned: true, notes: "", createdAt: timestamp, updatedAt: timestamp,
+    });
+
+    expect(createVehicleAnnualSummaries(data)[0]).toMatchObject({ totalCosts: 50, fuelCosts: 50, installments: 0, distanceKm: 600 });
+    expect(createAnnualSummary(data).vehicleCosts).toBe(50);
   });
 });
