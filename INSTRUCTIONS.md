@@ -143,7 +143,7 @@ In the same form, enable **Manage financing** and enter installment amount, freq
 
 When you enter the **Odometer**, ContaMì suggests **Distance travelled** by subtracting the latest certain earlier reading for the same vehicle; at the start of a year it can use the closing odometer retained in history. The suggestion remains editable, for example after an odometer replacement. For fuel records, entering the amount and **Price per litre** automatically calculates **Litres**, which you can still adjust. **Fuel type** offers Petrol, Diesel, LPG, Methane, Electricity, and Hydrogen; choosing `—` leaves the field empty.
 
-The dashboard shows current-year costs, fuel, and distance. Each vehicle card shows lifetime ownership costs; opening it shows the category breakdown, combinable description/month filters with a filtered total, and yearly comparison. The comparison chart places vehicle names on the horizontal axis and cost per kilometre on the vertical axis, combining detailed current-vehicle records with prior-vehicle actuals.
+The dashboard shows confirmed current-year costs, fuel, and distance. Each vehicle card shows confirmed lifetime costs. The detail reconciles named categories with **Other / unitemized historical costs**, the total, recorded distance, and cost/km, and lists those figures by year. Other costs include Other entries and amounts in older yearly summaries without a separate category. The chart divides confirmed costs by the sum of recorded **Distance travelled**, which can differ from the **Odometer** reading. Planned instalments are labelled in the list but excluded from cost/km and the filtered confirmed total; year rollover does not count them as actual costs before confirmation.
 
 ## 8. Investments and savings
 

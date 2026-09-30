@@ -65,7 +65,7 @@ ContaMì/
 │   │   ├── propertyWater.ts            # consumi progressivi, copertura e statistiche acqua condominiale
 │   │   ├── rent.ts                     # stato rate affitto da competenza e incasso effettivo
 │   │   ├── recurringRates.ts           # tariffa per decorrenza, anteprima e protezione dello storico
-│   │   ├── vehicleEntries.ts           # lettura precedente, percorrenza e litri suggeriti per le registrazioni Automobile
+│   │   ├── vehicleEntries.ts           # conferma delle registrazioni, lettura precedente, percorrenza e litri suggeriti
 │   │   ├── vehicleInstallments.ts      # unicità, ciclo di vita e protezione dello storico dei finanziamenti auto
 │   │   ├── migrations.ts               # migrazione workbook v1–v13 → v14, inclusi valori acqua conservativi
 │   │   ├── models.ts                   # schema Zod v14 e modello finanziario
@@ -131,7 +131,7 @@ ContaMì/
 │   │   │   ├── overviewTransactions.ts # recenti confermati / confirmed recent records
 │   │   │   ├── propertyHistory.ts      # serie, mesi e filtri delle registrazioni immobiliari
 │   │   │   ├── propertyIndicators.ts   # indicatori residenza / residence indicators
-│   │   │   └── vehicleHistory.ts       # serie annuali, vita intera e confronto costo/km per vettura
+│   │   │   └── vehicleHistory.ts       # serie annuali, vita intera, costi non dettagliati e confronto costo/km
 │   │   ├── views/                      # dashboard e liste tematiche lazy-loaded
 │   │   │   ├── OverviewView.tsx     # patrimonio totale/al netto immobili, liquidità e saldo Casse
 │   │   │   ├── TransactionsView.tsx # saldi filtrati puri e riepiloghi ad oggi separati tra conti e Casse

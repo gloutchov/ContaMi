@@ -1,5 +1,6 @@
 import { createVehicleAnnualSummaries } from "../../domain/annualHistory";
 import type { FinanceData, VehicleAnnualSummary } from "../../domain/models";
+import { confirmedVehicleEntries } from "../../domain/vehicleEntries";
 
 export function vehicleHistory(data: FinanceData, vehicleId: string): VehicleAnnualSummary[] {
   const byYear = new Map(
@@ -8,7 +9,8 @@ export function vehicleHistory(data: FinanceData, vehicleId: string): VehicleAnn
       .map((item) => [item.year, item]),
   );
   const current = createVehicleAnnualSummaries(data).find((item) => item.vehicleId === vehicleId);
-  const hasCurrentEntries = data.vehicleEntries.some((item) => item.vehicleId === vehicleId && item.date.startsWith(String(data.meta.activeYear)));
+  const hasCurrentEntries = confirmedVehicleEntries(data).some((item) => item.vehicleId === vehicleId
+    && item.date.startsWith(String(data.meta.activeYear)));
   if (current && hasCurrentEntries) byYear.set(current.year, current);
   return [...byYear.values()].sort((a, b) => a.year - b.year);
 }
@@ -40,6 +42,12 @@ export function vehicleLifetimeSummary(data: FinanceData, vehicleId: string): Ve
     averageKmPerLiter: fuelLiters > 0 ? distanceKm / fuelLiters : undefined,
     closingOdometer,
   };
+}
+
+export function vehicleUnitemizedCosts(summary: VehicleAnnualSummary): number {
+  const categorizedCosts = summary.fuelCosts + summary.installments + summary.taxes
+    + summary.insurance + summary.tires + summary.maintenance + summary.repairs;
+  return Math.round((summary.totalCosts - categorizedCosts) * 100) / 100;
 }
 
 export interface VehicleCostComparisonPoint {

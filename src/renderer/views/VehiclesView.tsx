@@ -2,6 +2,7 @@ import { CarFront, Fuel, Gauge, Pencil, Plus, ReceiptText, Trash2 } from "lucide
 import { useMemo, useState } from "react";
 import type { FinanceCommand } from "../../domain/commands";
 import type { FinanceData, Vehicle, VehicleEntry } from "../../domain/models";
+import { confirmedVehicleEntries } from "../../domain/vehicleEntries";
 import { vehicleHasRecordedHistory } from "../../domain/vehicleInstallments";
 import { DetailDialog } from "../components/DetailDialog";
 import { EntryFilters } from "../components/EntryFilters";
@@ -14,7 +15,7 @@ import { useI18n } from "../i18n/I18nContext";
 import { filterDatedEntries } from "../utils/detailFilters";
 import { formatCurrency, formatDate, todayIso } from "../utils/format";
 import { runUiAction } from "../utils/save";
-import { vehicleCostComparison, vehicleLifetimeSummary } from "../utils/vehicleHistory";
+import { vehicleCostComparison, vehicleHistory, vehicleLifetimeSummary, vehicleUnitemizedCosts } from "../utils/vehicleHistory";
 
 export function VehiclesView({ data, onSave }: { data: FinanceData; onSave: (command: FinanceCommand) => Promise<void> }) {
   const { t, language } = useI18n();
@@ -25,7 +26,9 @@ export function VehiclesView({ data, onSave }: { data: FinanceData; onSave: (com
   const [detailSearch, setDetailSearch] = useState("");
   const [detailMonth, setDetailMonth] = useState("");
   const currentYear = String(data.meta.activeYear);
-  const yearEntries = data.vehicleEntries.filter((item) => item.date.startsWith(currentYear));
+  const confirmedEntries = useMemo(() => confirmedVehicleEntries(data), [data]);
+  const confirmedEntryIds = useMemo(() => new Set(confirmedEntries.map((item) => item.id)), [confirmedEntries]);
+  const yearEntries = confirmedEntries.filter((item) => item.date.startsWith(currentYear));
   const totalCosts = yearEntries.filter((item) => item.kind !== "valuation").reduce((sum, item) => sum + item.amount, 0);
   const fuelCosts = yearEntries.filter((item) => item.kind === "fuel").reduce((sum, item) => sum + item.amount, 0);
   const distance = yearEntries.reduce((sum, item) => sum + (item.distanceKm ?? 0), 0);
@@ -33,6 +36,7 @@ export function VehiclesView({ data, onSave }: { data: FinanceData; onSave: (com
   const entries = useMemo(() => selected ? data.vehicleEntries.filter((item) => item.vehicleId === selected.id).sort((a, b) => b.date.localeCompare(a.date)) : [], [data.vehicleEntries, selected]);
   const filteredEntries = useMemo(() => filterDatedEntries(entries, detailMonth, detailSearch), [entries, detailMonth, detailSearch]);
   const summary = selected ? vehicleLifetimeSummary(data, selected.id) : undefined;
+  const annualHistory = selected ? vehicleHistory(data, selected.id) : [];
   const comparison = useMemo(() => vehicleCostComparison(data), [data]);
   const openEntry = (id: string) => { setEntryVehicleId(id); setEditingEntry(null); };
   const openDetails = (vehicle: Vehicle) => { setDetailSearch(""); setDetailMonth(""); setSelected(vehicle); };
@@ -45,9 +49,29 @@ export function VehiclesView({ data, onSave }: { data: FinanceData; onSave: (com
     {selected && <DetailDialog title={selected.name} onClose={() => setSelected(undefined)} actions={<><button className="secondary-button" onClick={() => { setEditingVehicle(selected); setSelected(undefined); }}>{t("editVehicle")}</button><button className="primary-button" onClick={() => { openEntry(selected.id); setSelected(undefined); }}>{t("newVehicleEntry")}</button></>}>
       <div className="detail-facts"><span><small>{t("manufacturer")}</small><strong>{selected.manufacturer || "—"}</strong></span><span><small>{t("model")}</small><strong>{selected.model || "—"}</strong></span><span><small>{t("fuelType")}</small><strong>{t(selected.fuelType)}</strong></span><span><small>{t("purchasePrice")}</small><strong>{selected.purchasePrice === undefined ? "—" : formatCurrency(selected.purchasePrice, language)}</strong></span></div>
       <section className="vehicle-history"><h3>{t("vehicleComparison")}</h3><TrendBars points={comparison.map((item) => ({ label: item.label, value: item.costPerKm }))} format={(value) => `${formatCurrency(value, language)}/km`} /></section>
-      {summary && <div className="type-totals"><span><small>{t("fuel")}</small><strong>{formatCurrency(summary.fuelCosts, language)}</strong></span><span><small>{t("installment")}</small><strong>{formatCurrency(summary.installments, language)}</strong></span><span><small>{t("insurance")}</small><strong>{formatCurrency(summary.insurance, language)}</strong></span><span><small>{t("tax")}</small><strong>{formatCurrency(summary.taxes, language)}</strong></span><span><small>{t("tires")}</small><strong>{formatCurrency(summary.tires, language)}</strong></span><span><small>{t("maintenance")}</small><strong>{formatCurrency(summary.maintenance + summary.repairs, language)}</strong></span></div>}
-      <EntryFilters activeYear={data.meta.activeYear} search={detailSearch} month={detailMonth} onSearchChange={setDetailSearch} onMonthChange={setDetailMonth} summary={<span>{t("filteredTotal")} <strong>{formatCurrency(filteredEntries.reduce((sum, item) => sum + item.amount, 0), language)}</strong></span>} />
-      <div className="detail-table"><table className="data-table"><thead><tr><th>{t("date")}</th><th>{t("type")}</th><th>{t("description")}</th><th>{t("amount")}</th><th /></tr></thead><tbody>{filteredEntries.map((item) => <tr key={item.id}><td>{formatDate(item.date, language)}</td><td><span className="pill">{t(item.kind)}</span></td><td>{item.description}</td><td>{formatCurrency(item.amount, language)}</td><td><div className="row-actions"><button className="icon-button" aria-label={t("edit")} onClick={() => { setEditingEntry(item); setEntryVehicleId(item.vehicleId); setSelected(undefined); }}><Pencil size={14}/></button><button className="icon-button danger" aria-label={t("delete")} onClick={() => remove("vehicleEntry", item.id)}><Trash2 size={14}/></button></div></td></tr>)}</tbody></table>{!filteredEntries.length && <p className="empty-inline">{t("noFilteredEntries")}</p>}</div>
+      {summary && <>
+        <div className="type-totals">
+          <span><small>{t("fuel")}</small><strong>{formatCurrency(summary.fuelCosts, language)}</strong></span>
+          <span><small>{t("installment")}</small><strong>{formatCurrency(summary.installments, language)}</strong></span>
+          <span><small>{t("insurance")}</small><strong>{formatCurrency(summary.insurance, language)}</strong></span>
+          <span><small>{t("tax")}</small><strong>{formatCurrency(summary.taxes, language)}</strong></span>
+          <span><small>{t("tires")}</small><strong>{formatCurrency(summary.tires, language)}</strong></span>
+          <span><small>{t("maintenance")}</small><strong>{formatCurrency(summary.maintenance + summary.repairs, language)}</strong></span>
+          <span><small>{t("vehicleUnitemizedCosts")}</small><strong>{formatCurrency(vehicleUnitemizedCosts(summary), language)}</strong></span>
+          <span><small>{t("vehicleCosts")}</small><strong>{formatCurrency(summary.totalCosts, language)}</strong></span>
+          <span><small>{t("distanceKm")}</small><strong>{summary.distanceKm.toLocaleString(language, { maximumFractionDigits: 3 })} km</strong></span>
+          <span><small>{t("costPerKm")}</small><strong>{summary.distanceKm > 0 ? `${formatCurrency(summary.totalCosts / summary.distanceKm, language)}/km` : "—"}</strong></span>
+        </div>
+        <p className="meta">{t("vehicleCostBasisHelp")}</p>
+        {annualHistory.length > 0 && <section className="vehicle-history">
+          <h3>{t("vehicleYearlyCosts")}</h3>
+          <div className="detail-table"><table className="data-table"><thead><tr><th>{t("year")}</th><th>{t("vehicleCosts")}</th><th>{t("vehicleUnitemizedCosts")}</th><th>{t("distanceKm")}</th></tr></thead><tbody>
+            {annualHistory.map((item) => <tr key={item.year}><td>{item.year}</td><td>{formatCurrency(item.totalCosts, language)}</td><td>{formatCurrency(vehicleUnitemizedCosts(item), language)}</td><td>{item.distanceKm.toLocaleString(language, { maximumFractionDigits: 3 })} km</td></tr>)}
+          </tbody></table></div>
+        </section>}
+      </>}
+      <EntryFilters activeYear={data.meta.activeYear} search={detailSearch} month={detailMonth} onSearchChange={setDetailSearch} onMonthChange={setDetailMonth} summary={<span>{t("confirmedFilteredTotal")} <strong>{formatCurrency(filteredEntries.filter((item) => confirmedEntryIds.has(item.id) && item.kind !== "valuation").reduce((sum, item) => sum + item.amount, 0), language)}</strong></span>} />
+      <div className="detail-table"><table className="data-table"><thead><tr><th>{t("date")}</th><th>{t("type")}</th><th>{t("description")}</th><th>{t("amount")}</th><th /></tr></thead><tbody>{filteredEntries.map((item) => <tr key={item.id}><td>{formatDate(item.date, language)}</td><td><span className="pill">{t(item.kind)}</span>{!confirmedEntryIds.has(item.id) && <span className="pill">{t("planned")}</span>}</td><td>{item.description}</td><td>{formatCurrency(item.amount, language)}</td><td><div className="row-actions"><button className="icon-button" aria-label={t("edit")} onClick={() => { setEditingEntry(item); setEntryVehicleId(item.vehicleId); setSelected(undefined); }}><Pencil size={14}/></button><button className="icon-button danger" aria-label={t("delete")} onClick={() => remove("vehicleEntry", item.id)}><Trash2 size={14}/></button></div></td></tr>)}</tbody></table>{!filteredEntries.length && <p className="empty-inline">{t("noFilteredEntries")}</p>}</div>
     </DetailDialog>}
     {editingVehicle !== undefined && <VehicleForm data={data} value={editingVehicle ?? undefined} onClose={() => setEditingVehicle(undefined)} onSave={onSave} />}
     {editingEntry !== undefined && <VehicleEntryForm data={data} value={editingEntry ?? undefined} initialVehicleId={entryVehicleId} onClose={() => { setEditingEntry(undefined); setEntryVehicleId(undefined); }} onSave={onSave} />}
