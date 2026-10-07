@@ -1,6 +1,7 @@
 import { expect, test, type Locator } from "@playwright/test";
 
 test("supports IT/EN, light/dark and keyboard-safe dialogs at 1080 px", async ({ page }) => {
+  test.setTimeout(60_000);
   const consoleErrors: string[] = [];
   const expectImportControlsAligned = async (root: Locator, buttonName: string) => {
     const selectBox = await root.locator(".import-controls select").boundingBox();

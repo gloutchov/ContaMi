@@ -35,7 +35,7 @@ ContaMì/
 │   ├── after-pack.mjs                  # chiude eccezioni di rete nel bundle macOS
 │   ├── check-required-docs.mjs         # controllo documenti e file privati
 │   ├── generate-demo-workbook.ts       # workbook sintetico per QA, mai dati reali
-│   ├── inspect-packaged.mjs             # ispezione app.asar e assenza contenuti privati
+│   ├── inspect-packaged.mjs             # ispezione app.asar, contenuti privati e versione minima macOS
 │   ├── numbers-mirror.applescript      # import xlsx in Numbers su macOS
 │   ├── smoke-packaged.mjs              # avvio controllato del pacchetto unpacked macOS/Windows
 │   └── smoke-installed.mjs             # installazione, avvio e rimozione DMG/NSIS in area temporanea

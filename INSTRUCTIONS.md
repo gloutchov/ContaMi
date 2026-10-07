@@ -27,7 +27,7 @@ The app is local-first: it requires no account, uses no cloud service, and sends
 
 ## 2. Requirements and installation
 
-- for builds from source with Electron 44: 64-bit macOS 13 or later; release `v1.22.2` still uses Electron 43;
+- for version 1.23.0 builds with Electron 44: 64-bit macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12;
 - or 64-bit Windows (`x64`);
 - enough space for the app, workbook, and backups;
 - Apple Numbers only if you want a native `.numbers` mirror;
@@ -299,6 +299,6 @@ See [SECURITY_MODEL.md](SECURITY_MODEL.md) for technical controls and residual r
 
 Close ContaMì and keep a workbook copy before updating, then install the new release over the old one.
 
-Version 1.22.2 shows the total and categories behind Vehicle cost/km, separates any unitemized historical costs, and excludes planned instalments from incurred costs. It does not automatically change historical data or the workbook schema. Version 1.22.1 fixes a Vite development-configuration warning. Keeping a copy first remains recommended for every update.
+Version 1.23.0 updates the runtime to Electron 44 and the verified development dependencies without changing features, data, or the workbook schema. It requires macOS 13 or later; macOS 12 users can continue with `v1.22.2`. Version 1.22.2 shows the total and categories behind Vehicle cost/km, separates any unitemized historical costs, and excludes planned instalments from incurred costs. It does not automatically change historical data or the workbook schema. Version 1.22.1 fixes a Vite development-configuration warning. Keeping a copy first remains recommended for every update.
 
 To remove the app on macOS, close ContaMì and move `Contami` from **Applications** to the Trash. On Windows open **Settings → Apps → Installed apps**, find `Contami`, and choose **Uninstall**. Removing the app does not delete user-selected workbooks or `.contami-backups`; they stay in their folders and should be removed only manually after reviewing their contents.
