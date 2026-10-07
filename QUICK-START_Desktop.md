@@ -2,7 +2,7 @@
 
 ## Italiano
 
-Le build dalla sorgente con Electron 44 richiedono macOS 13 o successivo; la release `v1.22.2` usa ancora Electron 43.
+Le build `1.23.0` con Electron 44 richiedono macOS 13 o successivo; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12.
 
 1. Scarica dalla release privata il DMG macOS `arm64`/`x64` oppure l’installer Windows `x64` insieme a `SHA256SUMS.txt`; verifica il checksum e installa il pacchetto seguendo gli avvisi documentati nel manuale.
 2. Avvia ContaMì. Lingua e tema seguono il sistema finché non scegli un override.
@@ -18,7 +18,7 @@ Il workbook è il dato autorevole. Non tenerlo aperto e modificarlo contemporane
 
 ## English
 
-Builds from source with Electron 44 require macOS 13 or later; release `v1.22.2` still uses Electron 43.
+Version 1.23.0 builds with Electron 44 require macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12.
 
 1. From the private release, download the macOS `arm64`/`x64` DMG or Windows `x64` installer together with `SHA256SUMS.txt`; verify the checksum and install the package by following the warning guidance in the manual.
 2. Launch ContaMì. Language and theme follow the system until you choose an override.

@@ -77,12 +77,16 @@ jobs:
           body: |
             ContaMì desktop release for macOS and Windows.
 
+            Questa release usa Electron 44: su macOS richiede la versione 13 o successiva (Intel/Apple Silicon). Chi usa macOS 12 può continuare a usare la precedente v1.22.2. Il pacchetto Windows richiede x64.
+
             Questi artifact sono generati da GitHub Actions senza certificati e senza firma ad-hoc del bundle. Verificare `SHA256SUMS.txt` prima dell’installazione.
 
             - macOS: aprire il DMG e trascinare `Contami` in Applicazioni. Se lo sviluppatore non può essere verificato, usare Impostazioni di Sistema → Privacy e sicurezza → Apri comunque. Non disabilitare Gatekeeper globalmente.
             - Windows: se SmartScreen mostra “PC protetto da Windows”, usare Ulteriori informazioni → Esegui comunque solo dopo aver verificato il checksum. Non disattivare Smart App Control se impedisce l’avvio.
 
             These artifacts are produced by GitHub Actions without certificates and without a bundle-level ad-hoc signature. Verify `SHA256SUMS.txt` before installation.
+
+            This Electron 44 release requires macOS 13 or later (Intel/Apple Silicon). macOS 12 users can continue using the previous v1.22.2 release. The Windows package requires x64.
 
             - macOS: open the DMG and drag `Contami` to Applications. If the developer cannot be verified, use System Settings → Privacy & Security → Open Anyway. Do not disable Gatekeeper globally.
             - Windows: if SmartScreen displays “Windows protected your PC”, use More info → Run anyway only after verifying the checksum. Do not turn off Smart App Control if it blocks the app.

@@ -6,7 +6,7 @@ ContaMì è un’app desktop local-first per gestire finanze personali articolat
 
 ContaMì is a local-first desktop app for managing detailed personal finances while keeping a readable spreadsheet as the durable data source. It is bilingual (Italian/English), follows the system theme, and targets macOS and Windows.
 
-> Stato / Status: **1.22.2 — trasparenza del costo/km Automobile / Vehicle cost per kilometre breakdown (rilasciata / released)** · Licenza / License: **Apache-2.0**
+> Stato sorgente / Source status: **1.23.0 — Electron 44 e manutenzione dipendenze / Electron 44 and dependency maintenance** · Licenza / License: **Apache-2.0**
 
 Sito / Website: [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/) — presentazione bilingue, funzioni, dettagli tecnici, accesso all’ultima release, collegamento diretto al manuale nella lingua selezionata e ritorno al sito principale [glaucosilvestri.it](https://glaucosilvestri.it/). La pubblicazione avviene dal solo contenuto di `docs/` tramite GitHub Pages configurato su `main` + `/docs`, con il dominio personalizzato dichiarato in `docs/CNAME`.
 
@@ -72,7 +72,7 @@ Sito / Website: [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/
 
 Le build di release sono generate da GitHub Actions senza certificati e senza applicare una firma ad-hoc al bundle. Gli artifact sono pubblicati nella sezione Releases:
 
-Le build dalla sorgente con Electron 44 richiedono macOS 13 o successivo (Intel/Apple Silicon); la release `v1.22.2` usa ancora Electron 43. Il pacchetto Windows resta `x64`.
+Le build `1.23.0` con Electron 44 richiedono macOS 13 o successivo (Intel/Apple Silicon). La precedente release `v1.22.2` usa Electron 43 e resta disponibile per macOS 12. Il pacchetto Windows resta `x64`.
 
 1. scarica il pacchetto per macOS o Windows e il file `SHA256SUMS.txt`;
 2. verifica il checksum;
@@ -81,7 +81,7 @@ Le build dalla sorgente con Electron 44 richiedono macOS 13 o successivo (Intel/
 
 Release builds are produced by GitHub Actions without certificates and without applying an ad-hoc signature to the bundle. Artifacts are published under Releases:
 
-Builds from source with Electron 44 require macOS 13 or later (Intel/Apple Silicon); release `v1.22.2` still uses Electron 43. The Windows package remains `x64`.
+Version 1.23.0 builds with Electron 44 require macOS 13 or later (Intel/Apple Silicon). The previous `v1.22.2` release uses Electron 43 and remains available for macOS 12. The Windows package remains `x64`.
 
 1. download the macOS or Windows package and `SHA256SUMS.txt`;
 2. verify the checksum;
