@@ -27,7 +27,8 @@ L’app è local-first: non richiede account, non usa servizi cloud e non invia 
 
 ## 2. Requisiti e installazione
 
-- macOS o Windows a 64 bit;
+- per le build dalla sorgente con Electron 44: macOS 13 o successivo a 64 bit; la release `v1.22.2` usa ancora Electron 43;
+- oppure Windows a 64 bit (`x64`);
 - spazio sufficiente per l’app, il workbook e i backup;
 - Apple Numbers installato solo se vuoi una copia `.numbers` nativa;
 - Excel non è richiesto: ContaMì legge e scrive `.xlsx` direttamente.
