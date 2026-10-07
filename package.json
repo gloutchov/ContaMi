@@ -65,6 +65,7 @@
     "mac": {
       "category": "public.app-category.finance",
       "icon": "assets/icon.png",
+      "minimumSystemVersion": "13.0",
       "artifactName": "Contami-${version}-mac-${arch}.${ext}",
       "extendInfo": {
         "NSAppTransportSecurity": {

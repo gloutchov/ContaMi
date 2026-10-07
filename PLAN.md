@@ -70,8 +70,8 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | M32 — Letture acqua per gli immobili di residenza | `milestone/32-residence-water-readings` | `1.22.0` | Completata e rilasciata; CI/release macOS e Windows verdi; checksum verificati |
 | Patch configurazione Vite con loader nativo | `patch/1.22.1-vite-native-config` | `1.22.1` | Completata e rilasciata; CI/release macOS e Windows verdi; checksum verificati |
 | Patch trasparenza costo/km Automobile | `patch/1.22.2-vehicle-cost-breakdown` | `1.22.2` | Rilasciata; CI/release macOS e Windows verdi; checksum verificati |
-| M33 — Lucide e audit della catena di build, PR #114 | `milestone/33-dependabot-lucide-audit` | nessuna release prevista | Implementata e verificata localmente; review del proprietario in attesa |
-| M34 — Electron 44, PR #112 | `milestone/34-dependabot-electron` | da decidere dopo i gate | Pianificata, dopo M33 |
+| M33 — Lucide e audit della catena di build, PR #114 | `milestone/33-dependabot-lucide-audit` | nessuna release prevista | Integrata; CI main e packaging macOS/Windows verdi, branch rimossi |
+| M34 — Electron 44, PR #112 | `milestone/34-dependabot-electron` | da decidere dopo i gate | In verifica locale, dopo M33 |
 | M35 — Coverage Vitest 5, PR #113 | `milestone/35-dependabot-coverage` | con M36 | Pianificata; gate congiunto con M36 |
 | M36 — Vitest 5, PR #115 | `milestone/36-dependabot-vitest` | da decidere dopo i gate | Pianificata; gate congiunto con M35 |
 
@@ -1175,13 +1175,19 @@ Procedere nell'ordine M33 → M34 → M35/M36. Per ogni passaggio usare dati sin
 
 **Verifica locale 2026-10-07:** il lockfile risolve precisamente `lucide-react@1.49.0`, `@electron/get@5.1.0` anche per `electron-builder`, e `source-map-js@1.2.2`; elimina le vecchie catene `got/cacheable-request/http-cache-semantics` e `global-agent/roarr/sprintf-js`. Passano `npm ci`, baseline Node, lint, typecheck, 300 test in 50 file, build, controllo dei 15 documenti, CSP, `npm audit` con 0 vulnerabilità e 11 test Playwright con IT/EN, chiaro/scuro a 1080 px. Il pacchetto Windows locale supera build, ispezione `app.asar` senza file sensibili e avvio smoke dell'eseguibile unpacked. Restano da verificare CI e packaging/smoke macOS/Windows sul branch remoto; la modifica della major transitiva `@electron/get` rende questo gate obbligatorio. Branch locale `milestone/33-dependabot-lucide-audit`; push e merge attendono il controllo del commit finale previsto da `AGENTS.md`.
 
+**Integrazione 2026-10-07:** il proprietario ha approvato il commit finale `ba2193e`. La [PR #116](https://github.com/gloutchov/ContaMi/pull/116) è stata integrata nel merge `fcffa44` dopo CI verde su [push](https://github.com/gloutchov/ContaMi/actions/runs/37601230639) e [PR](https://github.com/gloutchov/ContaMi/actions/runs/37601299619), e [packaging senza tag](https://github.com/gloutchov/ContaMi/actions/runs/37601311348) verde su macOS/Windows inclusi ispezione, smoke unpacked e installato. Anche la [CI di `main`](https://github.com/gloutchov/ContaMi/actions/runs/37602125597) è verde. La #114 è stata chiusa e il suo branch, insieme al branch M33 locale/remoto, è stato rimosso dopo i gate. Dependabot aveva nel frattempo aggiornato #114 alla successiva `lucide-react@1.52.0`; il lockfile verificato e integrato resta volutamente a `1.49.0`, mentre eventuali versioni future richiedono una valutazione separata. Nessuna release o tag è stata pubblicata.
+
 ## M34 — Aggiornamento Electron 44, PR #112
 
 **Obiettivo:** valutare e adottare Electron 44.5.1 da 43.7.5 solo dopo M33, mantenendo isolamento e funzionamento del pacchetto desktop.
 
 **Attività:** ricreare il lockfile dalla `main` aggiornata, verificare breaking change e compatibilità Node/Builder; eseguire test dei confini Electron, CSP, navigazione e permessi; ispezionare `app.asar` e verificare packaging e smoke di installazione su macOS e Windows. Chiudere #112 soltanto dopo merge della modifica verificata o motivare nel piano l'eventuale rifiuto dell'upgrade.
 
-**Criteri di accettazione:** gate locali obbligatori e `npm audit` verdi; CI e packaging/smoke macOS/Windows verdi; nessuna regressione di sandbox, preload, IPC, CSP, blocchi di rete o salvataggio. Nessuna release o tag senza i gate previsti.
+**Criteri di accettazione:** gate locali obbligatori e `npm audit` verdi; CI e packaging/smoke macOS/Windows verdi; nessuna regressione di sandbox, preload, IPC, CSP, blocchi di rete o salvataggio. Le build Electron 44 dichiarano e codificano macOS 13 come minimo, poiché Electron 44 non supporta macOS 12; la release `v1.22.2` resta su Electron 43. Nessuna release o tag senza i gate previsti.
+
+**Verifica in corso 2026-10-07:** il commit Dependabot della #112 è stato applicato senza modifiche al manifest/lockfile sul branch locale `milestone/34-dependabot-electron`; la CI aggiornata della PR bot è verde su macOS e Windows. Un workflow Release senza tag sul branch bot verifica packaging e smoke su entrambe le piattaforme. Il codice non usa le API Electron 44 modificate per clipboard, certificati client, integrazione di subframe o librerie ANGLE. La configurazione locale aggiunge `minimumSystemVersion: "13.0"` al pacchetto macOS e allinea README, manuali IT/EN, quick start e modello di sicurezza. Prima della review servono i gate locali sul branch definitivo e la verifica CI/packaging dopo l'eventuale push approvato.
+
+**Verifica locale 2026-10-07:** `electron@44.5.1` e `npm ci` sono compatibili con la baseline; preflight completo (baseline Node, landing, lint, typecheck, 300 test in 50 file, build e CSP), controllo dei 15 documenti e `npm audit` con 0 vulnerabilità sono verdi. Il pacchetto Windows Electron 44 supera build, ispezione `app.asar` e smoke dell'eseguibile unpacked. Il commit bot `bd61b41` supera la [CI macOS/Windows](https://github.com/gloutchov/ContaMi/actions/runs/37602435688) e il [packaging senza tag](https://github.com/gloutchov/ContaMi/actions/runs/37602778357), inclusi smoke dei pacchetti installati; il branch M34 aggiunge il limite macOS e la documentazione, quindi richiederà un proprio gate remoto prima del merge. Le [note ufficiali di Electron 44](https://www.electronjs.org/blog/electron-44-0) confermano che macOS 12 non è più supportato. Nessun workbook privato è stato aperto o usato nei test.
 
 ## M35 — Coverage Vitest 5, PR #113
 

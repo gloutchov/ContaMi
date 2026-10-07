@@ -72,12 +72,16 @@ Sito / Website: [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/
 
 Le build di release sono generate da GitHub Actions senza certificati e senza applicare una firma ad-hoc al bundle. Gli artifact sono pubblicati nella sezione Releases:
 
+Le build dalla sorgente con Electron 44 richiedono macOS 13 o successivo (Intel/Apple Silicon); la release `v1.22.2` usa ancora Electron 43. Il pacchetto Windows resta `x64`.
+
 1. scarica il pacchetto per macOS o Windows e il file `SHA256SUMS.txt`;
 2. verifica il checksum;
 3. installa e avvia ContaMì seguendo, se necessario, le istruzioni per l’avviso del sistema riportate sotto;
 4. scegli **Crea nuovo foglio** oppure **Apri foglio esistente**.
 
 Release builds are produced by GitHub Actions without certificates and without applying an ad-hoc signature to the bundle. Artifacts are published under Releases:
+
+Builds from source with Electron 44 require macOS 13 or later (Intel/Apple Silicon); release `v1.22.2` still uses Electron 43. The Windows package remains `x64`.
 
 1. download the macOS or Windows package and `SHA256SUMS.txt`;
 2. verify the checksum;
