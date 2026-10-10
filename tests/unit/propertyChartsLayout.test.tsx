@@ -31,3 +31,30 @@ describe("property compact chart layout", () => {
     expect(css).toContain("@keyframes financial-chart-grow-y");
   });
 });
+
+
+describe("vehicle cost comparison bars", () => {
+  it("renders a labelled zero-cost comparison without inventing a positive bar", () => {
+    const { container } = render(<TrendBars variant="costComparison" points={[{ label: "Synthetic free car", value: 0 }]} format={String} />);
+    expect(screen.getByRole("img")).toHaveAccessibleName("Synthetic free car: 0");
+    expect(container.querySelector("rect")).toHaveAttribute("height", "0");
+  });
+
+  it("uses rectangular columns, tied extrema colours and proportional heights", () => {
+    const { container } = render(<TrendBars variant="costComparison" points={[0.2, 0.5, 0.8, 0.2, 0.8].map((value, index) => ({ label: `Car ${index}`, value }))} format={String} />);
+    const bars = [...container.querySelectorAll("rect")];
+    expect(bars.map((bar) => bar.getAttribute("rx"))).toEqual(["0", "0", "0", "0", "0"]);
+    expect(bars.map((bar) => bar.getAttribute("height"))).toEqual(["25", "62.5", "100", "25", "100"]);
+    expect(container.querySelectorAll(".trend-cost-economical")).toHaveLength(2);
+    expect(container.querySelectorAll(".trend-cost-moderate")).toHaveLength(1);
+    expect(container.querySelectorAll(".trend-cost-expensive")).toHaveLength(2);
+    expect(screen.getByRole("img")).toHaveAccessibleName("Car 0: 0.2; Car 1: 0.5; Car 2: 0.8; Car 3: 0.2; Car 4: 0.8");
+    expect(container.querySelectorAll("[style]")).toHaveLength(0);
+  });
+
+  it.each([[0.5], [0.5, 0.5]])("shows equal costs as economical (%j)", (...values) => {
+    const { container } = render(<TrendBars variant="costComparison" points={values.map((value, index) => ({ label: `Car ${index}`, value }))} format={String} />);
+    expect(container.querySelectorAll(".trend-cost-economical")).toHaveLength(values.length);
+    expect(container.querySelectorAll(".trend-cost-expensive")).toHaveLength(0);
+  });
+});

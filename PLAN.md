@@ -1476,3 +1476,48 @@ La checklist seguente è un gate riutilizzabile da verificare alla chiusura di c
 ## Criterio di completamento del progetto
 
 Il criterio di completamento è soddisfatto dalla release privata `v1.0.0`: include applicazioni installabili e verificate per macOS e Windows, le funzioni richieste sono coperte da test proporzionati al rischio, il workbook resta leggibile fuori dall’app, la chiusura annuale è riconciliata, i documenti obbligatori sono aggiornati e la CI è verde.
+
+
+## Patch 1.22.3 — Km/l e confronto Automobile — 2026-10-10
+
+- Obiettivo: mostrare il consumo medio Km/l sotto il confronto e riordinare gli undici box secondo la richiesta del proprietario; colonne rettangolari con minimi verdi, intermedi arancioni e massimi rossi.
+- Branch: `patch/1.22.3-vehicle-efficiency`; incremento patch `1.22.2 → 1.22.3`; eventuale tag versione `v1.22.3` solo dopo approvazione. Release da concordare per questa patch; nessun nuovo checkpoint milestone.
+- Criteri di accettazione: ordine richiesto, Km/l complessivo e assenza litri gestita, colori coerenti anche con parità/unico mezzo, compatibilità IT/EN e chiaro/scuro a 1080 px, nessuno stile inline.
+- Attività: riuso del rapporto complessivo esistente, variante del grafico isolata dagli altri usi, traduzioni, documentazione e test sintetici.
+- Documentazione: README, manuali IT/EN, MAP, versione documento SECURITY_MODEL; nessuna nuova superficie di sicurezza.
+- Verifiche: lint, typecheck, 304 test Vitest su 50 file, build renderer/Electron, controllo dei 15 documenti obbligatori e CSP produzione superati. Playwright CLI a 1080×900 in IT/chiaro ed EN/scuro: ordine degli undici box, 20 km/l sintetici, colonne senza arrotondamento, colori min/max, assenza overflow ed errori console verificati; screenshot locali in `output/playwright/`.
+- Limiti: `npm audit` segnala 10 vulnerabilità preesistenti (8 moderate, 2 alte: `http-cache-semantics` e `source-map-js`); grafo dipendenze invariato, nessun audit fix forzato. Packaging e CI multipiattaforma non eseguiti per questa revisione locale; nessun workflow avviato. Tre file utente non tracciati con suffisso ` 2` lasciati intatti ed esclusi dal commit.
+- Stato: implementazione e verifiche funzionali completate, branch congelato sul commit locale consegnato al proprietario; revisione pendente. Merge, tag, push, eventuale release e rimozione branch attendono controllo personale e approvazione esplicita del commit finale.
+
+
+### Integrazione patch 1.22.3 — compatibilità LibreOffice — 2026-10-10
+
+- Il proprietario ha segnalato `OPERATION_FAILED` dopo una modifica manuale del workbook con LibreOffice. L’analisi locale su copia privata ha identificato booleani esportati come `TRUE()`/`FALSE()` e cache false omessa da ExcelJS; nessun dato privato è stato inserito in codice, fixture o documentazione.
+- Corretto il lettore per riconoscere solo queste costanti senza eseguire formule. La copia del workbook segnalato viene ora caricata; l’originale non è stato modificato.
+- Aggiunti test sintetici di round-trip per vero/falso, mancata cache, rifiuto di formule arbitrarie senza cache e invariabilità del file durante il caricamento. Manuali, README e modello di sicurezza aggiornati.
+- Il commit precedente `6e6aa9f` è superato dall’integrazione: occorre controllare e approvare il nuovo commit finale prima di merge, tag o pubblicazione. Verifiche finali superate: lint, typecheck, 306 test su 50 file, build renderer/Electron, controllo documenti e CSP. Caricamento della copia privata riuscito; confronto SHA-256 conferma che l’originale coincide ancora con la copia diagnostica. Audit con gli avvisi preesistenti già documentati; CI e packaging non rieseguiti.
+
+
+### Integrazione patch 1.22.3 — modifica anagrafica e feedback salvataggio — 2026-10-10
+
+- Riprodotto localmente il blocco del prezzo Automobile: due finanziamenti attivi preesistenti causavano `VEHICLE_INSTALLMENT_PLAN_EXISTS` anche senza variazioni al finanziamento. Il modulo ora usa `updateVehicle` quando i controlli finanziamento sono invariati; la modifica anagrafica non rigenera piani o movimenti. I piani preesistenti restano intatti e le effettive modifiche al finanziamento conservano la validazione di unicità.
+- Gli errori erano mostrati dietro la modale: aggiunto un contesto UI con sole chiavi localizzate/sanitizzate, avviso persistente nel modulo dopo il submit e blocco del pulsante durante l’operazione.
+- Test su copia privata: prezzo sintetico Automobile e maggiorazione di 20 euro a un affitto del mese corrente salvati e riletti correttamente; originale non modificato. Il problema specifico dell’affitto segnalato dal proprietario non è riprodotto: resta da verificare il messaggio della sua operazione, ora visibile nel modulo.
+- Verifiche locali superate: lint, typecheck, 311 test su 51 file, build renderer/Electron, controllo documenti e CSP. Playwright CLI a 1080 px in IT/chiaro ed EN/scuro: errore simulato visibile, input conservato, nuovo tentativo riuscito, modale chiusa e prezzo aggiornato. Screenshot soltanto sintetici in `output/playwright/`.
+- Aggiornati README, manuali, MAP e SECURITY_MODEL. Nessuna dipendenza aggiunta, nessun workflow avviato; audit preesistente e gate packaging/CI invariati.
+- Il commit `aeb7da8` è superato da questa integrazione. Branch da congelare sul nuovo commit locale; merge/tag/push restano subordinati al controllo personale e all’approvazione esplicita del commit finale.
+
+
+## Estensione funzionale 1.24.0 — costo d’uso e costo complessivo/km — 2026-10-10
+
+- Obiettivo: confrontare i costi d’uso senza acquisto e mostrare separatamente il costo complessivo sostenuto, con copertura esplicita e senza duplicare acquisto/rate.
+- Branch: `patch/1.24.0-vehicle-dual-costs` (inizialmente `patch/1.23.0-vehicle-dual-costs`), derivato dal commit locale `3f36fe1` della patch precedente su richiesta del proprietario; include il lavoro non ancora pubblicato. Nessun merge/tag/push del predecessore viene presunto autorizzato.
+- Versione: incremento minore dalla release remota `1.23.0 → 1.24.0`; tag previsto `v1.24.0` solo dopo revisione. Checkpoint milestone non previsto per questa estensione mirata; pubblicazione/release subordinate anche ai gate di distribuzione.
+- Attività: calcolo puro dedicato, metadati informativi pagamento acquisto/anticipo/acquisto già nei costi, schema workbook v15 con migrazione conservativa v14, doppio KPI e confronto sul costo d’uso, traduzioni e manuali.
+- Accettazione: acquisto unico, finanziamento con anticipo, rate confermate vs pianificate, assenza duplicazioni, dati mancanti/incoerenti segnalati, zero km, IT/EN e chiaro/scuro, round-trip e rollover.
+- Test: unitari finanziari, integrazione workbook/migrazione/import e UI sintetica; lint, typecheck, suite, build, documenti, CSP, audit. Nessun dato privato usato come fixture.
+- Documenti: README, manuali, MAP, SECURITY_MODEL, AGENTS per schema corrente, PLAN. Stato: implementazione locale completata, in attesa di controllo personale e approvazione del commit finale.
+- Esito locale: lint, typecheck, 333 test in 52 file, build renderer/Electron, controllo documentale e CSP superati. Migrazione v14→v15 e round-trip verificati su workbook sintetici; nessun workbook privato aperto o modificato per questa estensione. Playwright CLI a 1080 px conferma salvataggio, dati acquisto mancanti, doppio valore e assenza di overflow in IT/chiaro ed EN/scuro. Audit npm: 10 vulnerabilità preesistenti (8 moderate, 2 alte); nessuna dipendenza aggiunta o aggiornata. CI e packaging multipiattaforma non eseguiti in questa fase locale; restano necessari prima della distribuzione. Screenshot sintetici e diff di revisione in `output/playwright/`, non tracciati.
+
+- Riallineamento autorizzato dal proprietario il 2026-10-10: integrata la main remota `6e621ca`, mantenendo Electron 44, correzioni audit, aggiornamenti Vitest/Lucide, requisito macOS 13 e documentazione M33–M37. La precedente versione locale 1.23.0 era basata su main 1.22.2 ed era in conflitto con il tag già pubblicato. La release remota v1.23.0 resta intatta. Il commit approvato `75c330f` è conservato nella storia; il nuovo commit deve essere verificato e sottoposto nuovamente al controllo personale prima di merge/tag/push/release.
+- Verifica finale 1.24.0: installazione pulita da lockfile con Node.js 24.18.1; baseline, landing statica, lint, typecheck, 333 test su 52 file, build renderer/Electron, CSP, documenti e igiene repository superati. Playwright: 11 test app e 7 landing verdi; workflow CLI conferma salvataggio e doppio KPI in IT/chiaro ed EN/scuro a 1080 px, con screenshot sintetici. Audit npm a zero vulnerabilità, grazie alle correzioni già presenti nella main remota (sostituisce l'esito audit della precedente base locale). Build macOS ARM64 non firmata verificata con ispezione app.asar e smoke del pacchetto; prova DMG di installazione/avvio/rimozione eseguita. Checksum locali in `output/playwright/vehicle-1.24-local-SHA256SUMS.txt`. Nessun dato privato o file utente con suffisso ` 2` modificato/tracciato. Restano CI macOS/Windows e pacchetti macOS x64/Windows x64 prima della release; nessun workflow remoto avviato prima del nuovo controllo.

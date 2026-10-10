@@ -802,6 +802,10 @@ function vehicleValue(reader: RowReader, id: string, current?: Vehicle): Vehicle
     model: reader.text("model", false, 120) ?? "", purchaseDate: reader.date("purchase_date"),
     disposalDate: active ? undefined : (reader.date("disposal_date") ?? current?.disposalDate),
     purchasePrice: reader.number("purchase_price"), salePrice: reader.number("sale_price"), active, notes: notes(reader),
+    // Existing v1/v2/v3 templates cannot express these new metadata; preserve them on updates.
+    purchasePaymentMode: current?.purchasePaymentMode,
+    purchaseDownPayment: current?.purchaseDownPayment,
+    purchaseCostRecorded: current?.purchaseCostRecorded,
   };
 }
 

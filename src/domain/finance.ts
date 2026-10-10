@@ -44,7 +44,7 @@ export function createEmptyFinanceData(year = new Date().getFullYear()): Finance
   const category = (nameIt: string, nameEn: string, kind: "income" | "expense" | "both") => ({ id: randomUUID(), nameIt, nameEn, kind, active: true });
   const payment = (name: string, kind: "cash" | "card" | "bank_transfer" | "direct_debit" | "digital_wallet" | "other") => ({ id: randomUUID(), name, kind, active: true });
   return financeDataSchema.parse({
-    meta: { schemaVersion: 14, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
+    meta: { schemaVersion: 15, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
     categories: [
       category("Stipendio", "Salary", "income"), category("Affitti", "Rent income", "income"),
       category("Alimentari", "Groceries", "expense"), category("Casa", "Home", "expense"),
@@ -635,7 +635,11 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       const previous = next.vehicles.find((item) => item.id === command.value.id);
       if (!previous) throw new Error("ENTITY_NOT_FOUND");
       replace(next.vehicles, command.value);
-      syncVehicleInstallmentLifecycle(next, command.value.id, !previous.active && command.value.active);
+      if (previous.active !== command.value.active) {
+        syncVehicleInstallmentLifecycle(next, command.value.id, !previous.active && command.value.active);
+      } else if (previous.name !== command.value.name) {
+        for (const plan of vehicleInstallmentPlans(next, command.value.id)) plan.name = command.value.name;
+      }
       break;
     }
     case "addVehicleWithInstallment": saveVehicleWithInstallment(next, command.value, false); break;

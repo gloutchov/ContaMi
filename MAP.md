@@ -65,10 +65,11 @@ ContaMì/
 │   │   ├── propertyWater.ts            # consumi progressivi, copertura e statistiche acqua condominiale
 │   │   ├── rent.ts                     # stato rate affitto da competenza e incasso effettivo
 │   │   ├── recurringRates.ts           # tariffa per decorrenza, anteprima e protezione dello storico
+│   │   ├── vehicleCosts.ts             # costo d’uso/complessivo puro, acquisto pagato e copertura
 │   │   ├── vehicleEntries.ts           # conferma delle registrazioni, lettura precedente, percorrenza e litri suggeriti
 │   │   ├── vehicleInstallments.ts      # unicità, ciclo di vita e protezione dello storico dei finanziamenti auto
-│   │   ├── migrations.ts               # migrazione workbook v1–v13 → v14, inclusi valori acqua conservativi
-│   │   ├── models.ts                   # schema Zod v14 e modello finanziario
+│   │   ├── migrations.ts               # migrazione workbook v1–v14 → v15, inclusi valori acqua conservativi
+│   │   ├── models.ts                   # schema Zod v15 e modello finanziario
 │   │   ├── uuidRepair.ts               # unicità UUID e riallineamento conservativo dei collegamenti
 │   │   └── rollover.ts                 # passaggio d’anno, rendimenti e saldo quote noti, rate e affitti
 │   ├── infrastructure/
@@ -99,6 +100,7 @@ ContaMì/
 │   │   └── index.ts                    # bridge minimo e congelato verso la UI
 │   ├── renderer/
 │   │   ├── components/                 # shell, KPI, modali, dettagli, grafici storici e stati vuoti
+│   │   │   ├── OperationFeedbackContext.ts # stato operazioni ed errori sanitizzati nelle modali
 │   │   │   ├── EntryFilters.tsx        # filtri condivisi descrizione/mese con reset accessibile
 │   │   │   ├── HistoryChart.tsx        # grafici SVG responsive, gap configurabili, media e tooltip sopra/overlay, senza style
 │   │   │   ├── ReturnChart.tsx         # rendimenti mensili/annuali, linea continua, media e dettaglio componenti
@@ -110,7 +112,7 @@ ContaMì/
 │   │   │   ├── PaymentAccountField.tsx # selezione coerente di conto o Cassa per metodo
 │   │   │   ├── PropertyReportDialog.tsx # periodo e nomi effimeri dei proprietari, stampa/salvataggio
 │   │   │   ├── RecurringRateChangesEditor.tsx # cronologia, anteprima e conferma tariffa
-│   │   │   └── TrendBars.tsx           # barre SVG proporzionali compatibili con CSP rigorosa
+│   │   │   └── TrendBars.tsx           # barre SVG proporzionali e variante rettangolare costo/km verde/arancione/rossa, compatibili con CSP rigorosa
 │   │   ├── forms/                      # moduli di inserimento per ogni dominio
 │   │   │   ├── AccountForm.tsx     # conti ordinari e Casse con alimentazione predefinita
 │   │   │   ├── InvestmentForms.tsx  # investimenti non pensionistici e movimenti
@@ -131,7 +133,7 @@ ContaMì/
 │   │   │   ├── overviewTransactions.ts # recenti confermati / confirmed recent records
 │   │   │   ├── propertyHistory.ts      # serie, mesi e filtri delle registrazioni immobiliari
 │   │   │   ├── propertyIndicators.ts   # indicatori residenza / residence indicators
-│   │   │   └── vehicleHistory.ts       # serie annuali, vita intera, costi non dettagliati e confronto costo/km
+│   │   │   └── vehicleHistory.ts       # serie annuali, vita intera, costi non dettagliati e confronto costo d’uso/km
 │   │   ├── views/                      # dashboard e liste tematiche lazy-loaded
 │   │   │   ├── OverviewView.tsx     # patrimonio totale/al netto immobili, liquidità e saldo Casse
 │   │   │   ├── TransactionsView.tsx # saldi filtrati puri e riepiloghi ad oggi separati tra conti e Casse
@@ -269,3 +271,7 @@ The renderer imports no privileged Node/Electron modules. Domain code is UI-inde
 - `outputs/` and `tmp/` contain local or temporary artifacts and must not be published.
 - Build/dependency folders are reproducible generated output.
 - `.contami-backups` belongs beside the user workbook, not in this repository.
+
+`tests/unit/modalSaveFeedback.test.tsx`: errori visibili nel modulo in IT/EN, conservazione input e blocco di submit duplicati. / Visible form errors in IT/EN, preserved input and blocked duplicate submissions.
+
+`tests/unit/vehicleCosts.test.ts`: acquisto unico, finanziamento/anticipo, assenza duplicazioni, dati incompleti/incoerenti, zero km e rollover. / Acquisition, financing, double counting, coverage, zero distance and rollover.

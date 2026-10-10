@@ -12,6 +12,7 @@
 - Mantieni separati dominio, configurazione, persistenza spreadsheet, servizi main, IPC/preload e renderer.
 - Evita moduli monolitici e logica finanziaria nei componenti React.
 - Il dominio espone trasformazioni pure e validate; adapter Excel/Numbers implementano solo il formato.
+- Schema workbook corrente: v15. I metadati acquisto Automobile sono informativi: non generare movimenti finanziari, non sommare prezzo intero e rate e non inventare anticipi durante la migrazione.
 - `.xlsx` è il formato canonico portabile. `.numbers` è una copia macOS opzionale; non introdurre dipendenza Numbers nel dominio.
 - Il renderer non deve ottenere Node.js, percorsi arbitrari, IPC generico, rete o segreti.
 - Aggiungi canali IPC soltanto in `src/shared/ipc.ts`, valida input e mittente in `registerIpc.ts`, esponi il minimo nel preload e aggiorna `SECURITY_MODEL.md`.

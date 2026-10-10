@@ -54,6 +54,20 @@ function addBundle(data: FinanceData, vehicle: Vehicle, installment: RecurringIt
 }
 
 describe("vehicle installment plans", () => {
+  it("updates vehicle metadata without regenerating legacy duplicate financing plans", () => {
+    const initial = setup();
+    const data = addBundle(initial.data, initial.vehicle, initial.installment);
+    data.recurringItems.push({ ...data.recurringItems[0], id: crypto.randomUUID() });
+    const next = applyFinanceCommand(data, {
+      type: "updateVehicle", value: { ...data.vehicles[0], purchasePrice: 25_000 },
+    });
+    expect(next.vehicles[0].purchasePrice).toBe(25_000);
+    expect(next.recurringItems).toEqual(data.recurringItems);
+    expect(next.transactions).toEqual(data.transactions);
+    expect(next.vehicleEntries).toEqual(data.vehicleEntries);
+    expect(data.vehicles[0].purchasePrice).toBe(24_000);
+  });
+
   it("creates one vehicle, one recurrence and one installment entry per planned transaction atomically", () => {
     const { data, vehicle, installment } = setup();
     const next = addBundle(data, vehicle, installment);

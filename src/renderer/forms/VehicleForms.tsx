@@ -1,8 +1,9 @@
 import { useMemo, useState, type FormEvent } from "react";
 import type { FinanceCommand } from "../../domain/commands";
 import type { FinanceData, RecurringItem, Vehicle, VehicleEntry } from "../../domain/models";
+import { vehicleHasFinancing } from "../../domain/vehicleCosts";
 import { calculateFuelLiters, calculateVehicleDistance, previousVehicleOdometer } from "../../domain/vehicleEntries";
-import { vehicleInstallmentPlan } from "../../domain/vehicleInstallments";
+import { sameVehicleInstallmentConfiguration, vehicleInstallmentPlan } from "../../domain/vehicleInstallments";
 import { Field, Modal } from "../components/Modal";
 import { PaymentAccountField } from "../components/PaymentAccountField";
 import { RecurringRateChangesEditor } from "../components/RecurringRateChangesEditor";
@@ -39,11 +40,15 @@ export function VehicleForm({ data, value, onClose, onSave }: { data: FinanceDat
   const [purchaseDate, setPurchaseDate] = useState(value?.purchaseDate ?? "");
   const [disposalDate, setDisposalDate] = useState(value?.disposalDate ?? "");
   const [purchasePrice, setPurchasePrice] = useState(value?.purchasePrice !== undefined ? String(value.purchasePrice) : "");
+  const [purchasePaymentMode, setPurchasePaymentMode] = useState<"auto" | "cash" | "financed">(value?.purchasePaymentMode ?? "auto");
+  const [purchaseDownPayment, setPurchaseDownPayment] = useState(value?.purchaseDownPayment === undefined ? "" : String(value.purchaseDownPayment));
+  const [purchaseCostRecorded, setPurchaseCostRecorded] = useState(value?.purchaseCostRecorded === undefined ? "" : String(value.purchaseCostRecorded));
   const [salePrice, setSalePrice] = useState(value?.salePrice !== undefined ? String(value.salePrice) : "");
   const [notes, setNotes] = useState(value?.notes ?? "");
-  const [financing, setFinancing] = useState(Boolean(existingInstallment
+  const initialFinancing = Boolean(existingInstallment
     && existingInstallment.remainingInstallments !== 0
-    && (!existingInstallment.endDate || existingInstallment.endDate >= todayIso())));
+    && (!existingInstallment.endDate || existingInstallment.endDate >= todayIso()));
+  const [financing, setFinancing] = useState(initialFinancing);
   const [installmentAmount, setInstallmentAmount] = useState(existingInstallment ? String(existingInstallment.amount) : "");
   const [installmentFrequency, setInstallmentFrequency] = useState<RecurringItem["frequency"]>(existingInstallment?.frequency ?? "monthly");
   const [installmentNextDueDate, setInstallmentNextDueDate] = useState(existingInstallment?.nextDueDate ?? purchaseDate ?? todayIso());
@@ -64,13 +69,20 @@ export function VehicleForm({ data, value, onClose, onSave }: { data: FinanceDat
     && (remainingCount !== undefined || installmentEndDate)
     && (remainingCount === undefined || (Number.isInteger(remainingCount) && remainingCount > 0 && remainingCount <= 10_000))
     && (!installmentEndDate || installmentEndDate >= installmentNextDueDate));
-  const valid = Boolean(name.trim() && financingValid);
+  const effectivePurchaseMode = purchasePaymentMode === "auto"
+    ? (financing || vehicleHasFinancing(data, vehicleId) ? "financed" : "cash")
+    : purchasePaymentMode;
+  const validPurchaseNumbers = [purchasePrice, purchaseDownPayment, purchaseCostRecorded].every((input) => input === "" || (Number.isFinite(Number(input)) && Number(input) >= 0 && Number(input) <= 1_000_000_000_000));
+  const valid = Boolean(name.trim() && financingValid && validPurchaseNumbers);
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); if (!valid) return;
     const vehicle: Vehicle = {
       ...value, id: vehicleId, name: name.trim(), manufacturer: manufacturer.trim(), model: model.trim(), fuelType,
       purchaseDate: purchaseDate || undefined, disposalDate: disposalDate || undefined,
       purchasePrice: purchasePrice ? Number(purchasePrice) : undefined, salePrice: salePrice ? Number(salePrice) : undefined,
+      purchasePaymentMode: purchasePaymentMode === "auto" ? undefined : purchasePaymentMode,
+      purchaseDownPayment: effectivePurchaseMode === "financed" && purchaseDownPayment !== "" ? Number(purchaseDownPayment) : undefined,
+      purchaseCostRecorded: purchaseCostRecorded === "" ? undefined : Number(purchaseCostRecorded),
       active: value?.active ?? true, notes,
     };
     const installment: RecurringItem | undefined = financing ? {
@@ -92,6 +104,12 @@ export function VehicleForm({ data, value, onClose, onSave }: { data: FinanceDat
       closedAt: vehicle.active ? undefined : existingInstallment?.closedAt,
       notes: existingInstallment?.notes ?? "",
     } : undefined;
+    const financingUnchanged = financing === initialFinancing
+      && (!financing || sameVehicleInstallmentConfiguration(existingInstallment, installment));
+    if (value && financingUnchanged) {
+      await saveAndClose(onSave, { type: "updateVehicle", value: vehicle }, onClose);
+      return;
+    }
     await saveAndClose(onSave, {
       type: value ? "updateVehicleWithInstallment" : "addVehicleWithInstallment",
       value: { vehicle, installment },
@@ -104,6 +122,9 @@ export function VehicleForm({ data, value, onClose, onSave }: { data: FinanceDat
     <Field label={t("fuelType")}><select value={fuelType} onChange={(event) => setFuelType(event.target.value as Vehicle["fuelType"])}>{fuelTypes.map((item) => <option key={item} value={item}>{t(item)}</option>)}</select></Field>
     <Field label={t("date")}><input type="date" value={purchaseDate} onChange={(event) => setPurchaseDate(event.target.value)} /></Field>
     <Field label={t("purchasePrice")}><input type="number" min="0" step="0.01" value={purchasePrice} onChange={(event) => setPurchasePrice(event.target.value)} /></Field>
+    <Field label={t("vehiclePurchasePaymentMode")}><select value={purchasePaymentMode} onChange={(event) => setPurchasePaymentMode(event.target.value as typeof purchasePaymentMode)}><option value="auto">{t("vehiclePurchaseAuto")}</option><option value="cash">{t("vehiclePurchaseCash")}</option><option value="financed">{t("vehiclePurchaseFinanced")}</option></select></Field>
+    {effectivePurchaseMode === "financed" && <Field label={t("vehiclePurchaseDownPayment")} hint={t("vehiclePurchaseDownPaymentHelp")}><input type="number" min="0" step="0.01" value={purchaseDownPayment} onChange={(event) => setPurchaseDownPayment(event.target.value)} /></Field>}
+    <Field label={t("vehiclePurchaseCostRecorded")} hint={t("vehiclePurchaseCostRecordedHelp")} wide><input type="number" min="0" step="0.01" value={purchaseCostRecorded} onChange={(event) => setPurchaseCostRecorded(event.target.value)} /></Field>
     <Field label={t("disposalDate")}><input type="date" value={disposalDate} onChange={(event) => setDisposalDate(event.target.value)} /></Field>
     <Field label={t("salePrice")}><input type="number" min="0" step="0.01" value={salePrice} onChange={(event) => setSalePrice(event.target.value)} /></Field>
     <section className="vehicle-financing-section" aria-labelledby={`vehicle-financing-${vehicleId}`}>

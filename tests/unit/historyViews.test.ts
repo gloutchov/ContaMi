@@ -143,7 +143,7 @@ describe("historical view helpers", () => {
     );
 
     expect(vehicleHistory(data, vehicleId)).toHaveLength(2);
-    expect(vehicleLifetimeSummary(data, vehicleId)).toMatchObject({ totalCosts: 1_250, fuelCosts: 600, distanceKm: 5_400, closingOdometer: 90_900 });
+    expect(vehicleLifetimeSummary(data, vehicleId)).toMatchObject({ totalCosts: 1_250, fuelCosts: 600, distanceKm: 5_400, averageKmPerLiter: 15, closingOdometer: 90_900 });
     expect(vehicleCostComparison(data)).toEqual([{ vehicleId, label: "Previous car", costPerKm: 1_250 / 5_400, totalCosts: 1_250, distanceKm: 5_400 }]);
   });
 
@@ -171,8 +171,16 @@ describe("historical view helpers", () => {
     });
 
     const summary = vehicleLifetimeSummary(data, vehicleId);
-    expect(summary).toMatchObject({ totalCosts: 1_075, fuelCosts: 250, installments: 300, distanceKm: 2_500 });
+    expect(summary).toMatchObject({ totalCosts: 1_075, fuelCosts: 250, installments: 300, distanceKm: 2_500, averageKmPerLiter: 20 });
     expect(vehicleUnitemizedCosts(summary)).toBe(325);
-    expect(vehicleCostComparison(data)[0].costPerKm).toBe(1_075 / 2_500);
+    expect(vehicleCostComparison(data)[0].costPerKm).toBe(775 / 2_500);
   });
+  it("leaves fuel efficiency unknown when no litres are recorded", () => {
+    const data = createEmptyFinanceData(2026);
+    const vehicleId = crypto.randomUUID();
+    expect(vehicleLifetimeSummary(data, vehicleId).averageKmPerLiter).toBeUndefined();
+    data.vehicleAnnualSummaries.push({ vehicleId, year: 2025, totalCosts: 100, fuelCosts: 0, installments: 0, taxes: 100, insurance: 0, tires: 0, maintenance: 0, repairs: 0, fuelLiters: 0, distanceKm: 1000 });
+    expect(vehicleLifetimeSummary(data, vehicleId).averageKmPerLiter).toBeUndefined();
+  });
+
 });

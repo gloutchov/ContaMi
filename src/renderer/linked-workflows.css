@@ -153,6 +153,10 @@
 .trend-fill { vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center bottom; animation: financial-chart-grow-y 720ms cubic-bezier(.22, 1, .36, 1) both; }
 .trend-column small { align-self: start; color: var(--muted); font-size: 9px; font-weight: 400; line-height: 1.2; padding-top: 5px; }
 .vehicle-history .trend-bars { height: 196px; }
+.trend-bars-cost-comparison .trend-track { max-width: 96px; margin-inline: auto; }
+.trend-cost-economical { fill: #27a76c; }
+.trend-cost-moderate { fill: #ed942b; }
+.trend-cost-expensive { fill: #df5353; }
 
 @keyframes financial-chart-line-in {
   to { stroke-dashoffset: 0; }
