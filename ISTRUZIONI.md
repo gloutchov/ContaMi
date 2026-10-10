@@ -162,6 +162,8 @@ Sotto il confronto, i box seguono questo ordine: Pagamento rateale, Assicurazion
 
 LibreOffice può risalvare i campi booleani come `TRUE()` e `FALSE()`: ContaMì riconosce queste due costanti anche quando manca il risultato memorizzato di `FALSE()`, senza eseguire formule. Le modifiche manuali devono comunque mantenere nomi dei fogli, colonne e tipi previsti.
 
+Quando salvi una modifica, la finestra si chiude solo dopo il successo. Se l’operazione fallisce, il messaggio resta visibile nella finestra e i campi inseriti vengono conservati; Salva è disabilitato mentre l’operazione è in corso. Se il workbook è stato modificato da un’altra app, riaprilo prima di ripetere la modifica. Cambiare soltanto prezzo, marca, modello o note dell’automobile non rigenera né riconvalida il finanziamento esistente.
+
 ## 8. Investimenti e risparmio
 
 Con **Nuovo investimento** puoi registrare titoli, fondi, fogli, ETF, obbligazioni o altre forme di risparmio non pensionistiche. Indica tipologia, gestore, data di apertura, eventuale investimento padre e, quando disponibile, il versamento iniziale con il conto interessato. Puoi anche inserire un codice ISIN facoltativo: ContaMì rimuove gli spazi esterni, lo converte in maiuscolo e ne verifica formato e cifra di controllo senza collegarsi a servizi esterni. Il versamento iniziale diventa subito controvalore e genera il trasferimento collegato nelle Transazioni. Gli investimenti sono raggruppati per tipologia e ogni gruppo mostra il proprio totale.

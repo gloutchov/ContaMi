@@ -635,7 +635,11 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       const previous = next.vehicles.find((item) => item.id === command.value.id);
       if (!previous) throw new Error("ENTITY_NOT_FOUND");
       replace(next.vehicles, command.value);
-      syncVehicleInstallmentLifecycle(next, command.value.id, !previous.active && command.value.active);
+      if (previous.active !== command.value.active) {
+        syncVehicleInstallmentLifecycle(next, command.value.id, !previous.active && command.value.active);
+      } else if (previous.name !== command.value.name) {
+        for (const plan of vehicleInstallmentPlans(next, command.value.id)) plan.name = command.value.name;
+      }
       break;
     }
     case "addVehicleWithInstallment": saveVehicleWithInstallment(next, command.value, false); break;

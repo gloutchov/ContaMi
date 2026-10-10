@@ -1425,3 +1425,13 @@ Il criterio di completamento è soddisfatto dalla release privata `v1.0.0`: incl
 - Corretto il lettore per riconoscere solo queste costanti senza eseguire formule. La copia del workbook segnalato viene ora caricata; l’originale non è stato modificato.
 - Aggiunti test sintetici di round-trip per vero/falso, mancata cache, rifiuto di formule arbitrarie senza cache e invariabilità del file durante il caricamento. Manuali, README e modello di sicurezza aggiornati.
 - Il commit precedente `6e6aa9f` è superato dall’integrazione: occorre controllare e approvare il nuovo commit finale prima di merge, tag o pubblicazione. Verifiche finali superate: lint, typecheck, 306 test su 50 file, build renderer/Electron, controllo documenti e CSP. Caricamento della copia privata riuscito; confronto SHA-256 conferma che l’originale coincide ancora con la copia diagnostica. Audit con gli avvisi preesistenti già documentati; CI e packaging non rieseguiti.
+
+
+### Integrazione patch 1.22.3 — modifica anagrafica e feedback salvataggio — 2026-10-10
+
+- Riprodotto localmente il blocco del prezzo Automobile: due finanziamenti attivi preesistenti causavano `VEHICLE_INSTALLMENT_PLAN_EXISTS` anche senza variazioni al finanziamento. Il modulo ora usa `updateVehicle` quando i controlli finanziamento sono invariati; la modifica anagrafica non rigenera piani o movimenti. I piani preesistenti restano intatti e le effettive modifiche al finanziamento conservano la validazione di unicità.
+- Gli errori erano mostrati dietro la modale: aggiunto un contesto UI con sole chiavi localizzate/sanitizzate, avviso persistente nel modulo dopo il submit e blocco del pulsante durante l’operazione.
+- Test su copia privata: prezzo sintetico Automobile e maggiorazione di 20 euro a un affitto del mese corrente salvati e riletti correttamente; originale non modificato. Il problema specifico dell’affitto segnalato dal proprietario non è riprodotto: resta da verificare il messaggio della sua operazione, ora visibile nel modulo.
+- Verifiche locali superate: lint, typecheck, 311 test su 51 file, build renderer/Electron, controllo documenti e CSP. Playwright CLI a 1080 px in IT/chiaro ed EN/scuro: errore simulato visibile, input conservato, nuovo tentativo riuscito, modale chiusa e prezzo aggiornato. Screenshot soltanto sintetici in `output/playwright/`.
+- Aggiornati README, manuali, MAP e SECURITY_MODEL. Nessuna dipendenza aggiunta, nessun workflow avviato; audit preesistente e gate packaging/CI invariati.
+- Il commit `aeb7da8` è superato da questa integrazione. Branch da congelare sul nuovo commit locale; merge/tag/push restano subordinati al controllo personale e all’approvazione esplicita del commit finale.

@@ -11,7 +11,7 @@ import { TaxTypeForm } from "../../src/renderer/forms/CatalogForms";
 import { PropertyExpenseForm } from "../../src/renderer/forms/PropertyExpenseForms";
 import { PropertyEntryForm } from "../../src/renderer/forms/PropertyForms";
 import { TransactionForm } from "../../src/renderer/forms/TransactionForm";
-import { VehicleEntryForm } from "../../src/renderer/forms/VehicleForms";
+import { VehicleForm, VehicleEntryForm } from "../../src/renderer/forms/VehicleForms";
 import { RecurringForm } from "../../src/renderer/forms/RecurringForm";
 import { I18nProvider } from "../../src/renderer/i18n/I18nContext";
 import { PropertiesView } from "../../src/renderer/views/PropertiesView";
@@ -49,6 +49,21 @@ function dataWithUnrelatedSharedExpense() {
 }
 
 describe("v0.8 review forms", () => {
+  it("saves only vehicle metadata when financing controls are unchanged", async () => {
+    const data = createEmptyFinanceData(2026);
+    const vehicle = { id: crypto.randomUUID(), name: "Synthetic car", manufacturer: "", model: "", fuelType: "petrol" as const, active: true, notes: "" };
+    data.vehicles.push(vehicle);
+    const plan = { id: crypto.randomUUID(), name: vehicle.name, kind: "installment" as const, direction: "expense" as const, amount: 300, frequency: "monthly" as const, categoryId: data.categories.find(c => c.kind === "expense")!.id, paymentMethodId: data.paymentMethods.find(p => p.kind === "bank_transfer")!.id, accountId: data.accounts[0].id, vehicleId: vehicle.id, nextDueDate: "2026-10-15", remainingInstallments: 12, active: true, notes: "" };
+    data.recurringItems.push(plan, { ...plan, id: crypto.randomUUID() });
+    const onSave = vi.fn().mockResolvedValue(undefined);
+    const onClose = vi.fn();
+    renderIt(<VehicleForm data={data} value={vehicle} onSave={onSave} onClose={onClose} />);
+    fireEvent.change(screen.getByLabelText("Prezzo di acquisto"), { target: { value: "25000" } });
+    fireEvent.click(screen.getByRole("button", { name: "Salva", exact: true }));
+    await waitFor(() => expect(onClose).toHaveBeenCalledOnce());
+    expect(onSave).toHaveBeenCalledWith({ type: "updateVehicle", value: expect.objectContaining({ purchasePrice: 25000 }) });
+  });
+
   it("previews and confirms a recurring rate change from the keyboard in Italian and English", async () => {
     let data = createEmptyFinanceData(2026);
     const recurringId = crypto.randomUUID();

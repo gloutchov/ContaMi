@@ -99,6 +99,7 @@ ContaMì/
 │   │   └── index.ts                    # bridge minimo e congelato verso la UI
 │   ├── renderer/
 │   │   ├── components/                 # shell, KPI, modali, dettagli, grafici storici e stati vuoti
+│   │   │   ├── OperationFeedbackContext.ts # stato operazioni ed errori sanitizzati nelle modali
 │   │   │   ├── EntryFilters.tsx        # filtri condivisi descrizione/mese con reset accessibile
 │   │   │   ├── HistoryChart.tsx        # grafici SVG responsive, gap configurabili, media e tooltip sopra/overlay, senza style
 │   │   │   ├── ReturnChart.tsx         # rendimenti mensili/annuali, linea continua, media e dettaglio componenti
@@ -269,3 +270,5 @@ The renderer imports no privileged Node/Electron modules. Domain code is UI-inde
 - `outputs/` and `tmp/` contain local or temporary artifacts and must not be published.
 - Build/dependency folders are reproducible generated output.
 - `.contami-backups` belongs beside the user workbook, not in this repository.
+
+`tests/unit/modalSaveFeedback.test.tsx`: errori visibili nel modulo in IT/EN, conservazione input e blocco di submit duplicati. / Visible form errors in IT/EN, preserved input and blocked duplicate submissions.

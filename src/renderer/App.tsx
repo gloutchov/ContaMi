@@ -6,6 +6,7 @@ import type { ImportTemplateType } from "../domain/importTemplates";
 import type { ImportDuplicateStrategy } from "../domain/imports";
 import type { AppSettings, FinanceSnapshot, SystemCapabilities } from "../shared/contracts";
 import type { PropertyReportRequest } from "../shared/propertyReportContracts";
+import { OperationFeedbackContext } from "./components/OperationFeedbackContext";
 import { AppShell, type AppView } from "./components/AppShell";
 import { I18nProvider, useI18n } from "./i18n/I18nContext";
 import { translations, type Language, type TranslationKey } from "./i18n/translations";
@@ -83,6 +84,7 @@ export default function App() {
   const [capabilities, setCapabilities] = useState<SystemCapabilities>(defaultCapabilities);
   const [snapshot, setSnapshot] = useState<FinanceSnapshot>();
   const [busy, setBusy] = useState(true);
+  const [operationError, setOperationError] = useState<TranslationKey>();
   const [notice, setNotice] = useState<TranslationKey>();
   const [noticeValues, setNoticeValues] = useState<Record<string, string | number>>();
   const language: Language = settings.language === "system" ? capabilities.systemLanguage : settings.language;
@@ -99,7 +101,7 @@ export default function App() {
   }, []);
 
   const run = useCallback(async <T,>(operation: () => Promise<T>): Promise<T> => {
-    setBusy(true); setNotice(undefined);
+    setBusy(true); setNotice(undefined); setOperationError(undefined);
     try { return await operation(); }
     catch (error) {
       const message = error instanceof Error ? error.message : "";
@@ -109,10 +111,12 @@ export default function App() {
           return await operation();
         } catch (recoveryError) {
           setNotice(errorKey(recoveryError));
+          setOperationError(errorKey(recoveryError));
           throw recoveryError;
         }
       }
       setNotice(errorKey(error));
+      setOperationError(errorKey(error));
       throw error;
     }
     finally { setBusy(false); }
@@ -209,7 +213,7 @@ export default function App() {
 
   if (!snapshot) return <ThemeProvider theme={settings.theme} capabilities={capabilities}><div className="splash"><div><img src={logo} alt="ContaMì" /><p>{translations[language].loading}</p></div></div></ThemeProvider>;
 
-  return <I18nProvider language={language}><ThemeProvider theme={settings.theme} capabilities={capabilities}><AppShell view={view} onNavigate={setView} workbookName={snapshot.workbookDisplayName} busy={busy}>{notice && <Notice messageKey={notice} values={noticeValues} onClose={dismissNotice} />}<Suspense fallback={<div className="empty-state">{translations[language].loading}</div>}>{content}</Suspense></AppShell></ThemeProvider></I18nProvider>;
+  return <I18nProvider language={language}><ThemeProvider theme={settings.theme} capabilities={capabilities}><OperationFeedbackContext.Provider value={{ busy, error: operationError }}><AppShell view={view} onNavigate={setView} workbookName={snapshot.workbookDisplayName} busy={busy}>{notice && <Notice messageKey={notice} values={noticeValues} onClose={dismissNotice} />}<Suspense fallback={<div className="empty-state">{translations[language].loading}</div>}>{content}</Suspense></AppShell></OperationFeedbackContext.Provider></ThemeProvider></I18nProvider>;
 }
 
 function Notice({ messageKey, values, onClose }: { messageKey: TranslationKey; values?: Record<string, string | number>; onClose: () => void }) {

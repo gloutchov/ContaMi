@@ -2,7 +2,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import type { FinanceCommand } from "../../domain/commands";
 import type { FinanceData, RecurringItem, Vehicle, VehicleEntry } from "../../domain/models";
 import { calculateFuelLiters, calculateVehicleDistance, previousVehicleOdometer } from "../../domain/vehicleEntries";
-import { vehicleInstallmentPlan } from "../../domain/vehicleInstallments";
+import { sameVehicleInstallmentConfiguration, vehicleInstallmentPlan } from "../../domain/vehicleInstallments";
 import { Field, Modal } from "../components/Modal";
 import { PaymentAccountField } from "../components/PaymentAccountField";
 import { RecurringRateChangesEditor } from "../components/RecurringRateChangesEditor";
@@ -41,9 +41,10 @@ export function VehicleForm({ data, value, onClose, onSave }: { data: FinanceDat
   const [purchasePrice, setPurchasePrice] = useState(value?.purchasePrice !== undefined ? String(value.purchasePrice) : "");
   const [salePrice, setSalePrice] = useState(value?.salePrice !== undefined ? String(value.salePrice) : "");
   const [notes, setNotes] = useState(value?.notes ?? "");
-  const [financing, setFinancing] = useState(Boolean(existingInstallment
+  const initialFinancing = Boolean(existingInstallment
     && existingInstallment.remainingInstallments !== 0
-    && (!existingInstallment.endDate || existingInstallment.endDate >= todayIso())));
+    && (!existingInstallment.endDate || existingInstallment.endDate >= todayIso()));
+  const [financing, setFinancing] = useState(initialFinancing);
   const [installmentAmount, setInstallmentAmount] = useState(existingInstallment ? String(existingInstallment.amount) : "");
   const [installmentFrequency, setInstallmentFrequency] = useState<RecurringItem["frequency"]>(existingInstallment?.frequency ?? "monthly");
   const [installmentNextDueDate, setInstallmentNextDueDate] = useState(existingInstallment?.nextDueDate ?? purchaseDate ?? todayIso());
@@ -92,6 +93,12 @@ export function VehicleForm({ data, value, onClose, onSave }: { data: FinanceDat
       closedAt: vehicle.active ? undefined : existingInstallment?.closedAt,
       notes: existingInstallment?.notes ?? "",
     } : undefined;
+    const financingUnchanged = financing === initialFinancing
+      && (!financing || sameVehicleInstallmentConfiguration(existingInstallment, installment));
+    if (value && financingUnchanged) {
+      await saveAndClose(onSave, { type: "updateVehicle", value: vehicle }, onClose);
+      return;
+    }
     await saveAndClose(onSave, {
       type: value ? "updateVehicleWithInstallment" : "addVehicleWithInstallment",
       value: { vehicle, installment },

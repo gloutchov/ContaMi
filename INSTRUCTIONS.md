@@ -149,6 +149,8 @@ Below the comparison, the boxes appear in this order: Installment, Insurance, Ro
 
 LibreOffice may resave boolean cells as `TRUE()` and `FALSE()`: ContaMì recognizes these two constants even when the cached `FALSE()` result is missing, without executing formulas. Manual edits must still preserve the expected sheet names, columns, and data types.
 
+When saving an edit, the window closes only after success. If saving fails, the error remains visible inside the window and entered fields are preserved; Save is disabled while the operation is pending. If another app changed the workbook, reopen it before repeating the edit. Editing only the vehicle price, manufacturer, model, or notes does not regenerate or revalidate its existing financing plan.
+
 ## 8. Investments and savings
 
 **New investment** supports stocks, funds, savings sheets, ETFs, bonds, and other non-pension savings. Enter type, provider, opening date, optional parent/group, and an optional initial contribution with its affected account. You can also enter an optional ISIN: ContaMì trims surrounding spaces, converts it to uppercase, and checks its format and check digit without contacting external services. The initial contribution immediately establishes countervalue and creates its linked Transaction. Investments are grouped by customizable type, with a subtotal for each group.

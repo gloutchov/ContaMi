@@ -81,3 +81,11 @@ export function vehicleHasRecordedHistory(
     return !transaction?.planned;
   });
 }
+
+
+/** Compare financing fields, excluding the display name derived from the vehicle. */
+export function sameVehicleInstallmentConfiguration(left: RecurringItem | undefined, right: RecurringItem | undefined): boolean {
+  if (!left || !right) return left === right;
+  const fields = ["id", "kind", "direction", "amount", "frequency", "categoryId", "paymentMethodId", "accountId", "vehicleId", "investmentId", "propertyId", "nextDueDate", "endDate", "remainingInstallments", "active", "closedAt", "notes"] as const;
+  return fields.every((field) => left[field] === right[field]);
+}
