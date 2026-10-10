@@ -49,6 +49,12 @@ function readCellValue(value: ExcelJS.CellValue): unknown {
   if (value === null || value === undefined || value === "") return undefined;
   if (value instanceof Date) return toIsoDate(value);
   if (typeof value === "object") {
+    // LibreOffice exports booleans as constant formulas. ExcelJS omits cached false.
+    // Recognize only these literal constants; never evaluate workbook formulas.
+    if ("formula" in value && typeof value.formula === "string") {
+      if (value.formula === "FALSE()") return false;
+      if (value.formula === "TRUE()") return true;
+    }
     if ("result" in value) return readCellValue(value.result as ExcelJS.CellValue);
     if ("text" in value && typeof value.text === "string") return value.text;
     if ("richText" in value) return value.richText.map((part) => part.text).join("");

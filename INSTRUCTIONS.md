@@ -147,6 +147,8 @@ The dashboard shows confirmed current-year costs, fuel, and distance. Each vehic
 
 Below the comparison, the boxes appear in this order: Installment, Insurance, Road tax, Routine maintenance (including repairs), Tyres, Fuel, Other costs, Total vehicle costs, Cost/km, Distance travelled, and Kilometres / Litre. Km/l divides total recorded lifetime kilometres by total litres rather than averaging yearly ratios; without recorded litres it shows —. Comparison columns are rectangular: green for minimum costs, orange for intermediate values, and red for maximum costs. Ties share a colour; a single vehicle or all equal costs appear green.
 
+LibreOffice may resave boolean cells as `TRUE()` and `FALSE()`: ContaMì recognizes these two constants even when the cached `FALSE()` result is missing, without executing formulas. Manual edits must still preserve the expected sheet names, columns, and data types.
+
 ## 8. Investments and savings
 
 **New investment** supports stocks, funds, savings sheets, ETFs, bonds, and other non-pension savings. Enter type, provider, opening date, optional parent/group, and an optional initial contribution with its affected account. You can also enter an optional ISIN: ContaMì trims surrounding spaces, converts it to uppercase, and checks its format and check digit without contacting external services. The initial contribution immediately establishes countervalue and creates its linked Transaction. Investments are grouped by customizable type, with a subtotal for each group.

@@ -1417,3 +1417,11 @@ Il criterio di completamento è soddisfatto dalla release privata `v1.0.0`: incl
 - Verifiche: lint, typecheck, 304 test Vitest su 50 file, build renderer/Electron, controllo dei 15 documenti obbligatori e CSP produzione superati. Playwright CLI a 1080×900 in IT/chiaro ed EN/scuro: ordine degli undici box, 20 km/l sintetici, colonne senza arrotondamento, colori min/max, assenza overflow ed errori console verificati; screenshot locali in `output/playwright/`.
 - Limiti: `npm audit` segnala 10 vulnerabilità preesistenti (8 moderate, 2 alte: `http-cache-semantics` e `source-map-js`); grafo dipendenze invariato, nessun audit fix forzato. Packaging e CI multipiattaforma non eseguiti per questa revisione locale; nessun workflow avviato. Tre file utente non tracciati con suffisso ` 2` lasciati intatti ed esclusi dal commit.
 - Stato: implementazione e verifiche funzionali completate, branch congelato sul commit locale consegnato al proprietario; revisione pendente. Merge, tag, push, eventuale release e rimozione branch attendono controllo personale e approvazione esplicita del commit finale.
+
+
+### Integrazione patch 1.22.3 — compatibilità LibreOffice — 2026-10-10
+
+- Il proprietario ha segnalato `OPERATION_FAILED` dopo una modifica manuale del workbook con LibreOffice. L’analisi locale su copia privata ha identificato booleani esportati come `TRUE()`/`FALSE()` e cache false omessa da ExcelJS; nessun dato privato è stato inserito in codice, fixture o documentazione.
+- Corretto il lettore per riconoscere solo queste costanti senza eseguire formule. La copia del workbook segnalato viene ora caricata; l’originale non è stato modificato.
+- Aggiunti test sintetici di round-trip per vero/falso, mancata cache, rifiuto di formule arbitrarie senza cache e invariabilità del file durante il caricamento. Manuali, README e modello di sicurezza aggiornati.
+- Il commit precedente `6e6aa9f` è superato dall’integrazione: occorre controllare e approvare il nuovo commit finale prima di merge, tag o pubblicazione. Verifiche finali superate: lint, typecheck, 306 test su 50 file, build renderer/Electron, controllo documenti e CSP. Caricamento della copia privata riuscito; confronto SHA-256 conferma che l’originale coincide ancora con la copia diagnostica. Audit con gli avvisi preesistenti già documentati; CI e packaging non rieseguiti.

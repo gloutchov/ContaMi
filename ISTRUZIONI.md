@@ -160,6 +160,8 @@ La dashboard mostra costi confermati dell’anno, carburante e percorrenza. Ogni
 
 Sotto il confronto, i box seguono questo ordine: Pagamento rateale, Assicurazione, Bollo, Manutenzione ordinaria (incluse le riparazioni), Pneumatici, Carburante, Altri costi, Totale costi automobile, Costo/km, Chilometri percorsi e Chilometri / Litro. Km/l è il rapporto fra chilometri e litri complessivi registrati nell’intera storia, non la media dei valori annuali; senza litri disponibili compare —. Le colonne del confronto sono rettangolari: verde per i minimi, arancione per i valori intermedi e rosso per i massimi. Le parità condividono il colore; con un solo mezzo o costi tutti uguali le colonne sono verdi.
 
+LibreOffice può risalvare i campi booleani come `TRUE()` e `FALSE()`: ContaMì riconosce queste due costanti anche quando manca il risultato memorizzato di `FALSE()`, senza eseguire formule. Le modifiche manuali devono comunque mantenere nomi dei fogli, colonne e tipi previsti.
+
 ## 8. Investimenti e risparmio
 
 Con **Nuovo investimento** puoi registrare titoli, fondi, fogli, ETF, obbligazioni o altre forme di risparmio non pensionistiche. Indica tipologia, gestore, data di apertura, eventuale investimento padre e, quando disponibile, il versamento iniziale con il conto interessato. Puoi anche inserire un codice ISIN facoltativo: ContaMì rimuove gli spazi esterni, lo converte in maiuscolo e ne verifica formato e cifra di controllo senza collegarsi a servizi esterni. Il versamento iniziale diventa subito controvalore e genera il trasferimento collegato nelle Transazioni. Gli investimenti sono raggruppati per tipologia e ogni gruppo mostra il proprio totale.

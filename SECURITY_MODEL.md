@@ -333,3 +333,8 @@ macOS Developer ID signing/notarization and Windows Authenticode are not schedul
 Il controllo `npm audit` del 2026-10-10 rileva 10 vulnerabilità nel grafo preesistente (8 moderate e 2 alte, in `http-cache-semantics` e `source-map-js`). Il precedente esito zero descrive soltanto il controllo storico del 2026-09-29. Questa patch modifica presentazione e riuso di metriche locali: non aggiorna il grafo dipendenze. Gli avvisi restano aperti e richiedono una verifica dedicata prima della distribuzione.
 
 The 2026-10-10 `npm audit` reports 10 vulnerabilities in the existing dependency graph (8 moderate and 2 high, in `http-cache-semantics` and `source-map-js`). The earlier zero count refers only to the historical 2026-09-29 check. This patch changes presentation and reuses local metrics without changing the dependency graph. These findings remain open and require dedicated verification before distribution.
+
+
+Compatibilità LibreOffice nella patch 1.22.3: l’adapter riconosce esclusivamente le formule costanti letterali `TRUE()` e `FALSE()` come booleani, anche senza cache. Non esegue formule né aggiunge accessi a rete/filesystem; gli altri valori restano soggetti alla validazione di dominio. Test sintetici verificano entrambi i booleani, rifiuto di formule arbitrarie senza cache e assenza di riscrittura all’apertura.
+
+LibreOffice compatibility in patch 1.22.3: the adapter recognizes only the literal constant formulas `TRUE()` and `FALSE()` as booleans, even without a cache. It does not execute formulas or add network/filesystem access; all other values remain subject to domain validation. Synthetic tests cover both booleans, rejection of arbitrary formulas without cached results, and no rewrite during opening.

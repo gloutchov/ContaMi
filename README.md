@@ -12,6 +12,8 @@ Sito / Website: [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/
 
 Il dettaglio Automobile mostra anche Km/l e box riordinati, con colonne rettangolari verdi/arancioni/rosse nel confronto costo/km. Vehicle details also show Km/l and reordered totals, with rectangular green/orange/red cost/km comparison columns.
 
+Compatibilità LibreOffice: riconosciute le costanti booleane `TRUE()`/`FALSE()` anche senza risultato memorizzato. LibreOffice compatibility: boolean constants `TRUE()`/`FALSE()` are recognized even without cached results.
+
 ## Funzioni principali / Key features
 
 - Dashboard generale con saldo Cassa, patrimonio netto e relativo valore al netto degli immobili, oltre ai confronti storici per patrimonio, liquidità, immobili, investimenti e pensioni integrative, entrate, uscite e impegni periodici.

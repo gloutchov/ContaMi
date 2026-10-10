@@ -16,6 +16,40 @@ function withoutId(value: object): Record<string, unknown> {
 }
 
 describe("ExcelWorkbookRepository", () => {
+  it("loads LibreOffice boolean constants even when ExcelJS drops cached false", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-libreoffice-")); directories.push(directory);
+    const filePath = path.join(directory, "synthetic.xlsx");
+    const repository = new ExcelWorkbookRepository();
+    const data = createEmptyFinanceData(2026);
+    data.categories[0].active = false;
+    await repository.save(filePath, data);
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+    const sheet = workbook.getWorksheet("Categories")!;
+    sheet.getCell("E2").value = { formula: "FALSE()", result: false };
+    sheet.getCell("E3").value = { formula: "TRUE()", result: true };
+    await workbook.xlsx.writeFile(filePath);
+    const before = await readFile(filePath);
+    const loaded = await repository.load(filePath);
+    expect(loaded.categories[0].active).toBe(false);
+    expect(loaded.categories[1].active).toBe(true);
+    expect(await readFile(filePath)).toEqual(before);
+  });
+
+  it("does not evaluate arbitrary formulas missing cached results", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-formula-")); directories.push(directory);
+    const filePath = path.join(directory, "synthetic.xlsx");
+    const repository = new ExcelWorkbookRepository();
+    await repository.save(filePath, createEmptyFinanceData(2026));
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+    workbook.getWorksheet("Categories")!.getCell("E2").value = { formula: "1=0" };
+    await workbook.xlsx.writeFile(filePath);
+    const before = await readFile(filePath);
+    await expect(repository.load(filePath)).rejects.toThrow();
+    expect(await readFile(filePath)).toEqual(before);
+  });
+
   it("round-trips residence water readings without creating financial movements", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-workbook-water-readings-")); directories.push(directory);
     const filePath = path.join(directory, "ContaMi-water-readings.xlsx");
