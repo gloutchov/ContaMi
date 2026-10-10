@@ -1405,3 +1405,15 @@ La checklist seguente è un gate riutilizzabile da verificare alla chiusura di c
 ## Criterio di completamento del progetto
 
 Il criterio di completamento è soddisfatto dalla release privata `v1.0.0`: include applicazioni installabili e verificate per macOS e Windows, le funzioni richieste sono coperte da test proporzionati al rischio, il workbook resta leggibile fuori dall’app, la chiusura annuale è riconciliata, i documenti obbligatori sono aggiornati e la CI è verde.
+
+
+## Patch 1.22.3 — Km/l e confronto Automobile — 2026-10-10
+
+- Obiettivo: mostrare il consumo medio Km/l sotto il confronto e riordinare gli undici box secondo la richiesta del proprietario; colonne rettangolari con minimi verdi, intermedi arancioni e massimi rossi.
+- Branch: `patch/1.22.3-vehicle-efficiency`; incremento patch `1.22.2 → 1.22.3`; eventuale tag versione `v1.22.3` solo dopo approvazione. Release da concordare per questa patch; nessun nuovo checkpoint milestone.
+- Criteri di accettazione: ordine richiesto, Km/l complessivo e assenza litri gestita, colori coerenti anche con parità/unico mezzo, compatibilità IT/EN e chiaro/scuro a 1080 px, nessuno stile inline.
+- Attività: riuso del rapporto complessivo esistente, variante del grafico isolata dagli altri usi, traduzioni, documentazione e test sintetici.
+- Documentazione: README, manuali IT/EN, MAP, versione documento SECURITY_MODEL; nessuna nuova superficie di sicurezza.
+- Verifiche: lint, typecheck, 304 test Vitest su 50 file, build renderer/Electron, controllo dei 15 documenti obbligatori e CSP produzione superati. Playwright CLI a 1080×900 in IT/chiaro ed EN/scuro: ordine degli undici box, 20 km/l sintetici, colonne senza arrotondamento, colori min/max, assenza overflow ed errori console verificati; screenshot locali in `output/playwright/`.
+- Limiti: `npm audit` segnala 10 vulnerabilità preesistenti (8 moderate, 2 alte: `http-cache-semantics` e `source-map-js`); grafo dipendenze invariato, nessun audit fix forzato. Packaging e CI multipiattaforma non eseguiti per questa revisione locale; nessun workflow avviato. Tre file utente non tracciati con suffisso ` 2` lasciati intatti ed esclusi dal commit.
+- Stato: implementazione e verifiche funzionali completate, branch congelato sul commit locale consegnato al proprietario; revisione pendente. Merge, tag, push, eventuale release e rimozione branch attendono controllo personale e approvazione esplicita del commit finale.

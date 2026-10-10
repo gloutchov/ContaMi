@@ -6,9 +6,11 @@ ContaMì è un’app desktop local-first per gestire finanze personali articolat
 
 ContaMì is a local-first desktop app for managing detailed personal finances while keeping a readable spreadsheet as the durable data source. It is bilingual (Italian/English), follows the system theme, and targets macOS and Windows.
 
-> Stato / Status: **1.22.2 — trasparenza del costo/km Automobile / Vehicle cost per kilometre breakdown (rilasciata / released)** · Licenza / License: **Apache-2.0**
+> Stato / Status: **1.22.3 — Km/l e confronto costi Automobile / Vehicle fuel efficiency and cost comparison (in revisione locale / local review)** · Licenza / License: **Apache-2.0**
 
 Sito / Website: [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/) — presentazione bilingue, funzioni, dettagli tecnici, accesso all’ultima release, collegamento diretto al manuale nella lingua selezionata e ritorno al sito principale [glaucosilvestri.it](https://glaucosilvestri.it/). La pubblicazione avviene dal solo contenuto di `docs/` tramite GitHub Pages configurato su `main` + `/docs`, con il dominio personalizzato dichiarato in `docs/CNAME`.
+
+Il dettaglio Automobile mostra anche Km/l e box riordinati, con colonne rettangolari verdi/arancioni/rosse nel confronto costo/km. Vehicle details also show Km/l and reordered totals, with rectangular green/orange/red cost/km comparison columns.
 
 ## Funzioni principali / Key features
 

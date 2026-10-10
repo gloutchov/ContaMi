@@ -1,6 +1,6 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-09-30 · Applicazione / Application: 1.22.2
+Versione del documento / Document version: 2026-10-10 · Applicazione / Application: 1.22.3
 
 ## Italiano
 
@@ -326,3 +326,10 @@ M11 is complete: production denies inline styles and connections. The only `unsa
 Application-level encryption is not planned and has no assigned milestone or version. It may be reconsidered only if a standard solution preserves direct Excel/Numbers interoperability and recovery. FileVault/BitLocker, filesystem permissions, and protected backups remain the recommended controls.
 
 macOS Developer ID signing/notarization and Windows Authenticode are not scheduled milestones while the required credentials are unavailable. Builds remain unsigned and accompanied by checksums and Gatekeeper/SmartScreen instructions. No web integrations or market-data features are planned, and the network block remains unchanged.
+
+
+### Verifica locale patch 1.22.3 / Local patch 1.22.3 verification
+
+Il controllo `npm audit` del 2026-10-10 rileva 10 vulnerabilità nel grafo preesistente (8 moderate e 2 alte, in `http-cache-semantics` e `source-map-js`). Il precedente esito zero descrive soltanto il controllo storico del 2026-09-29. Questa patch modifica presentazione e riuso di metriche locali: non aggiorna il grafo dipendenze. Gli avvisi restano aperti e richiedono una verifica dedicata prima della distribuzione.
+
+The 2026-10-10 `npm audit` reports 10 vulnerabilities in the existing dependency graph (8 moderate and 2 high, in `http-cache-semantics` and `source-map-js`). The earlier zero count refers only to the historical 2026-09-29 check. This patch changes presentation and reuses local metrics without changing the dependency graph. These findings remain open and require dedicated verification before distribution.

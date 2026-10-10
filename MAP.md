@@ -110,7 +110,7 @@ ContaMì/
 │   │   │   ├── PaymentAccountField.tsx # selezione coerente di conto o Cassa per metodo
 │   │   │   ├── PropertyReportDialog.tsx # periodo e nomi effimeri dei proprietari, stampa/salvataggio
 │   │   │   ├── RecurringRateChangesEditor.tsx # cronologia, anteprima e conferma tariffa
-│   │   │   └── TrendBars.tsx           # barre SVG proporzionali compatibili con CSP rigorosa
+│   │   │   └── TrendBars.tsx           # barre SVG proporzionali e variante rettangolare costo/km verde/arancione/rossa, compatibili con CSP rigorosa
 │   │   ├── forms/                      # moduli di inserimento per ogni dominio
 │   │   │   ├── AccountForm.tsx     # conti ordinari e Casse con alimentazione predefinita
 │   │   │   ├── InvestmentForms.tsx  # investimenti non pensionistici e movimenti
