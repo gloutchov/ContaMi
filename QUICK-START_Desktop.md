@@ -2,6 +2,8 @@
 
 ## Italiano
 
+Le build `1.23.0` con Electron 44 richiedono macOS 13 o successivo; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12.
+
 1. Scarica dalla release privata il DMG macOS `arm64`/`x64` oppure l’installer Windows `x64` insieme a `SHA256SUMS.txt`; verifica il checksum e installa il pacchetto seguendo gli avvisi documentati nel manuale.
 2. Avvia ContaMì. Lingua e tema seguono il sistema finché non scegli un override.
 3. Nella Panoramica premi **Crea nuovo foglio**. Scegli Excel su macOS/Windows oppure Numbers su macOS con Numbers installato.
@@ -15,6 +17,8 @@
 Il workbook è il dato autorevole. Non tenerlo aperto e modificarlo contemporaneamente in Excel/Numbers mentre salvi dall’app: ContaMì confronta anche l’impronta SHA-256 e blocca il conflitto. I salvataggi ContaMì usano inoltre un lock cooperativo a scadenza; dopo un crash, l’app chiede conferma prima di rimuovere il solo lock scaduto. I backup sono nella cartella nascosta `.contami-backups` accanto al file `.xlsx`.
 
 ## English
+
+Version 1.23.0 builds with Electron 44 require macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12.
 
 1. From the private release, download the macOS `arm64`/`x64` DMG or Windows `x64` installer together with `SHA256SUMS.txt`; verify the checksum and install the package by following the warning guidance in the manual.
 2. Launch ContaMì. Language and theme follow the system until you choose an override.

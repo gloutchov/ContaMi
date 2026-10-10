@@ -27,7 +27,8 @@ L’app è local-first: non richiede account, non usa servizi cloud e non invia 
 
 ## 2. Requisiti e installazione
 
-- macOS o Windows a 64 bit;
+- per le build `1.23.0` con Electron 44: macOS 13 o successivo a 64 bit; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12;
+- oppure Windows a 64 bit (`x64`);
 - spazio sufficiente per l’app, il workbook e i backup;
 - Apple Numbers installato solo se vuoi una copia `.numbers` nativa;
 - Excel non è richiesto: ContaMì legge e scrive `.xlsx` direttamente.
@@ -343,9 +344,11 @@ Vedi [SECURITY_MODEL.md](SECURITY_MODEL.md) per dettagli tecnici e rischi residu
 
 Prima di aggiornare, chiudi ContaMì e conserva una copia del workbook. Installa la nuova release sopra la precedente.
 
-La versione 1.22.2 mostra il totale e le categorie che compongono il costo/km dell'Automobile, separa gli eventuali costi storici non dettagliati ed esclude le rate pianificate dai costi sostenuti. Non modifica automaticamente i dati storici né lo schema del workbook. La versione 1.22.1 corregge un avviso della configurazione di sviluppo Vite. La copia preventiva resta raccomandata come per ogni aggiornamento.
+La versione 1.23.0 aggiorna il runtime a Electron 44 e le dipendenze di sviluppo verificate, senza cambiare funzioni, dati o schema del workbook. Su macOS richiede almeno la versione 13; chi usa macOS 12 può continuare con `v1.22.2`. La versione 1.22.2 mostra il totale e le categorie che compongono il costo/km dell'Automobile, separa gli eventuali costi storici non dettagliati ed esclude le rate pianificate dai costi sostenuti. Non modifica automaticamente i dati storici né lo schema del workbook. La versione 1.22.1 corregge un avviso della configurazione di sviluppo Vite. La copia preventiva resta raccomandata come per ogni aggiornamento.
 
 Per rimuovere l’app su macOS, chiudi ContaMì e sposta `Contami` da **Applicazioni** al Cestino. Su Windows apri **Impostazioni → App → App installate**, cerca `Contami` e scegli **Disinstalla**. La rimozione dell’app non elimina i workbook scelti né `.contami-backups`: restano nelle cartelle dell’utente e vanno eliminati solo manualmente dopo averne verificato il contenuto.
 
 
 Schema workbook v15: aggiunge a `Vehicles` i campi facoltativi `purchasePaymentMode`, `purchaseDownPayment` e `purchaseCostRecorded`. Migrazione v14 con backup, senza inventare importi; rollover e round-trip conservano i campi. I template di importazione v1/v2/v3 restano compatibili e conservano questi metadati sugli aggiornamenti: compilali dal modulo Automobile.
+
+La versione 1.24.0 aggiunge costo d’uso/km e costo complessivo/km e aggiorna il workbook a schema v15 con backup e migrazione conservativa. Include inoltre Km/l, colonne rettangolari, compatibilità con le costanti booleane LibreOffice e feedback di salvataggio nelle modali. Mantiene Electron 44 e il requisito macOS 13 della 1.23.0.

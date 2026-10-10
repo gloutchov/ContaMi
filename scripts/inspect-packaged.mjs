@@ -1,4 +1,5 @@
 import { listPackage, extractFile } from "@electron/asar";
+import { execFileSync } from "node:child_process";
 import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { assertStrictProductionCspHtml } from "./validate-renderer-csp.mjs";
@@ -68,6 +69,13 @@ for (const asarPath of asarFiles) {
   assertStrictProductionCspHtml(extractFile(asarPath, "dist/index.html").toString("utf8"), `${asarPath}:dist/index.html`);
 
   const resources = path.dirname(asarPath);
+  if (process.platform === "darwin") {
+    const plistPath = path.resolve(resources, "..", "Info.plist");
+    const minimumVersion = execFileSync("/usr/bin/plutil", ["-extract", "LSMinimumSystemVersion", "raw", "-o", "-", plistPath], { encoding: "utf8" }).trim();
+    if (minimumVersion !== manifest.build.mac.minimumSystemVersion) {
+      throw new Error(`macOS minimum version mismatch in ${plistPath}: ${minimumVersion} != ${manifest.build.mac.minimumSystemVersion}`);
+    }
+  }
   for (const requiredResource of ["scripts/numbers-mirror.applescript", "assets/icon.png"]) {
     const resourcePath = path.join(resources, requiredResource);
     if (!packagedFiles.includes(resourcePath)) throw new Error(`Missing packaged resource: ${resourcePath}`);

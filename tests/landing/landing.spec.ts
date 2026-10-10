@@ -52,6 +52,8 @@ test("landing detects non-Italian locales and exposes the main conversion path",
     "https://github.com/gloutchov/Contami/blob/main/INSTRUCTIONS.md",
   );
   await expect(page.locator("#hero-image")).toHaveAttribute("src", /panoramica_whi_english\.png$/);
+  await expect(page.locator('[data-i18n="download.body"]')).toContainText("macOS 13 or later");
+  await expect(page.locator('[data-i18n="download.body"]')).toContainText("v1.22.2");
   expect(consoleErrors).toEqual([]);
   expect(remoteRequests).toEqual([]);
   await context.close();
@@ -72,6 +74,8 @@ test("landing detects Italian, follows dark mode, and loads localized media", as
     "href",
     "https://glaucosilvestri.it/",
   );
+  await expect(page.locator('[data-i18n="download.body"]')).toContainText("macOS 13 o successivo");
+  await expect(page.locator('[data-i18n="download.body"]')).toContainText("v1.22.2");
   expect(consoleErrors).toEqual([]);
   expect(remoteRequests).toEqual([]);
   await context.close();
