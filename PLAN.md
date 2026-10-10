@@ -1435,3 +1435,15 @@ Il criterio di completamento è soddisfatto dalla release privata `v1.0.0`: incl
 - Verifiche locali superate: lint, typecheck, 311 test su 51 file, build renderer/Electron, controllo documenti e CSP. Playwright CLI a 1080 px in IT/chiaro ed EN/scuro: errore simulato visibile, input conservato, nuovo tentativo riuscito, modale chiusa e prezzo aggiornato. Screenshot soltanto sintetici in `output/playwright/`.
 - Aggiornati README, manuali, MAP e SECURITY_MODEL. Nessuna dipendenza aggiunta, nessun workflow avviato; audit preesistente e gate packaging/CI invariati.
 - Il commit `aeb7da8` è superato da questa integrazione. Branch da congelare sul nuovo commit locale; merge/tag/push restano subordinati al controllo personale e all’approvazione esplicita del commit finale.
+
+
+## Estensione funzionale 1.23.0 — costo d’uso e costo complessivo/km — 2026-10-10
+
+- Obiettivo: confrontare i costi d’uso senza acquisto e mostrare separatamente il costo complessivo sostenuto, con copertura esplicita e senza duplicare acquisto/rate.
+- Branch: `patch/1.23.0-vehicle-dual-costs`, derivato dal commit locale `3f36fe1` della patch precedente su richiesta del proprietario; include il lavoro non ancora pubblicato. Nessun merge/tag/push del predecessore viene presunto autorizzato.
+- Versione: incremento minore `1.22.3 → 1.23.0`; tag previsto `v1.23.0` solo dopo revisione. Checkpoint milestone non previsto per questa estensione mirata; pubblicazione/release subordinate anche ai gate di distribuzione.
+- Attività: calcolo puro dedicato, metadati informativi pagamento acquisto/anticipo/acquisto già nei costi, schema workbook v15 con migrazione conservativa v14, doppio KPI e confronto sul costo d’uso, traduzioni e manuali.
+- Accettazione: acquisto unico, finanziamento con anticipo, rate confermate vs pianificate, assenza duplicazioni, dati mancanti/incoerenti segnalati, zero km, IT/EN e chiaro/scuro, round-trip e rollover.
+- Test: unitari finanziari, integrazione workbook/migrazione/import e UI sintetica; lint, typecheck, suite, build, documenti, CSP, audit. Nessun dato privato usato come fixture.
+- Documenti: README, manuali, MAP, SECURITY_MODEL, AGENTS per schema corrente, PLAN. Stato: implementazione locale completata, in attesa di controllo personale e approvazione del commit finale.
+- Esito locale: lint, typecheck, 333 test in 52 file, build renderer/Electron, controllo documentale e CSP superati. Migrazione v14→v15 e round-trip verificati su workbook sintetici; nessun workbook privato aperto o modificato per questa estensione. Playwright CLI a 1080 px conferma salvataggio, dati acquisto mancanti, doppio valore e assenza di overflow in IT/chiaro ed EN/scuro. Audit npm: 10 vulnerabilità preesistenti (8 moderate, 2 alte); nessuna dipendenza aggiunta o aggiornata. CI e packaging multipiattaforma non eseguiti in questa fase locale; restano necessari prima della distribuzione. Screenshot sintetici e diff di revisione in `output/playwright/`, non tracciati.

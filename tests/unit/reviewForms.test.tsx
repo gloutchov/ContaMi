@@ -49,6 +49,20 @@ function dataWithUnrelatedSharedExpense() {
 }
 
 describe("v0.8 review forms", () => {
+  it("saves informational down payment and acquisition amounts without modifying financing", async () => {
+    const data = createEmptyFinanceData(2026);
+    const vehicle = { id: crypto.randomUUID(), name: "Synthetic financed car", manufacturer: "", model: "", fuelType: "petrol" as const, active: true, notes: "" };
+    data.vehicles.push(vehicle);
+    const onSave = vi.fn().mockResolvedValue(undefined);
+    renderIt(<VehicleForm data={data} value={vehicle} onSave={onSave} onClose={vi.fn()} />);
+    fireEvent.change(screen.getByLabelText("Pagamento dell’acquisto"), { target: { value: "financed" } });
+    fireEvent.change(screen.getByLabelText(/^Anticipo già pagato/), { target: { value: "0" } });
+    fireEvent.change(screen.getByLabelText(/^Acquisto già incluso nei costi/), { target: { value: "0" } });
+    fireEvent.click(screen.getByRole("button", { name: "Salva", exact: true }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave).toHaveBeenCalledWith({ type: "updateVehicle", value: expect.objectContaining({ purchasePaymentMode: "financed", purchaseDownPayment: 0, purchaseCostRecorded: 0 }) });
+  });
+
   it("saves only vehicle metadata when financing controls are unchanged", async () => {
     const data = createEmptyFinanceData(2026);
     const vehicle = { id: crypto.randomUUID(), name: "Synthetic car", manufacturer: "", model: "", fuelType: "petrol" as const, active: true, notes: "" };

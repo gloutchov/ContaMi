@@ -152,7 +152,7 @@ const WORKBOOK_TABLES_WITH_WATER_READINGS: WorkbookTableDefinition[] = WORKBOOK_
     ]
   : [definition]);
 
-export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_WITH_WATER_READINGS.map((definition) => definition.key === "propertyAnnualSummaries"
+export const WORKBOOK_TABLES_V14: WorkbookTableDefinition[] = WORKBOOK_TABLES_WITH_WATER_READINGS.map((definition) => definition.key === "propertyAnnualSummaries"
   ? {
       ...definition,
       columns: [
@@ -195,4 +195,8 @@ export const WORKBOOK_TABLES_V1: WorkbookTableDefinition[] = [
   { key: "annualSummaries", sheet: "Annual Summaries", columns: ["year", "income", "expenses", "netCashFlow", "closingNetWorth"] },
 ];
 
-export const WORKBOOK_SCHEMA_VERSION = 14;
+export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_V14.map((definition) => definition.key === "vehicles"
+  ? { ...definition, columns: [...definition.columns, "purchasePaymentMode", "purchaseDownPayment", "purchaseCostRecorded"] }
+  : definition);
+
+export const WORKBOOK_SCHEMA_VERSION = 15;

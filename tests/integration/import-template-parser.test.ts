@@ -138,6 +138,17 @@ async function changeTemplateVersion(filePath: string, type: ImportTemplateType,
 }
 
 describe("ExcelImportTemplateParser", () => {
+  it("preserves vehicle acquisition metadata when updating through a v3 template", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-import-vehicle-acquisition-")); directories.push(directory);
+    const data = createEmptyFinanceData(2026);
+    data.vehicles.push({ id: crypto.randomUUID(), name: "Synthetic car", manufacturer: "", model: "", fuelType: "petrol", active: true, notes: "", purchasePaymentMode: "financed", purchaseDownPayment: 2000, purchaseCostRecorded: 1000 });
+    const filePath = await completedTemplate(directory, "vehicles", data, [syntheticRows("vehicles", data)[0]]);
+    const prepared = await new ExcelImportTemplateParser().parse(filePath, data, "update");
+    expect(prepared.preview.rejectedRows).toBe(0);
+    const next = applyFinanceCommands(data, prepared.commands);
+    expect(next.vehicles[0]).toMatchObject({ purchasePaymentMode: "financed", purchaseDownPayment: 2000, purchaseCostRecorded: 1000 });
+  });
+
   it("parses and applies all eight supported templates with linked records exactly once", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-import-parser-"));
     directories.push(directory);

@@ -1,5 +1,6 @@
 import { createVehicleAnnualSummaries } from "../../domain/annualHistory";
 import type { FinanceData, VehicleAnnualSummary } from "../../domain/models";
+import { vehicleCostMetrics, vehicleHasFinancing } from "../../domain/vehicleCosts";
 import { confirmedVehicleEntries } from "../../domain/vehicleEntries";
 
 export function vehicleHistory(data: FinanceData, vehicleId: string): VehicleAnnualSummary[] {
@@ -61,12 +62,13 @@ export interface VehicleCostComparisonPoint {
 export function vehicleCostComparison(data: FinanceData): VehicleCostComparisonPoint[] {
   return data.vehicles.flatMap((vehicle) => {
     const summary = vehicleLifetimeSummary(data, vehicle.id);
-    if (summary.distanceKm <= 0 || summary.totalCosts <= 0) return [];
+    const costs = vehicleCostMetrics(vehicle, summary, vehicleHasFinancing(data, vehicle.id));
+    if (costs.operatingCostPerKm === undefined) return [];
     return [{
       vehicleId: vehicle.id,
       label: vehicle.name,
-      costPerKm: summary.totalCosts / summary.distanceKm,
-      totalCosts: summary.totalCosts,
+      costPerKm: costs.operatingCostPerKm,
+      totalCosts: costs.operatingCosts!,
       distanceKm: summary.distanceKm,
     }];
   });

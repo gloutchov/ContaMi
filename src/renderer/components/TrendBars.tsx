@@ -6,7 +6,7 @@ export function TrendBars({ points, format, variant = "default" }: { points: Tre
   const chartId = useId().replaceAll(":", "");
   const maximum = Math.max(0, ...points.map((point) => point.value));
   const minimum = Math.min(...points.map((point) => point.value));
-  if (!points.length || maximum === 0) return null;
+  if (!points.length || (maximum === 0 && variant === "default")) return null;
   const accessibleLabel = points.map((point) => {
     const label = "label" in point ? point.label : point.year;
     return `${label}: ${format(point.value)}`;
@@ -14,7 +14,7 @@ export function TrendBars({ points, format, variant = "default" }: { points: Tre
   return <div className={`trend-bars${variant === "costComparison" ? " trend-bars-cost-comparison" : ""}`} role="img" aria-label={accessibleLabel}>
     {points.map((point, index) => {
       const label = "label" in point ? point.label : point.year;
-      const height = Math.max(3, point.value / maximum * 100);
+      const height = maximum === 0 ? 0 : variant === "costComparison" ? point.value / maximum * 100 : Math.max(3, point.value / maximum * 100);
       const costTone = point.value === minimum ? "economical" : point.value === maximum ? "expensive" : "moderate";
       return <div className="trend-column" key={label} title={`${label}: ${format(point.value)}`}>
         <span className="trend-value">{format(point.value)}</span>

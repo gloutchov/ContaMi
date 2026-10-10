@@ -34,6 +34,12 @@ describe("property compact chart layout", () => {
 
 
 describe("vehicle cost comparison bars", () => {
+  it("renders a labelled zero-cost comparison without inventing a positive bar", () => {
+    const { container } = render(<TrendBars variant="costComparison" points={[{ label: "Synthetic free car", value: 0 }]} format={String} />);
+    expect(screen.getByRole("img")).toHaveAccessibleName("Synthetic free car: 0");
+    expect(container.querySelector("rect")).toHaveAttribute("height", "0");
+  });
+
   it("uses rectangular columns, tied extrema colours and proportional heights", () => {
     const { container } = render(<TrendBars variant="costComparison" points={[0.2, 0.5, 0.8, 0.2, 0.8].map((value, index) => ({ label: `Car ${index}`, value }))} format={String} />);
     const bars = [...container.querySelectorAll("rect")];

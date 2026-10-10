@@ -311,6 +311,9 @@ export const vehicleSchema = z.object({
   disposalDate: isoDate.optional(),
   purchasePrice: money.optional(),
   salePrice: money.optional(),
+  purchasePaymentMode: z.enum(["cash", "financed"]).optional(),
+  purchaseDownPayment: money.optional(),
+  purchaseCostRecorded: money.optional(),
   active: z.boolean(),
   notes,
 });
@@ -415,7 +418,7 @@ export const vehicleAnnualSummarySchema = z.object({
 
 export const financeDataSchema = z.object({
   meta: z.object({
-    schemaVersion: z.literal(14),
+    schemaVersion: z.literal(15),
     activeYear: z.number().int().min(1900).max(9999),
     createdAt: isoTimestamp,
     updatedAt: isoTimestamp,

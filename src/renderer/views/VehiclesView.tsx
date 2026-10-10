@@ -2,6 +2,7 @@ import { CarFront, Fuel, Gauge, Pencil, Plus, ReceiptText, Trash2 } from "lucide
 import { useMemo, useState } from "react";
 import type { FinanceCommand } from "../../domain/commands";
 import type { FinanceData, Vehicle, VehicleEntry } from "../../domain/models";
+import { vehicleCostMetrics, vehicleHasFinancing } from "../../domain/vehicleCosts";
 import { confirmedVehicleEntries } from "../../domain/vehicleEntries";
 import { vehicleHasRecordedHistory } from "../../domain/vehicleInstallments";
 import { DetailDialog } from "../components/DetailDialog";
@@ -37,6 +38,7 @@ export function VehiclesView({ data, onSave }: { data: FinanceData; onSave: (com
   const filteredEntries = useMemo(() => filterDatedEntries(entries, detailMonth, detailSearch), [entries, detailMonth, detailSearch]);
   const summary = selected ? vehicleLifetimeSummary(data, selected.id) : undefined;
   const annualHistory = selected ? vehicleHistory(data, selected.id) : [];
+  const costs = selected && summary ? vehicleCostMetrics(selected, summary, vehicleHasFinancing(data, selected.id)) : undefined;
   const comparison = useMemo(() => vehicleCostComparison(data), [data]);
   const openEntry = (id: string) => { setEntryVehicleId(id); setEditingEntry(null); };
   const openDetails = (vehicle: Vehicle) => { setDetailSearch(""); setDetailMonth(""); setSelected(vehicle); };
@@ -48,7 +50,7 @@ export function VehiclesView({ data, onSave }: { data: FinanceData; onSave: (com
     })}</section> : <section className="panel"><EmptyState title={t("noVehicles")} actionLabel={t("addFirst")} onAction={() => setEditingVehicle(null)} icon={CarFront} /></section>}
     {selected && <DetailDialog title={selected.name} onClose={() => setSelected(undefined)} actions={<><button className="secondary-button" onClick={() => { setEditingVehicle(selected); setSelected(undefined); }}>{t("editVehicle")}</button><button className="primary-button" onClick={() => { openEntry(selected.id); setSelected(undefined); }}>{t("newVehicleEntry")}</button></>}>
       <div className="detail-facts"><span><small>{t("manufacturer")}</small><strong>{selected.manufacturer || "—"}</strong></span><span><small>{t("model")}</small><strong>{selected.model || "—"}</strong></span><span><small>{t("fuelType")}</small><strong>{t(selected.fuelType)}</strong></span><span><small>{t("purchasePrice")}</small><strong>{selected.purchasePrice === undefined ? "—" : formatCurrency(selected.purchasePrice, language)}</strong></span></div>
-      <section className="vehicle-history"><h3>{t("vehicleComparison")}</h3><TrendBars variant="costComparison" points={comparison.map((item) => ({ label: item.label, value: item.costPerKm }))} format={(value) => `${formatCurrency(value, language)}/km`} /></section>
+      <section className="vehicle-history"><h3>{t("vehicleOperatingComparison")}</h3><TrendBars variant="costComparison" points={comparison.map((item) => ({ label: item.label, value: item.costPerKm }))} format={(value) => `${formatCurrency(value, language)}/km`} /></section>
       {summary && <>
         <div className="type-totals">
           <span><small>{t("installment")}</small><strong>{formatCurrency(summary.installments, language)}</strong></span>
@@ -59,11 +61,13 @@ export function VehiclesView({ data, onSave }: { data: FinanceData; onSave: (com
           <span><small>{t("fuel")}</small><strong>{formatCurrency(summary.fuelCosts, language)}</strong></span>
           <span><small>{t("vehicleOtherCosts")}</small><strong>{formatCurrency(vehicleUnitemizedCosts(summary), language)}</strong></span>
           <span><small>{t("vehicleTotalCosts")}</small><strong>{formatCurrency(summary.totalCosts, language)}</strong></span>
-          <span><small>{t("costPerKm")}</small><strong>{summary.distanceKm > 0 ? `${formatCurrency(summary.totalCosts / summary.distanceKm, language)}/km` : "—"}</strong></span>
+          <span><small>{t("vehicleOperatingCostPerKm")}</small><strong>{costs?.operatingCostPerKm === undefined ? "—" : `${formatCurrency(costs.operatingCostPerKm, language)}/km`}</strong></span>
+          <span><small>{t("vehicleOverallCostPerKm")}</small><strong>{costs?.overallCostPerKm === undefined ? "—" : `${formatCurrency(costs.overallCostPerKm, language)}/km`}</strong>{costs?.incomplete && <small>{t(costs.inconsistent ? "vehicleCostInconsistent" : "vehicleCostIncomplete")}</small>}</span>
           <span><small>{t("distanceKm")}</small><strong>{summary.distanceKm.toLocaleString(language, { maximumFractionDigits: 3 })} km</strong></span>
           <span><small>{t("kilometersPerLiter")}</small><strong>{summary.averageKmPerLiter === undefined ? "—" : `${summary.averageKmPerLiter.toLocaleString(language, { maximumFractionDigits: 2 })} km/l`}</strong></span>
         </div>
-        <p className="meta">{t("vehicleCostBasisHelp")}</p>
+        <p className="meta">{t("vehicleDualCostBasisHelp")}</p>
+        {costs?.incomplete && <p className="meta" role="status">{t(costs.inconsistent ? "vehicleCostInconsistentHelp" : "vehicleCostIncompleteHelp")}</p>}
         {annualHistory.length > 0 && <section className="vehicle-history">
           <h3>{t("vehicleYearlyCosts")}</h3>
           <div className="detail-table"><table className="data-table"><thead><tr><th>{t("year")}</th><th>{t("vehicleCosts")}</th><th>{t("vehicleUnitemizedCosts")}</th><th>{t("distanceKm")}</th></tr></thead><tbody>

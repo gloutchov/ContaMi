@@ -173,7 +173,7 @@ describe("historical view helpers", () => {
     const summary = vehicleLifetimeSummary(data, vehicleId);
     expect(summary).toMatchObject({ totalCosts: 1_075, fuelCosts: 250, installments: 300, distanceKm: 2_500, averageKmPerLiter: 20 });
     expect(vehicleUnitemizedCosts(summary)).toBe(325);
-    expect(vehicleCostComparison(data)[0].costPerKm).toBe(1_075 / 2_500);
+    expect(vehicleCostComparison(data)[0].costPerKm).toBe(775 / 2_500);
   });
   it("leaves fuel efficiency unknown when no litres are recorded", () => {
     const data = createEmptyFinanceData(2026);
