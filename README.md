@@ -6,7 +6,7 @@ ContaMì è un’app desktop local-first per gestire finanze personali articolat
 
 ContaMì is a local-first desktop app for managing detailed personal finances while keeping a readable spreadsheet as the durable data source. It is bilingual (Italian/English), follows the system theme, and targets macOS and Windows.
 
-> Stato sorgente / Source status: **1.24.0 — costo d’uso e costo complessivo/km / Operating and overall vehicle cost per kilometre (in revisione locale / local review)** · Licenza / License: **Apache-2.0**
+> Stato sorgente / Source status: **1.24.0 — costo d’uso e costo complessivo/km / Operating and overall vehicle cost per kilometre (rilasciata / released)** · Licenza / License: **Apache-2.0**
 
 Sito / Website: [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/) — presentazione bilingue, funzioni, dettagli tecnici, accesso all’ultima release, collegamento diretto al manuale nella lingua selezionata e ritorno al sito principale [glaucosilvestri.it](https://glaucosilvestri.it/). La pubblicazione avviene dal solo contenuto di `docs/` tramite GitHub Pages configurato su `main` + `/docs`, con il dominio personalizzato dichiarato in `docs/CNAME`.
 
@@ -15,6 +15,8 @@ Il dettaglio Automobile mostra costo d’uso/km senza acquisto e costo complessi
 Le modifiche anagrafiche delle automobili preservano i finanziamenti; gli errori di salvataggio sono visibili nel modulo e conservano i dati inseriti. Vehicle metadata edits preserve financing; save errors appear inside the form and retain user input.
 
 Compatibilità LibreOffice: riconosciute le costanti booleane `TRUE()`/`FALSE()` anche senza risultato memorizzato. LibreOffice compatibility: boolean constants `TRUE()`/`FALSE()` are recognized even without cached results.
+
+La manutenzione delle dipendenze successiva a 1.24.0 non cambia le funzioni, lo schema workbook né la versione dell’app. Post-1.24.0 dependency maintenance does not change features, workbook schema, or the app version.
 
 ## Funzioni principali / Key features
 

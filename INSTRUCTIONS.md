@@ -318,4 +318,4 @@ To remove the app on macOS, close ContaMì and move `Contami` from **Application
 
 Workbook schema v15 adds optional `purchasePaymentMode`, `purchaseDownPayment`, and `purchaseCostRecorded` fields to `Vehicles`. Migration from v14 uses a backup without inventing amounts; rollover and round-trip preserve them. Import templates v1/v2/v3 remain compatible and preserve existing metadata on updates; enter these fields in the Vehicle form.
 
-Version 1.24.0 adds operating and overall cost/km and upgrades the workbook to schema v15 with backup and conservative migration. It also includes Km/l, rectangular columns, LibreOffice boolean constant compatibility and save feedback inside dialogs. It retains Electron 44 and the macOS 13 minimum from 1.23.0.
+Version 1.24.0 adds operating and overall cost/km and upgrades the workbook to schema v15 with backup and conservative migration. It also includes Km/l, rectangular columns, LibreOffice boolean constant compatibility and save feedback inside dialogs. It retains Electron 44 and the macOS 13 minimum from 1.23.0. The following dependency maintenance does not change features, the workbook schema, or the app version.
