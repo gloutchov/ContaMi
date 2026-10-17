@@ -16,7 +16,7 @@ Le modifiche anagrafiche delle automobili preservano i finanziamenti; gli errori
 
 Compatibilità LibreOffice: riconosciute le costanti booleane `TRUE()`/`FALSE()` anche senza risultato memorizzato. LibreOffice compatibility: boolean constants `TRUE()`/`FALSE()` are recognized even without cached results.
 
-La manutenzione delle dipendenze successiva a 1.24.0 è in revisione: non cambia le funzioni, lo schema workbook né la versione dell’app. Post-1.24.0 dependency maintenance is under review; it does not change features, workbook schema, or the app version.
+La manutenzione delle dipendenze successiva a 1.24.0 non cambia le funzioni, lo schema workbook né la versione dell’app. Post-1.24.0 dependency maintenance does not change features, workbook schema, or the app version.
 
 ## Funzioni principali / Key features
 
