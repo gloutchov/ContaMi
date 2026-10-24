@@ -193,6 +193,14 @@ Quando apri un workbook esistente, ContaMì riconcilia automaticamente i movimen
 
 ContaMì è uno strumento di registrazione, non fornisce consulenza finanziaria né quotazioni di mercato.
 
+### Report investimenti
+
+Nella pagina **Investimenti**, scegli **Report investimenti** per un resoconto di tutte le posizioni non pensionistiche; nel dettaglio di una posizione, usa lo stesso pulsante per il report di quella posizione. Seleziona **Anno corrente** (mesi) o **Intera storia** (anni), poi **Stampa** oppure **Salva PDF**. La stampa usa il dialogo del sistema; per il PDF scegli la destinazione con un dialogo nativo. Il report non modifica il workbook e non viene aggiunto ai backup.
+
+Per ogni valuta il documento mostra capitale iniziale, versamenti successivi, liquidazioni, capitale netto investito, controvalore, risultato complessivo e relativa percentuale quando il capitale netto è positivo. Un grafico confronta capitale e controvalore; un secondo mostra il rendimento mensile o annuale. Le tabelle riportano periodi, data dell'ultima valutazione disponibile, copertura, posizioni e registrazioni ancora disponibili. I gruppi contano soltanto le posizioni finali, senza duplicare i figli; valute diverse non vengono convertite o sommate.
+
+Il **risultato complessivo** è controvalore meno capitale netto investito. Il **rendimento del periodo** segue Modified Dietz oppure la stima storica dichiarata nel documento: un Versamento o una Liquidazione non è un guadagno o una perdita. Le Correzioni cambiano il capitale contabile ma non il rendimento. Gli anni archiviati possono avere soltanto consuntivi; l’assenza di valutazioni e i periodi parziali restano indicati, senza valori futuri inventati. Le registrazioni nel dettaglio sono limitate a 2.000 righe per valuta, mentre i totali usano tutti i dati validati. Il PDF contiene dati finanziari personali: conservalo e condividilo con cura.
+
 ## 9. Pensione integrativa
 
 La sezione **Pensione integrativa** è separata dagli altri investimenti e usa due livelli:

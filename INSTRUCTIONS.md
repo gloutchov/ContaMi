@@ -180,6 +180,14 @@ When an existing workbook is opened, ContaMì automatically reconciles asset mov
 
 ContaMì is a record-keeping tool. It does not provide financial advice or market prices.
 
+### Investment reports
+
+On the **Investments** page, choose **Investment report** for all non-pension positions; in a position’s details, use the same action for that position alone. Select **Current year** (monthly) or **Full history** (yearly), then **Print** or **Save PDF**. Printing uses the system dialog, while PDF export uses a native destination dialog. The report does not change the workbook or join its backups.
+
+For each currency, the document shows opening capital, later contributions, withdrawals, net invested capital, current value, overall result, and its percentage when net capital is positive. One chart compares capital with value; another shows monthly or yearly period returns. Tables include periods, the date of the latest available valuation, coverage, positions, and retained individual entries. Groups include leaf positions only, and different currencies are neither converted nor added together.
+
+**Overall result** means current value minus net invested capital. **Period return** follows Modified Dietz or the declared historical estimate: a Contribution or Withdrawal is not a gain or loss. Corrections change book capital but not period return. Archived years may have annual summaries only; missing valuations and partial periods remain marked, with no invented future values. The detailed table is limited to 2,000 entries per currency while totals use all validated data. The PDF contains personal financial information, so store and share it carefully.
+
 ## 9. Private pension
 
 The **Private pension** section is separate from other investments and uses two levels:

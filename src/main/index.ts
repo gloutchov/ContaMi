@@ -13,6 +13,7 @@ import { FinanceFileService } from "./services/FinanceFileService";
 import { ImportTemplateService } from "./services/ImportTemplateService";
 import { ImportDataService } from "./services/ImportDataService";
 import { PropertyReportService } from "./services/PropertyReportService";
+import { InvestmentReportService } from "./services/InvestmentReportService";
 
 app.enableSandbox();
 
@@ -128,7 +129,8 @@ function bootstrapWindow(): void {
   const importTemplates = new ImportTemplateService(mainWindow, finance, new ExcelImportTemplateGenerator());
   const imports = new ImportDataService(mainWindow, finance, new ExcelImportTemplateParser());
   const propertyReports = new PropertyReportService(mainWindow, finance);
-  registerIpc(mainWindow, settings, finance, importTemplates, imports, propertyReports);
+  const investmentReports = new InvestmentReportService(mainWindow, finance);
+  registerIpc(mainWindow, settings, finance, importTemplates, imports, propertyReports, investmentReports);
   installApplicationMenu();
 }
 

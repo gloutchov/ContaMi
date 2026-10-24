@@ -7,6 +7,7 @@ import {
   importTemplateGenerateIpcArgumentsSchema,
   noIpcArgumentsSchema,
   propertyReportIpcArgumentsSchema,
+  investmentReportIpcArgumentsSchema,
   settingsUpdateIpcArgumentsSchema,
   workbookCreateIpcArgumentsSchema,
 } from "../../src/shared/ipcValidation";
@@ -89,5 +90,15 @@ describe("IPC argument validation", () => {
     expect(propertyReportIpcArgumentsSchema.safeParse([{ ...request, ownerName: "x".repeat(121) }]).success).toBe(false);
     expect(propertyReportIpcArgumentsSchema.safeParse([{ ...request, filePath: "/private/report.pdf" }]).success).toBe(false);
     expect(propertyReportIpcArgumentsSchema.safeParse([request, "/private/report.pdf"]).success).toBe(false);
+  });
+
+  it("accepts only narrow investment-report requests", () => {
+    const request = { investmentId: crypto.randomUUID(), scope: "current-year", language: "it", action: "save-pdf" } as const;
+    expect(investmentReportIpcArgumentsSchema.safeParse([request]).success).toBe(true);
+    expect(investmentReportIpcArgumentsSchema.safeParse([{ scope: "lifetime", language: "en", action: "print" }]).success).toBe(true);
+    expect(investmentReportIpcArgumentsSchema.safeParse([{ ...request, investmentId: "invalid" }]).success).toBe(false);
+    expect(investmentReportIpcArgumentsSchema.safeParse([{ ...request, scope: "quarter" }]).success).toBe(false);
+    expect(investmentReportIpcArgumentsSchema.safeParse([{ ...request, filePath: "/private/report.pdf" }]).success).toBe(false);
+    expect(investmentReportIpcArgumentsSchema.safeParse([request, "/private/report.pdf"]).success).toBe(false);
   });
 });

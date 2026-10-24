@@ -5,6 +5,7 @@ import type { ImportTemplateType } from "../domain/importTemplates";
 import type { ImportCommitResult, ImportDuplicateStrategy, ImportPreview } from "../domain/imports";
 import type { FinanceData } from "../domain/models";
 import type { PropertyReportRequest, PropertyReportResult } from "./propertyReportContracts";
+import type { InvestmentReportRequest, InvestmentReportResult } from "./investmentReportContracts";
 
 export const appSettingsSchema = z.object({
   language: z.enum(["system", "it", "en"]),
@@ -66,6 +67,7 @@ export interface ContaMiApi {
   confirmImport(previewId: string): Promise<ImportCommitResult>;
   discardImport(previewId: string): Promise<boolean>;
   generatePropertyReport(request: PropertyReportRequest): Promise<PropertyReportResult>;
+  generateInvestmentReport(request: InvestmentReportRequest): Promise<InvestmentReportResult>;
 }
 
 declare global {

@@ -54,6 +54,8 @@ ContaMì/
 │   │   ├── finance.ts                  # aggregazioni, KPI incluso patrimonio senza immobili, saldi Conto/Cassa e comandi
 │   │   ├── investmentUnitOpening.ts     # inferenza prudente della base quote dal primo acquisto
 │   │   ├── investments.ts              # classificazione, correzioni, risultati complessivi e quote datate
+│   │   ├── investmentHistory.ts         # serie storiche condivise tra UI e report PDF
+│   │   ├── investmentReport.ts          # aggregazioni pure per report di posizione e portafoglio
 │   │   ├── isin.ts                     # normalizzazione e validazione locale ISO 6166 con cifra di controllo
 │   │   ├── investmentTransactionSync.ts # coppie movimento/Transazione e riconciliazione idempotente
 │   │   ├── importTemplates.ts           # contratti versionati e liste chiuse dei template di importazione
@@ -74,7 +76,8 @@ ContaMì/
 │   │   └── rollover.ts                 # passaggio d’anno, rendimenti e saldo quote noti, rate e affitti
 │   ├── infrastructure/
 │   │   ├── pdf/
-│   │   │   └── PropertyReportDocument.ts # documento HTML/CSS locale e vettoriale per stampa/PDF
+│   │   │   ├── PropertyReportDocument.ts # documento HTML/CSS per report immobili
+│   │   │   └── InvestmentReportDocument.ts # tabelle e grafici SVG del report investimenti
 │   │   ├── settings/
 │   │   │   └── SettingsService.ts      # preferenze locali atomiche
 │   │   └── spreadsheet/
@@ -95,7 +98,9 @@ ContaMì/
 │   │       ├── FinanceFileService.ts    # casi d’uso file, save e rollover
 │   │       ├── ImportDataService.ts      # dialogo, anteprima opaca, conferma e scadenza
 │   │       ├── ImportTemplateService.ts # dialogo nativo e generazione template isolata
-│   │       └── PropertyReportService.ts # stampa/PDF locale, dialogo nativo e scrittura verificata
+│   │       ├── PropertyReportService.ts # proiezione e stampa/PDF degli immobili
+│   │       ├── InvestmentReportService.ts # proiezione e stampa/PDF degli investimenti
+│   │       └── LocalPdfReport.ts         # finestra isolata, dialogo, stampa e salvataggio PDF condivisi
 │   ├── preload/
 │   │   └── index.ts                    # bridge minimo e congelato verso la UI
 │   ├── renderer/
@@ -108,6 +113,7 @@ ContaMì/
 │   │   │   ├── ImportPreviewDialog.tsx # riepilogo, diagnostica e conferma accessibile
 │   │   │   ├── IsinField.tsx            # textbox ISIN bilingue con errore accessibile e normalizzazione
 │   │   │   ├── InvestmentMovementSummary.tsx # quattro KPI/fatti e freccia di tendenza riusati da investimenti e pensioni
+│   │   │   ├── InvestmentReportDialog.tsx # scelta periodo e stampa/PDF investimenti
 │   │   │   ├── InvestmentUnitChart.tsx # andamento separato delle quote per posizione
 │   │   │   ├── PaymentAccountField.tsx # selezione coerente di conto o Cassa per metodo
 │   │   │   ├── PropertyReportDialog.tsx # periodo e nomi effimeri dei proprietari, stampa/salvataggio
@@ -148,6 +154,7 @@ ContaMì/
 │   │   ├── contracts.ts                # contratti tipizzati main/preload/renderer
 │   │   ├── ipc.ts                      # nomi canali IPC consentiti
 │   │   ├── ipcValidation.ts            # tuple e limiti degli argomenti IPC
+│   │   ├── investmentReportContracts.ts # richiesta stretta e testi report IT/EN
 │   │   └── propertyReportContracts.ts  # richiesta/report result validati e testi documento IT/EN
 │   └── test/setup.ts                   # ambiente comune Vitest
 ├── tests/
@@ -168,6 +175,7 @@ ContaMì/
 │   │   ├── import-data-service.test.ts # anteprima/annullamento/conferma senza percorsi
 │   │   ├── import-template-service.test.ts # dialogo e mancata esposizione del percorso
 │   │   ├── property-report-service.test.ts # dialogo, stampa/PDF, verifica e percorso redatto
+│   │   ├── investment-report-service.test.ts # generazione, stampa, annullamento e rollback PDF
 │   │   ├── revision-guard.test.ts      # hash e blocco modifiche concorrenti
 │   │   ├── settings.test.ts            # preferenze validate e atomiche
 │   │   ├── workbook-preflight.test.ts  # rifiuto prima di ExcelJS e compatibilità v1/v2
@@ -182,6 +190,8 @@ ContaMì/
 │       ├── ipcValidation.test.ts         # payload e arità dei canali privilegiati
 │       ├── performance.test.ts           # budget dashboard su dataset sintetico ampio
 │       ├── propertyReport.test.ts         # periodi, quote, previsioni, limiti, HTML ed escaping
+│       ├── investmentReport.test.ts       # capitale, valute, storico, HTML ed escaping
+│       ├── investmentReportDialog.test.tsx # dialogo e azioni IT/EN
 │       ├── propertyReportDialog.test.tsx  # dialogo bilingue, azioni e stati disabilitati
 │       ├── annualHistory.test.ts        # aggregati utenze e automobili
 │       ├── assetReturns.test.ts         # formule, copertura, flussi, aggregati, valute e affitti sintetici

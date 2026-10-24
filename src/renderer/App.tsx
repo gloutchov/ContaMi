@@ -6,6 +6,7 @@ import type { ImportTemplateType } from "../domain/importTemplates";
 import type { ImportDuplicateStrategy } from "../domain/imports";
 import type { AppSettings, FinanceSnapshot, SystemCapabilities } from "../shared/contracts";
 import type { PropertyReportRequest } from "../shared/propertyReportContracts";
+import type { InvestmentReportRequest } from "../shared/investmentReportContracts";
 import { OperationFeedbackContext } from "./components/OperationFeedbackContext";
 import { AppShell, type AppView } from "./components/AppShell";
 import { I18nProvider, useI18n } from "./i18n/I18nContext";
@@ -56,6 +57,7 @@ function errorKey(error: unknown): TranslationKey {
   if (text.includes("IMPORT_NO_VALID_ROWS")) return "importNoValidRows";
   if (text.includes("IMPORT_") || text.includes("INVALID_IMPORT")) return "importInvalidFile";
   if (text.includes("PROPERTY_REPORT")) return "propertyReportError";
+  if (text.includes("INVESTMENT_REPORT")) return "investmentReportError";
   return "genericError";
 }
 
@@ -194,6 +196,14 @@ export default function App() {
     }
     return result;
   }), [run]);
+  const generateInvestmentReport = useCallback(async (request: InvestmentReportRequest) => run(async () => {
+    const result = await api.generateInvestmentReport(request);
+    if (!result.canceled) {
+      setNotice(request.action === "save-pdf" ? "investmentReportSaved" : "investmentReportPrintOpened");
+      setNoticeValues(request.action === "save-pdf" ? { fileName: result.fileName ?? "" } : undefined);
+    }
+    return result;
+  }), [run]);
   const dismissNotice = useCallback(() => setNotice(undefined), []);
 
   const content = useMemo(() => {
@@ -203,13 +213,13 @@ export default function App() {
       case "transactions": return <TransactionsView data={snapshot.data} onSave={execute} />;
       case "properties": return <PropertiesView data={snapshot.data} onSave={execute} onGenerateReport={generatePropertyReport} />;
       case "vehicles": return <VehiclesView data={snapshot.data} onSave={execute} />;
-      case "investments": return <InvestmentsView data={snapshot.data} onSave={execute} />;
+      case "investments": return <InvestmentsView data={snapshot.data} onSave={execute} onGenerateReport={generateInvestmentReport} />;
       case "pensions": return <PensionsView data={snapshot.data} onSave={execute} />;
       case "recurring": return <RecurringView data={snapshot.data} onSave={execute} />;
       case "shared": return <SharedExpensesView data={snapshot.data} onSave={execute} />;
       case "settings": return <SettingsView settings={settings} capabilities={capabilities} snapshot={snapshot} onUpdate={updateSettings} onCreate={createWorkbook} onOpen={openWorkbook} onReveal={reveal} onRollover={rollover} onGenerateImportTemplate={generateImportTemplate} onPreviewImport={previewImport} onConfirmImport={confirmImport} onDiscardImport={discardImport} onSave={execute} />;
     }
-  }, [snapshot, view, createWorkbook, openWorkbook, execute, settings, capabilities, updateSettings, reveal, rollover, generateImportTemplate, previewImport, confirmImport, discardImport, generatePropertyReport]);
+  }, [snapshot, view, createWorkbook, openWorkbook, execute, settings, capabilities, updateSettings, reveal, rollover, generateImportTemplate, previewImport, confirmImport, discardImport, generatePropertyReport, generateInvestmentReport]);
 
   if (!snapshot) return <ThemeProvider theme={settings.theme} capabilities={capabilities}><div className="splash"><div><img src={logo} alt="ContaMì" /><p>{translations[language].loading}</p></div></div></ThemeProvider>;
 
@@ -225,5 +235,5 @@ function Notice({ messageKey, values, onClose }: { messageKey: TranslationKey; v
 
 function NoticeText({ messageKey, values }: { messageKey: TranslationKey; values?: Record<string, string | number> }) {
   const { t } = useI18n();
-  return <div className={messageKey === "genericError" || messageKey === "entityInUse" || messageKey === "duplicateTaxName" || messageKey === "workbookRequired" || messageKey === "workbookChangedExternally" || messageKey === "workbookMissing" || messageKey === "workbookUnsafe" || messageKey === "workbookResourceLimit" || messageKey === "importInvalidFile" || messageKey === "importPreviewExpired" || messageKey === "importNoValidRows" || messageKey === "invalidRateChange" || messageKey === "recurringBaseLocked" || messageKey === "propertyReportError" ? "notice error-notice" : "notice"} role="status">{t(messageKey, values)}</div>;
+  return <div className={messageKey === "genericError" || messageKey === "entityInUse" || messageKey === "duplicateTaxName" || messageKey === "workbookRequired" || messageKey === "workbookChangedExternally" || messageKey === "workbookMissing" || messageKey === "workbookUnsafe" || messageKey === "workbookResourceLimit" || messageKey === "importInvalidFile" || messageKey === "importPreviewExpired" || messageKey === "importNoValidRows" || messageKey === "invalidRateChange" || messageKey === "recurringBaseLocked" || messageKey === "propertyReportError" || messageKey === "investmentReportError" ? "notice error-notice" : "notice"} role="status">{t(messageKey, values)}</div>;
 }
