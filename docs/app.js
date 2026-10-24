@@ -7,7 +7,7 @@ const translations = {
       description: "ContaMì is a free, open-source, local-first desktop app for managing personal finances in a durable spreadsheet.",
     },
     accessibility: { skip: "Skip to content" },
-    nav: { label: "Primary navigation", overview: "Overview", features: "Features", technical: "Technical", download: "Download" },
+    nav: { label: "Primary navigation", reports: "What's new", overview: "Overview", features: "Features", technical: "Technical", download: "Download" },
     language: { label: "Language" },
     hero: {
       eyebrow: "Local-first desktop app",
@@ -92,7 +92,7 @@ const translations = {
       description: "ContaMì è un’app desktop gratuita, open source e local-first per gestire le finanze personali in un foglio di calcolo durevole.",
     },
     accessibility: { skip: "Vai al contenuto" },
-    nav: { label: "Navigazione principale", overview: "Panoramica", features: "Funzionalità", technical: "Tecnologia", download: "Download" },
+    nav: { label: "Navigazione principale", reports: "Novità", overview: "Panoramica", features: "Funzionalità", technical: "Tecnologia", download: "Download" },
     language: { label: "Lingua" },
     hero: {
       eyebrow: "App desktop local-first",
