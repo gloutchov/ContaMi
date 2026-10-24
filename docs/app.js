@@ -38,6 +38,14 @@ const translations = {
       freeTitle: "Free to use", freeBody: "No subscriptions, paid accounts or hidden services.",
       privateTitle: "Private", privateBody: "No cloud, advertising, analytics or telemetry.",
     },
+    reports: {
+      eyebrow: "What's new", title: "Your finances, ready to report.",
+      intro: "New investment and private pension reports join the existing property report. Choose the current year or full history, then print or save a PDF.",
+      investmentsTitle: "Investments", investmentsBody: "Invested capital, current value, overall result and returns over time, with charts and detail.",
+      pensionTitle: "Private pension", pensionBody: "Funds and compartments, cash flows and currency-separated totals, with charts and no double counting.",
+      propertiesTitle: "Properties", propertiesBody: "Income, expenses, consumption, forecasts and owners’ shares in the existing property report.",
+      note: "Reports are generated locally and leave your workbook unchanged.",
+    },
     overview: {
       eyebrow: "A calmer financial picture",
       title: "Everything you need. Nothing between you and your data.",
@@ -114,6 +122,14 @@ const translations = {
       openTitle: "Open source", openBody: "Trasparente, verificabile e rilasciata con licenza Apache 2.0.",
       freeTitle: "Gratis da usare", freeBody: "Nessun abbonamento, account a pagamento o servizio nascosto.",
       privateTitle: "Privata", privateBody: "Nessun cloud, pubblicità, analytics o telemetria.",
+    },
+    reports: {
+      eyebrow: "Novità", title: "Le tue finanze, pronte per un report.",
+      intro: "I nuovi report di investimenti e pensione integrativa si affiancano a quello degli immobili già disponibile. Scegli l’anno corrente o l’intera storia, poi stampa o salva un PDF.",
+      investmentsTitle: "Investimenti", investmentsBody: "Capitale investito, controvalore, risultato complessivo e rendimenti nel tempo, con grafici e dettaglio.",
+      pensionTitle: "Pensione integrativa", pensionBody: "Fondi e comparti, flussi e totali separati per valuta, con grafici e senza doppi conteggi.",
+      propertiesTitle: "Immobili", propertiesBody: "Entrate, uscite, consumi, previsioni e quote dei proprietari nel report già disponibile.",
+      note: "I report sono generati localmente e non modificano il workbook.",
     },
     overview: {
       eyebrow: "Un quadro finanziario più sereno",

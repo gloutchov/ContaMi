@@ -15,10 +15,10 @@ ContaMì/
 │   └── logo.png                       # logo GitHub e riferimento visivo / brand logo
 ├── docs/
 │   ├── assets/                        # icona, screenshot sintetico del README e demo MP4 IT/EN
-│   ├── app.js                         # lingua, override, link manuale localizzato e media tema/lingua
+│   ├── app.js                         # dizionari landing IT/EN, lingua, link manuale e media tema/lingua
 │   ├── CNAME                          # dominio pubblico personalizzato contami.glaucosilvestri.it
-│   ├── index.html                     # landing statica, dominio canonico, link al sito principale e CSP locale
-│   ├── styles.css                     # layout editoriale responsive, chiaro/scuro e reduced motion
+│   ├── index.html                     # landing statica con Novità report, dominio canonico e CSP locale
+│   ├── styles.css                     # layout editoriale e Novità responsive, chiaro/scuro e reduced motion
 │   └── .nojekyll                      # pubblicazione statica GitHub Pages da main + /docs
 ├── documents/
 │   ├── import-template-spec.md        # contratti versionati degli otto template Excel
