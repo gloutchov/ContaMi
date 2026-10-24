@@ -27,7 +27,7 @@ The app is local-first: it requires no account, uses no cloud service, and sends
 
 ## 2. Requirements and installation
 
-- for version 1.23.0 builds with Electron 44: 64-bit macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12;
+- for builds from version 1.23.0 with Electron 44: 64-bit macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12;
 - or 64-bit Windows (`x64`);
 - enough space for the app, workbook, and backups;
 - Apple Numbers only if you want a native `.numbers` mirror;
@@ -182,7 +182,7 @@ ContaMì is a record-keeping tool. It does not provide financial advice or marke
 
 ### Investment reports
 
-On the **Investments** page, choose **Investment report** for all non-pension positions; in a position’s details, use the same action for that position alone. Select **Current year** (monthly) or **Full history** (yearly), then **Print** or **Save PDF**. Printing uses the system dialog, while PDF export uses a native destination dialog. The report does not change the workbook or join its backups.
+On the **Investments** page, choose **Investment report** for all non-pension positions; in a position’s details, use the same action for that position alone. Select **Current year** (the months of the workbook's active year) or **Full history** (years), then **Print** or **Save PDF**. Printing uses the system dialog, while PDF export uses a native destination dialog. If you cancel the dialog, you can retry from the same modal. The report does not change the workbook or join its backups.
 
 For each currency, the document shows opening capital, later contributions, withdrawals, net invested capital, current value, overall result, and its percentage when net capital is positive. One chart compares capital with value; another shows monthly or yearly period returns. Tables include periods, the date of the latest available valuation, coverage, positions, and retained individual entries. Groups include leaf positions only, and different currencies are neither converted nor added together.
 
@@ -201,11 +201,11 @@ Monthly and annual return charts follow the same rules as investments. Each comp
 
 ### Private pension reports
 
-On the **Private pension** page, choose **Private pension report** for all pensions, or use the action on a collector or compartment for a focused report. Choose **Current year** (monthly) or **Full history** (yearly), then **Print** or **Save PDF**. Printing uses the system dialog; PDF export uses a native destination dialog. If there are no compartments, the document shows an empty state rather than invented values.
+On the **Private pension** page, choose **Private pension report** for all pensions. The same button on a collector card or in its details prepares a report of its compartments; on a compartment card or in its details it prepares a report of that position alone, even when closed. Choose **Current year** (the months of the workbook's active year) or **Full history** (years), then **Print** or **Save PDF**. Printing uses the system dialog; PDF export uses a native destination dialog. Cancellation leaves the modal open so you can retry. If there are no compartments, the document shows an empty state rather than invented values.
 
-For each currency, the report shows initial capital, later contributions, withdrawals, net capital, value, overall result, and its percentage when defined. The compartment table shows these flows per position; the charts compare capital with value and show period returns. Collector and all-pension totals include active final compartments only, never the collector itself. Currencies are separated without conversion, and aggregate returns are calculated from combined values and flows rather than averaging compartment percentages.
+For each currency, the report shows initial capital, later contributions, withdrawals, net capital, value, overall result, and its percentage when net capital is positive. The compartment table repeats these flows and results for each position so you can reconcile the total; one chart compares capital with value and another shows monthly or yearly returns. The period table gives valuation dates, coverage, and partial periods. Collector and all-pension totals include active final compartments only, never the collector itself. Currencies are separated without conversion, and aggregate returns are calculated from combined values and flows rather than averaging compartment percentages.
 
-Overall result and period return have different meanings, as in [Investment reports](#investment-reports). Missing valuations, partial periods, and archived annual summaries are marked; future annuities, tax benefits, and unrecorded costs are not estimated. Details are capped at 2,000 rows per currency without truncating totals. Generation is local and read-only: the PDF is not added to the workbook or backups and should be protected like other personal financial data.
+Overall result and period return have different meanings, as in [Investment reports](#investment-reports): contributions and withdrawals are flows, not gains or losses, and Corrections do not enter the return. Missing valuations, partial periods, and archived annual summaries are marked; future annuities, tax benefits, and unrecorded costs are not estimated. Details are capped at 2,000 rows per currency without truncating totals. Generation is local and read-only: the PDF is not added to the workbook or backups and should be protected like other personal financial data.
 
 In the workbook, pensions and compartments remain in the `Investments` table, identified by the reserved pension type and parent/child relationship. Corrections use explicit kinds in `Investment Entries`; older files migrate deterministically without changing existing columns.
 
@@ -312,6 +312,10 @@ The local settings file may be missing or invalid. Financial data remains in the
 
 Check transaction account links, recent valuations, active/closed state, workbook year, and consistent currency usage.
 
+### Empty report or unavailable return
+
+Check the workbook's active year, the selected position, and compartment status: the all-pension and collector reports sum active final compartments, while a report for one compartment can also show a closed one. A collector without compartments shows an empty state. Period returns need sufficient valuations and flows; gaps and partial periods are shown rather than estimated. If PDF export is canceled or fails, the workbook stays unchanged: retry from the modal and check that the destination folder is writable.
+
 ## 18. Security and limitations
 
 - Protect workbooks with operating-system permissions, FileVault/BitLocker, and encrypted backups when appropriate.
@@ -335,3 +339,5 @@ To remove the app on macOS, close ContaMì and move `Contami` from **Application
 Workbook schema v15 adds optional `purchasePaymentMode`, `purchaseDownPayment`, and `purchaseCostRecorded` fields to `Vehicles`. Migration from v14 uses a backup without inventing amounts; rollover and round-trip preserve them. Import templates v1/v2/v3 remain compatible and preserve existing metadata on updates; enter these fields in the Vehicle form.
 
 Version 1.24.0 adds operating and overall cost/km and upgrades the workbook to schema v15 with backup and conservative migration. It also includes Km/l, rectangular columns, LibreOffice boolean constant compatibility and save feedback inside dialogs. It retains Electron 44 and the macOS 13 minimum from 1.23.0. The following dependency maintenance, including Lucide 1.57.0, Node types 26.6.5, and typescript-eslint 8.71.2, does not change features, the workbook schema, or the app version.
+
+Source version 1.25.0 adds printable investment reports; 1.26.0 adds private pension reports using the same local PDF engine. Both keep workbook schema v15. For published packages and checksums, see [Releases](https://github.com/gloutchov/Contami/releases).

@@ -14,7 +14,7 @@ ContaMì/
 │   ├── icon.png                       # icona RGBA canonica per macOS, UI e landing
 │   └── logo.png                       # logo GitHub e riferimento visivo / brand logo
 ├── docs/
-│   ├── assets/                        # copia icona canonica, screenshot sintetici e demo MP4 IT/EN
+│   ├── assets/                        # icona, screenshot sintetico del README e demo MP4 IT/EN
 │   ├── app.js                         # lingua, override, link manuale localizzato e media tema/lingua
 │   ├── CNAME                          # dominio pubblico personalizzato contami.glaucosilvestri.it
 │   ├── index.html                     # landing statica, dominio canonico, link al sito principale e CSP locale
@@ -235,8 +235,8 @@ ContaMì/
 ├── LICENSE                              # Apache License 2.0
 ├── MAP.md                               # questo documento / this document
 ├── PLAN.md                              # milestone, branch e criteri
-├── QUICK-START_Desktop.md               # avvio rapido bilingue
-├── README.md                            # pagina GitHub bilingue
+├── QUICK-START_Desktop.md               # avvio rapido bilingue, inclusi stampa e PDF
+├── README.md                            # pagina GitHub bilingue, funzioni, screenshot e link
 ├── SECURITY_MODEL.md                    # controlli, minacce e limiti bilingui
 ├── design-qa.md                         # confronto visuale e collaudo responsive della landing
 ├── STARTUP_PREFERENCES.md               # preferenze progettuali del proprietario
@@ -261,7 +261,7 @@ Generati, non versionati / Generated, not versioned:
 └── .playwright-cli/                     # snapshot del collaudo UI locale
 ```
 
-Le GIF originali sotto `docs/assets/` sono sorgenti locali ignorate da Git; il sito pubblica le sole copie MP4 ottimizzate e i poster PNG già ispezionati. La landing pubblica è disponibile su [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/), usa esclusivamente percorsi relativi, viene distribuita da GitHub Pages tramite `main` + `/docs` con il dominio personalizzato definito in `docs/CNAME` e non entra in `app.asar` o negli artifact Electron. I documenti tecnici e di manutenzione restano separati sotto `documents/` e non fanno parte del sito pubblico.
+Le GIF originali sotto `docs/assets/` sono sorgenti locali ignorate da Git; il sito pubblica le sole copie MP4 ottimizzate e i poster PNG già ispezionati. Il README usa uno screenshot della panoramica con dati sintetici. La landing pubblica è disponibile su [contami.glaucosilvestri.it](https://contami.glaucosilvestri.it/), usa esclusivamente percorsi relativi, viene distribuita da GitHub Pages tramite `main` + `/docs` con il dominio personalizzato definito in `docs/CNAME` e non entra in `app.asar` o negli artifact Electron. I documenti tecnici e di manutenzione restano separati sotto `documents/` e non fanno parte del sito pubblico.
 
 ## Dipendenze tra livelli / Layer direction
 
@@ -271,13 +271,13 @@ Renderer UI ──typed bridge──> Preload ──validated IPC──> Main se
      └── shared contracts <── Domain rules ───────────────┤
                                                           ├── Settings
                                                           └── Spreadsheet adapters
-                                                               ├── canonical .xlsx v14 + migrations
+                                                               ├── canonical .xlsx v15 + migrations
                                                                └── optional .numbers mirror
 ```
 
-Il renderer non importa moduli Node/Electron privilegiati. Il dominio non dipende dalla UI. `FinanceFileService` coordina dialoghi, dominio e persistenza; i dettagli Excel/Numbers restano negli adapter.
+Il renderer non importa moduli Node/Electron privilegiati. Il dominio non dipende dalla UI. `FinanceFileService` coordina dialoghi, dominio e persistenza; i servizi report generano PDF locali in sola lettura tramite `LocalPdfReport`, mentre i dettagli Excel/Numbers restano negli adapter.
 
-The renderer imports no privileged Node/Electron modules. Domain code is UI-independent. `FinanceFileService` coordinates dialogs, domain rules, and persistence; Excel/Numbers details remain inside adapters.
+The renderer imports no privileged Node/Electron modules. Domain code is UI-independent. `FinanceFileService` coordinates dialogs, domain rules, and persistence; report services generate local read-only PDFs through `LocalPdfReport`, while Excel/Numbers details remain inside adapters.
 
 ## File da non modificare o pubblicare / Files not to edit or publish
 

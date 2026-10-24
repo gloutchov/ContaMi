@@ -27,7 +27,7 @@ L’app è local-first: non richiede account, non usa servizi cloud e non invia 
 
 ## 2. Requisiti e installazione
 
-- per le build `1.23.0` con Electron 44: macOS 13 o successivo a 64 bit; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12;
+- per le build dalla `1.23.0` con Electron 44: macOS 13 o successivo a 64 bit; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12;
 - oppure Windows a 64 bit (`x64`);
 - spazio sufficiente per l’app, il workbook e i backup;
 - Apple Numbers installato solo se vuoi una copia `.numbers` nativa;
@@ -195,7 +195,7 @@ ContaMì è uno strumento di registrazione, non fornisce consulenza finanziaria 
 
 ### Report investimenti
 
-Nella pagina **Investimenti**, scegli **Report investimenti** per un resoconto di tutte le posizioni non pensionistiche; nel dettaglio di una posizione, usa lo stesso pulsante per il report di quella posizione. Seleziona **Anno corrente** (mesi) o **Intera storia** (anni), poi **Stampa** oppure **Salva PDF**. La stampa usa il dialogo del sistema; per il PDF scegli la destinazione con un dialogo nativo. Il report non modifica il workbook e non viene aggiunto ai backup.
+Nella pagina **Investimenti**, scegli **Report investimenti** per tutte le posizioni non pensionistiche; nel dettaglio di una posizione, usa lo stesso pulsante per quella posizione. Seleziona **Anno corrente** (i mesi dell'anno attivo del workbook) o **Intera storia** (anni), poi **Stampa** oppure **Salva PDF**. La stampa usa il dialogo del sistema; per il PDF scegli la destinazione con un dialogo nativo. Se annulli il dialogo, puoi riprovare dalla stessa modale. Il report non modifica il workbook e non viene aggiunto ai backup.
 
 Per ogni valuta il documento mostra capitale iniziale, versamenti successivi, liquidazioni, capitale netto investito, controvalore, risultato complessivo e relativa percentuale quando il capitale netto è positivo. Un grafico confronta capitale e controvalore; un secondo mostra il rendimento mensile o annuale. Le tabelle riportano periodi, data dell'ultima valutazione disponibile, copertura, posizioni e registrazioni ancora disponibili. I gruppi contano soltanto le posizioni finali, senza duplicare i figli; valute diverse non vengono convertite o sommate.
 
@@ -214,11 +214,11 @@ I grafici mensili e annuali seguono le stesse regole degli investimenti. Ogni co
 
 ### Report pensione integrativa
 
-Nella pagina **Pensione integrativa**, scegli **Report pensione integrativa** per tutte le pensioni oppure usa l’azione del fondo o del comparto per un resoconto mirato. Seleziona **Anno corrente** (mesi) o **Intera storia** (anni), poi **Stampa** o **Salva PDF**. La stampa usa il dialogo del sistema; il PDF usa un dialogo nativo per la destinazione. Anche senza comparti il documento mostra uno stato vuoto, senza inventare valori.
+Nella pagina **Pensione integrativa**, scegli **Report pensione integrativa** per tutte le pensioni. Lo stesso pulsante nel riquadro o nel dettaglio di un fondo prepara il report dei suoi comparti; nel riquadro o nel dettaglio di un comparto prepara il report di quella sola posizione, anche se chiusa. Seleziona **Anno corrente** (i mesi dell'anno attivo del workbook) o **Intera storia** (anni), poi **Stampa** o **Salva PDF**. La stampa usa il dialogo del sistema; il PDF usa un dialogo nativo per la destinazione. Se annulli, la modale resta aperta per riprovare. Anche senza comparti il documento mostra uno stato vuoto, senza inventare valori.
 
-Per ogni valuta il report presenta capitale iniziale, versamenti successivi, liquidazioni, capitale netto, controvalore, risultato complessivo e relativa percentuale quando definita. La tabella dei comparti mostra questi flussi per ogni posizione; i grafici confrontano capitale e controvalore e mostrano il rendimento per periodo. Fondo e totale generale includono solo i comparti finali attivi, senza sommare il raccoglitore; le valute sono separate e non convertite. Il rendimento aggregato deriva da valori e flussi aggregati, non dalla media delle percentuali dei comparti.
+Per ogni valuta il report presenta capitale iniziale, versamenti successivi, liquidazioni, capitale netto, controvalore, risultato complessivo e relativa percentuale quando il capitale netto è positivo. La tabella dei comparti ripete questi flussi e risultati per ciascuna posizione, così puoi riconciliare il totale; un grafico confronta capitale e controvalore e un altro mostra il rendimento mensile o annuale. La tabella dei periodi indica date delle valutazioni, copertura e periodi parziali. Fondo e totale generale includono solo i comparti finali attivi, senza sommare il raccoglitore; le valute sono separate e non convertite. Il rendimento aggregato deriva da valori e flussi aggregati, non dalla media delle percentuali dei comparti.
 
-Il risultato complessivo e il rendimento del periodo hanno definizioni distinte, come nel [report investimenti](#report-investimenti). Valutazioni mancanti, periodi parziali e consuntivi storici sono indicati; rendita futura, benefici fiscali e costi non registrati non vengono stimati. Il dettaglio è limitato a 2.000 righe per valuta senza tagliare i totali. La generazione è locale e in sola lettura: il PDF non entra nel workbook o nei backup e va custodito come gli altri dati finanziari personali.
+Il risultato complessivo e il rendimento del periodo hanno definizioni distinte, come nel [report investimenti](#report-investimenti): versamenti e liquidazioni sono flussi, non guadagni o perdite, e le Correzioni non entrano nel rendimento. Valutazioni mancanti, periodi parziali e consuntivi storici sono indicati; rendita futura, benefici fiscali e costi non registrati non vengono stimati. Il dettaglio è limitato a 2.000 righe per valuta senza tagliare i totali. La generazione è locale e in sola lettura: il PDF non entra nel workbook o nei backup e va custodito come gli altri dati finanziari personali.
 
 Nel workbook pensioni e comparti restano nella tabella `Investments`, identificati dal tipo pensione e dalla relazione padre/figlio. Le Correzioni usano tipi espliciti nella tabella `Investment Entries`; i file precedenti vengono migrati in modo deterministico senza cambiare le colonne esistenti.
 
@@ -345,6 +345,10 @@ Il file locale delle impostazioni può essere assente o non valido. I dati finan
 
 Controlla che le transazioni abbiano il conto corretto, che esista una valutazione recente e che gli elementi siano attivi. Verifica anche l’anno del workbook e l’uso di una sola valuta coerente.
 
+### Report vuoto o rendimento non disponibile
+
+Controlla l'anno attivo del workbook, la posizione selezionata e lo stato dei comparti: il report generale e quello del fondo sommano i comparti finali attivi, mentre il report di un singolo comparto può mostrare anche quello chiuso. Un fondo senza comparti mostra uno stato vuoto. Il rendimento richiede valutazioni e flussi sufficienti; le lacune e i periodi parziali sono mostrati invece di essere stimati. Se l'esportazione PDF viene annullata o fallisce, il workbook resta invariato: riprova dalla modale e verifica che la cartella scelta sia scrivibile.
+
 ## 18. Sicurezza e limiti
 
 - Proteggi il workbook con i permessi del sistema, FileVault/BitLocker e backup cifrati se contiene dati sensibili.
@@ -368,3 +372,5 @@ Per rimuovere l’app su macOS, chiudi ContaMì e sposta `Contami` da **Applicaz
 Schema workbook v15: aggiunge a `Vehicles` i campi facoltativi `purchasePaymentMode`, `purchaseDownPayment` e `purchaseCostRecorded`. Migrazione v14 con backup, senza inventare importi; rollover e round-trip conservano i campi. I template di importazione v1/v2/v3 restano compatibili e conservano questi metadati sugli aggiornamenti: compilali dal modulo Automobile.
 
 La versione 1.24.0 aggiunge costo d’uso/km e costo complessivo/km e aggiorna il workbook a schema v15 con backup e migrazione conservativa. Include inoltre Km/l, colonne rettangolari, compatibilità con le costanti booleane LibreOffice e feedback di salvataggio nelle modali. Mantiene Electron 44 e il requisito macOS 13 della 1.23.0. La successiva manutenzione delle dipendenze, inclusi Lucide 1.57.0, i tipi Node 26.6.5 e typescript-eslint 8.71.2, non cambia le funzioni, lo schema workbook o la versione dell’app.
+
+La sorgente 1.25.0 aggiunge i report stampabili degli investimenti; la 1.26.0 aggiunge quelli della pensione integrativa, usando lo stesso motore PDF locale. Entrambe mantengono lo schema workbook v15. Per pacchetti effettivamente pubblicati e checksum consulta la pagina [Releases](https://github.com/gloutchov/Contami/releases).

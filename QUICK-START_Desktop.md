@@ -1,33 +1,45 @@
-# ContaMì — Quick start desktop
+# ContaMì — Avvio rapido desktop / Desktop quick start
 
 ## Italiano
 
-Le build `1.23.0` con Electron 44 richiedono macOS 13 o successivo; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12.
+**Requisiti:** macOS 13+ (Apple Silicon o Intel) oppure Windows x64. ContaMì non richiede Excel; Numbers serve soltanto per la copia `.numbers` facoltativa. Per macOS 12 è documentata la precedente release `v1.22.2`.
 
-1. Scarica dalla release privata il DMG macOS `arm64`/`x64` oppure l’installer Windows `x64` insieme a `SHA256SUMS.txt`; verifica il checksum e installa il pacchetto seguendo gli avvisi documentati nel manuale.
-2. Avvia ContaMì. Lingua e tema seguono il sistema finché non scegli un override.
-3. Nella Panoramica premi **Crea nuovo foglio**. Scegli Excel su macOS/Windows oppure Numbers su macOS con Numbers installato.
-4. Apri **Impostazioni** e crea almeno un conto; se usi contanti, crea anche una **Cassa** e associa facoltativamente il conto di alimentazione predefinito. Personalizza categorie e metodi di pagamento se necessario.
-5. Usa **Transazioni** per entrate e uscite quotidiane: i riepiloghi separano Conto e Cassa, il saldo esclude i saldi iniziali quando applichi un filtro e le due righe alla data odierna restano sempre assolute e non filtrate. La Panoramica mostra anche il saldo complessivo delle Casse e, sotto al patrimonio netto, il valore esclusi gli immobili; nelle nuove spese di **Immobili** e **Automobile** puoi scegliere **Dividi automaticamente a metà** per creare anche la Spesa condivisa collegata; in Automobile puoi inoltre aggiungere al mezzo un unico finanziamento collegato alle Ricorrenze. Nelle registrazioni Automobile i chilometri totali propongono la distanza percorsa e, per i rifornimenti, importo e prezzo al litro propongono i litri. Dal dettaglio di un immobile, **Report immobile** stampa o salva in PDF il resoconto annuale/storico e le quote dei proprietari. Nella pagina **Investimenti** o nel dettaglio di una posizione, **Report investimenti** stampa o salva un PDF con capitale, controvalore, risultato e grafici dei rendimenti. In **Pensione integrativa**, **Report pensione integrativa** offre lo stesso riepilogo per tutti i fondi, un fondo o un comparto, con flussi per comparto e valute separate.
-6. In **Investimenti** o **Pensione integrativa**, controlla nei quattro box capitale iniziale, versamenti successivi, liquidazioni e saldo. **Nuovo/Modifica investimento**, i comparti e **Correzione** accettano un ISIN facoltativo, normalizzato in maiuscolo e verificato localmente. Nell’anno di apertura le card mostrano il rendimento mensile; dagli anni successivi quello annuale, mentre il dettaglio mantiene il mensile sotto al controvalore. In Investimenti, il grafico globale confronta Titoli, Fondi e Fogli aggregando valori e flussi per tipologia. Il primo Versamento è capitale iniziale, la linea tratteggiata indica la media e una valutazione mancante resta senza punto pur non interrompendo il tracciato. Gli immobili in affitto mostrano gli stessi periodi come rendimento locativo netto. **Correzione** non entra nel calcolo del rendimento.
-7. Chiudi elementi conclusi con **Chiudi**: restano nello storico e possono essere riaperti.
-8. Per cambiare l’importo di una ricorrenza, apri **Modifica → Cambia tariffa**, scegli importo e mese e controlla l’anteprima: vengono aggiornate soltanto le scadenze pianificate.
-9. A fine anno usa **Chiudi anno**. Scegli il nuovo file; ContaMì non elimina né sovrascrive il vecchio.
+1. Scarica dalla pagina [Releases](https://github.com/gloutchov/Contami/releases) il DMG o l'installer adatto e `SHA256SUMS.txt`. Verifica il checksum; per i possibili avvisi delle build non firmate segui il [manuale](ISTRUZIONI.md#2-requisiti-e-installazione).
+2. Apri ContaMì e scegli **Crea nuovo foglio** oppure **Apri foglio esistente**. `.xlsx` è la scelta portabile; su macOS puoi scegliere Numbers se installato. Il file scelto è la fonte autorevole dei dati.
+3. In **Impostazioni**, crea almeno un **Conto**. Se usi contanti, crea anche una **Cassa**; il conto di alimentazione predefinito è solo un suggerimento per i trasferimenti.
+4. Registra entrate e uscite in **Transazioni**. Un movimento collegato a un immobile, un investimento o un comparto pensione compare anche nella vista pertinente. I filtri non cambiano i dati salvati.
+5. Aggiungi, secondo le tue esigenze, **Immobili**, **Automobile**, **Investimenti** e **Pensione integrativa**. La pensione è un fondo raccoglitore con comparti: inserisci versamenti, liquidazioni e valutazioni nei comparti, senza duplicarli nel fondo.
+6. Usa **Ricorrenze** per le scadenze e **Spese condivise** per gli importi ripartiti. **Cambia tariffa** modifica solo le scadenze pianificate dalla data scelta; le operazioni confermate restano nello storico.
+7. Controlla valori e rendimenti nelle schede. Il risultato complessivo è distinto dal rendimento del periodo; una valutazione mancante resta una lacuna e le Correzioni non diventano rendimento.
 
-Il workbook è il dato autorevole. Non tenerlo aperto e modificarlo contemporaneamente in Excel/Numbers mentre salvi dall’app: ContaMì confronta anche l’impronta SHA-256 e blocca il conflitto. I salvataggi ContaMì usano inoltre un lock cooperativo a scadenza; dopo un crash, l’app chiede conferma prima di rimuovere il solo lock scaduto. I backup sono nella cartella nascosta `.contami-backups` accanto al file `.xlsx`.
+### Stampare o salvare un report
+
+- Da **Immobili**, apri il dettaglio e scegli **Report immobile**.
+- Da **Investimenti**, scegli **Report investimenti** per tutte le posizioni non pensionistiche oppure apri il dettaglio di una posizione.
+- Da **Pensione integrativa**, scegli **Report pensione integrativa** per tutte le pensioni, da un fondo per i comparti attivi o da un comparto per quella posizione.
+
+Scegli **Anno corrente** o **Intera storia**, poi **Stampa** o **Salva PDF**. La generazione è locale e non modifica il workbook. Nei report finanziari le valute restano separate; i PDF contengono dati personali e vanno custoditi come il foglio.
+
+A fine anno usa **Chiudi anno** e scegli il nuovo file: il precedente resta intatto. I salvataggi usano backup in `.contami-backups` e bloccano modifiche esterne concorrenti. Per dettagli e recupero consulta [ISTRUZIONI.md](ISTRUZIONI.md).
 
 ## English
 
-Version 1.23.0 builds with Electron 44 require macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12.
+**Requirements:** macOS 13+ (Apple Silicon or Intel) or Windows x64. Excel is not required; Numbers is needed only for the optional `.numbers` copy. The earlier `v1.22.2` release is documented for macOS 12.
 
-1. From the private release, download the macOS `arm64`/`x64` DMG or Windows `x64` installer together with `SHA256SUMS.txt`; verify the checksum and install the package by following the warning guidance in the manual.
-2. Launch ContaMì. Language and theme follow the system until you choose an override.
-3. From Overview, select **Create new workbook**. Choose Excel on macOS/Windows or Numbers on macOS with Numbers installed.
-4. Open **Settings** and create at least one account; if you use cash, also create a **Cash register** and optionally select its default funding account. Customize categories and payment methods if needed.
-5. Use **Transactions** for everyday income and expenses: summaries separate accounts from cash registers, balances exclude opening balances when a filter is active, and the two as-of-today rows remain absolute and unfiltered. Overview also shows the total cash-register balance and, below net worth, the value excluding properties; new **Property** and **Vehicle** costs offer **Split automatically in half** to create the linked Shared Expense; Vehicles can also own one financing plan linked to Recurring Items. In Vehicle entries, the odometer suggests distance travelled and, for fuel records, amount and price per litre suggest litres. From a property’s details, **Property report** prints or saves the annual/full-history statement and owner shares as PDF. On **Investments** or in one position’s details, **Investment report** prints or saves a PDF with capital, value, overall result, and return charts. Under **Private pension**, **Private pension report** provides the same for all pensions, one collector, or one compartment, with flows per compartment and separate currencies.
-6. In **Investments** or **Private pension**, review initial capital, subsequent contributions, liquidations, and balance in the four boxes. **New/Edit investment**, compartments, and **Correction** accept an optional ISIN, normalized to uppercase and checked locally. During the opening year, cards show monthly returns; from later years they show annual returns, while details retain monthly returns below countervalue. In Investments, the global chart compares Securities, Funds, and Savings plans after aggregating values and flows by type. The first Contribution is opening capital, the dashed line marks the average, and a missing valuation keeps no point without breaking the plotted line. Rental properties show the same periods as net rental yield. **Correction** is excluded from return calculations.
-7. Use **Close** for completed items: they remain in history and can be reopened.
-8. To change a recurring amount, open **Edit → Change rate**, choose the amount and month, and review the preview: only planned occurrences are updated.
-9. At year-end use **Close year**. Pick the new file; ContaMì never deletes or overwrites the old one.
+1. Download the matching DMG or installer and `SHA256SUMS.txt` from [Releases](https://github.com/gloutchov/Contami/releases). Verify the checksum; follow the [manual](INSTRUCTIONS.md#2-requirements-and-installation) for possible unsigned-build warnings.
+2. Open ContaMì and choose **Create new workbook** or **Open existing workbook**. `.xlsx` is portable; on macOS you can choose Numbers if installed. The selected file is the authoritative data source.
+3. Under **Settings**, add at least one **Account**. If you use cash, add a **Cash register**; its default funding account is only a transfer suggestion.
+4. Record income and expenses under **Transactions**. A movement linked to a property, investment, or pension compartment also appears in the relevant view. Filters do not change saved data.
+5. Add **Properties**, **Vehicles**, **Investments**, and **Private Pension** as needed. A pension collector contains compartments: enter contributions, withdrawals, and valuations in the compartments without duplicating them in the collector.
+6. Use **Recurring items** for schedules and **Shared expenses** for split amounts. **Change rate** affects only planned occurrences from the selected date; confirmed records remain in history.
+7. Review values and returns on the cards. Overall result differs from period return; a missing valuation remains a gap, and Corrections do not become return.
 
-The workbook is authoritative. Do not edit it concurrently in Excel/Numbers while saving from the app: ContaMì also compares a SHA-256 fingerprint and blocks the conflict. ContaMì saves also use an expiring cooperative lock; after a crash, the app asks for confirmation before removing only the expired lock. Backups live in the hidden `.contami-backups` folder beside the `.xlsx` file.
+### Print or save a report
+
+- Under **Properties**, open details and choose **Property report**.
+- Under **Investments**, choose **Investment report** for all non-pension positions or open one position's details.
+- Under **Private Pension**, choose **Private pension report** for all pensions, from a collector for its active compartments, or from a compartment for that position.
+
+Choose **Current year** or **Full history**, then **Print** or **Save PDF**. Generation is local and does not change the workbook. Financial reports keep currencies separate; PDFs contain personal data and deserve the same protection as the workbook.
+
+At year-end, use **Close year** and select a new file: the old one remains intact. Saves keep backups in `.contami-backups` and block conflicting external edits. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for details and recovery.
