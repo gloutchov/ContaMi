@@ -15,4 +15,5 @@ export const IPC = {
   importDiscard: "import:discard",
   propertyReportGenerate: "property-report:generate",
   investmentReportGenerate: "investment-report:generate",
+  pensionReportGenerate: "pension-report:generate",
 } as const;

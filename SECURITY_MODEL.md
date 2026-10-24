@@ -1,6 +1,6 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-10-24 · Applicazione / Application: 1.25.0
+Versione del documento / Document version: 2026-10-24 · Applicazione / Application: 1.26.0
 
 ## Italiano
 
@@ -41,6 +41,7 @@ Non sono risolvibili dall’app, da soli, un sistema operativo compromesso, malw
 - Il renderer non sceglie né invia percorsi file: creazione, apertura e destinazione dei template passano dai dialoghi nativi nel main process. Per i template il renderer invia soltanto tipo e lingua validati e riceve soltanto annullamento e nome del file, mai il percorso completo.
 - Per un report immobile il renderer invia soltanto UUID dell’immobile, periodo, lingua, azione stampa/PDF e due nomi limitati a 120 caratteri. Il main sceglie l’eventuale percorso con dialogo nativo e restituisce soltanto annullamento o nome base; HTML, buffer PDF e percorso completo non attraversano il bridge.
 - Per un report investimenti il renderer invia soltanto l’UUID facoltativo di una posizione, periodo, lingua e azione stampa/PDF. Il main rifiuta UUID sconosciuti o pensionistici, sceglie la destinazione con dialogo nativo e restituisce soltanto annullamento o nome base. Il renderer non invia HTML, dati finanziari grezzi, opzioni di stampa o percorsi.
+- Per un report pensione il renderer invia soltanto l’UUID facoltativo del fondo/comparto, periodo, lingua e azione stampa/PDF. Il main rifiuta UUID sconosciuti o non pensionistici; usa la stessa finestra isolata e lo stesso dialogo nativo dei report investimenti. HTML, dati finanziari, buffer PDF e percorso restano nel main; al renderer torna solo annullamento o nome base.
 - Main, preload, dominio, persistenza, configurazione e renderer sono moduli separati.
 - È ammessa una sola istanza dell’app. Durante il commit, un lock cooperativo per workbook impedisce inoltre a processi o copie ContaMì distinti di salvare contemporaneamente la stessa revisione.
 
@@ -93,6 +94,8 @@ L’importatore accetta soltanto `.xlsx` scelti con dialogo nativo e contratti t
 Il report M25 è una trasformazione read-only della copia `FinanceData` validata. Prima di produrlo il main verifica che la revisione SHA-256 del workbook non sia cambiata. I totali usano tutte le righe ammesse, mentre ciascuna tabella di dettaglio HTML è limitata a 2.000 righe e segnala il troncamento. Gli anni archiviati riusano i consuntivi `Property History`; l’anno attivo esclude le coppie collegate a Transazioni pianificate dai consuntivi e usa una sola volta le Transazioni pianificate per le previsioni. Il report non esegue formule, non modifica il workbook e non persiste i nomi dei proprietari.
 
 Il report investimenti M40 usa la stessa copia del workbook con revisione verificata e la stessa pipeline PDF locale in sola lettura. La tupla IPC stretta accetta soltanto UUID facoltativo dell’investimento, uno dei due periodi, lingua `it`/`en` e stampa/PDF; il main rifiuta posizioni pensionistiche o sconosciute. Le posizioni finali sono raggruppate per valuta senza conversioni, le pianificazioni sono escluse e ogni dettaglio mostra al massimo 2.000 righe per valuta senza troncare i totali. HTML, valori finanziari, buffer PDF e percorso di destinazione non attraversano il bridge; il percorso non viene salvato né loggato. Il PDF scelto dall’utente resta un file finanziario locale da proteggere e condividere con attenzione.
+
+Il report pensione M41 condivide il calcolo puro e la pipeline PDF di M40, ma usa un canale IPC e un contratto di richiesta stretti per gli UUID pensionistici. Include solo comparti finali attivi per i totali del fondo e dell’insieme, separa le valute ed esclude le pianificazioni. Il documento è generato in sola lettura dalla copia a revisione verificata, con escaping HTML e CSP; il limite di 2.000 righe per valuta riguarda soltanto il dettaglio. Il PDF locale contiene dati previdenziali sensibili e richiede la stessa protezione del workbook.
 
 Il renderer riceve soltanto nome base, conteggi, importo aggregato, codici errore riga/colonna e un UUID di anteprima; non riceve percorso né comandi. Il piano validato resta in memoria nel main per 15 minuti. I riferimenti sono risolti tramite UUID attivo o nome esatto univoco, senza approssimazioni. La conferma passa il piano già preparato a una sola trasformazione di dominio, verifica la revisione del workbook e usa il salvataggio esistente con temporaneo, rilettura, backup, sostituzione e rollback. Nessuna scrittura avviene durante anteprima o annullamento e i contenuti finanziari non vengono loggati.
 
@@ -229,7 +232,7 @@ Threats considered include malformed `.xlsx` input, a compromised renderer attem
 - Electron enables context isolation, disabled Node integration, sandboxing, web security, and no insecure content.
 - The preload exposes only a frozen, minimal ContaMì API—never raw IPC, Node.js, or generic filesystem methods.
 - IPC uses a centralized allowlist. Every call must originate from the authorized window's main frame and currently loaded URL; Zod validates argument tuples, arity, and payloads, and errors are redacted. M10 recovery accepts no argument or path and can remove only the configured workbook’s already-expired lock.
-- File paths come only from native main-process dialogs. For templates, property reports, and investment reports, the renderer sends only validated options and receives only cancellation state and file name, never the complete path.
+- File paths come only from native main-process dialogs. For templates, property reports, investment reports, and pension reports, the renderer sends only validated options and receives only cancellation state and file name, never the complete path.
 - Main, preload, domain, persistence, settings, and renderer remain separate modules.
 - A single application instance is allowed. During commit, a per-workbook cooperative lock also prevents separate ContaMì processes or copies from saving the same revision concurrently.
 
@@ -241,7 +244,7 @@ Patch 1.22.1 makes the TypeScript extension explicit for the CSP import used onl
 
 Themes, bars, and dynamic charts need no inline styles: the theme uses a `data-theme` attribute with local classes, while local SVG charts use validated geometry and presentation attributes, monotone curves, local gradients, responsive dimensions, and local-stylesheet animations that honor `prefers-reduced-motion`. Recharts, which generated runtime styles, has been removed. Source scanning, production-HTML validation, and `app.asar` inspection prevent style attributes or a broader policy from being reintroduced.
 
-Property and investment reports are rendered in a short-lived hidden sandboxed window with Node integration and JavaScript disabled, no preload, denied popups/navigation/permissions, and a report-specific CSP that permits only the generated document, inline print CSS, data images, and local system fonts. Every user-supplied value is HTML-escaped before insertion. The window is destroyed after printing, PDF generation, cancellation, or failure.
+Property, investment, and pension reports are rendered in a short-lived hidden sandboxed window with Node integration and JavaScript disabled, no preload, denied popups/navigation/permissions, and a report-specific CSP that permits only the generated document, inline print CSS, data images, and local system fonts. Every user-supplied value is HTML-escaped before insertion. The window is destroyed after printing, PDF generation, cancellation, or failure.
 
 ### 5. Data and workbook validation
 
@@ -279,6 +282,8 @@ The renderer receives only the base file name, counts, an aggregate amount, row/
 M25 property reports are a read-only projection of already validated `FinanceData`. The main process uses the configured workbook copy and verifies its SHA-256 revision before aggregation. The renderer can request only one property UUID, one of two scopes, one supported language, two bounded display names, and either print or PDF export; it cannot provide HTML, formulas, paths, or arbitrary print options. Each detailed HTML table is capped at 2,000 rows while totals continue to cover the complete selected period. Forecasts include only validated planned property expenses due from the local current date through year-end; they do not mutate or confirm those records.
 
 M40 investment reports use the same revision-checked, read-only workbook copy and local PDF pipeline. The strict IPC tuple accepts only an optional investment UUID, one of two scopes, `it`/`en`, and print/PDF. The main process rejects pension or unknown targets. It groups leaf positions by currency without conversions, excludes planned movements, and caps displayed detail at 2,000 rows per currency while calculating totals from all validated records. Report HTML, financial values, PDF bytes, and destination paths never cross the renderer bridge. No report path is persisted or logged; a user-selected PDF remains an ordinary local financial file and requires the same device and sharing protection as the workbook.
+
+M41 pension reports share M40's pure calculations and PDF pipeline, with a separate narrow IPC channel and request contract for pension UUIDs. The main process rejects unknown and non-pension targets. Collector and all-pension totals include active final compartments only, separate currencies, and exclude planned movements. The document is generated read-only from a revision-checked copy, with HTML escaping and a restrictive CSP; the 2,000-row cap per currency applies only to detail. A saved PDF contains sensitive pension data and needs the same protection as the workbook.
 
 M9 evaluated moving the whole parser into a terminable worker/process. That would require moving load, migration, repair, and model transfer across a new privileged boundary. The preventive limits and synthetic budgets cover known ZIP attacks without that complexity, so parsing remains in the main process for now. XML parsing can still amplify CPU or heap within the admitted expansion limits; a terminable process should be reconsidered if cross-platform synthetic benchmarks show those limits do not keep loading within budget. Workbooks should still come from trusted sources.
 

@@ -8,6 +8,7 @@ import {
   noIpcArgumentsSchema,
   propertyReportIpcArgumentsSchema,
   investmentReportIpcArgumentsSchema,
+  pensionReportIpcArgumentsSchema,
   settingsUpdateIpcArgumentsSchema,
   workbookCreateIpcArgumentsSchema,
 } from "../../src/shared/ipcValidation";
@@ -100,5 +101,15 @@ describe("IPC argument validation", () => {
     expect(investmentReportIpcArgumentsSchema.safeParse([{ ...request, scope: "quarter" }]).success).toBe(false);
     expect(investmentReportIpcArgumentsSchema.safeParse([{ ...request, filePath: "/private/report.pdf" }]).success).toBe(false);
     expect(investmentReportIpcArgumentsSchema.safeParse([request, "/private/report.pdf"]).success).toBe(false);
+  });
+
+  it("accepts only narrow pension-report requests", () => {
+    const request = { pensionId: crypto.randomUUID(), scope: "current-year", language: "it", action: "save-pdf" } as const;
+    expect(pensionReportIpcArgumentsSchema.safeParse([request]).success).toBe(true);
+    expect(pensionReportIpcArgumentsSchema.safeParse([{ scope: "lifetime", language: "en", action: "print" }]).success).toBe(true);
+    expect(pensionReportIpcArgumentsSchema.safeParse([{ ...request, pensionId: "invalid" }]).success).toBe(false);
+    expect(pensionReportIpcArgumentsSchema.safeParse([{ ...request, scope: "quarter" }]).success).toBe(false);
+    expect(pensionReportIpcArgumentsSchema.safeParse([{ ...request, filePath: "/private/report.pdf" }]).success).toBe(false);
+    expect(pensionReportIpcArgumentsSchema.safeParse([request, "/private/report.pdf"]).success).toBe(false);
   });
 });

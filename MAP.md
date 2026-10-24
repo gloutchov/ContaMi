@@ -50,12 +50,14 @@ ContaMì/
 │   │   ├── catalogUsage.ts             # conteggio riferimenti per cataloghi / catalog usage counts
 │   │   ├── annualHistory.ts            # consuntivi annuali dettagliati per immobili, investimenti e veicoli
 │   │   ├── assetReturns.ts              # Modified Dietz, rendimento locativo, copertura e portafogli aggregati puri
+│   │   ├── assetReport.ts               # calcoli condivisi dei report investimenti e pensioni
 │   │   ├── commands.ts                 # comandi validati, inclusi bundle atomici per condivisione, ISIN e quote
 │   │   ├── finance.ts                  # aggregazioni, KPI incluso patrimonio senza immobili, saldi Conto/Cassa e comandi
 │   │   ├── investmentUnitOpening.ts     # inferenza prudente della base quote dal primo acquisto
 │   │   ├── investments.ts              # classificazione, correzioni, risultati complessivi e quote datate
 │   │   ├── investmentHistory.ts         # serie storiche condivise tra UI e report PDF
-│   │   ├── investmentReport.ts          # aggregazioni pure per report di posizione e portafoglio
+│   │   ├── investmentReport.ts          # ingresso dei report non pensionistici
+│   │   ├── pensionReport.ts             # ingresso dei report pensionistici
 │   │   ├── isin.ts                     # normalizzazione e validazione locale ISO 6166 con cifra di controllo
 │   │   ├── investmentTransactionSync.ts # coppie movimento/Transazione e riconciliazione idempotente
 │   │   ├── importTemplates.ts           # contratti versionati e liste chiuse dei template di importazione
@@ -77,7 +79,9 @@ ContaMì/
 │   ├── infrastructure/
 │   │   ├── pdf/
 │   │   │   ├── PropertyReportDocument.ts # documento HTML/CSS per report immobili
-│   │   │   └── InvestmentReportDocument.ts # tabelle e grafici SVG del report investimenti
+│   │   │   ├── AssetReportDocument.ts   # impaginazione e grafici SVG condivisi
+│   │   │   ├── InvestmentReportDocument.ts # etichette del report investimenti
+│   │   │   └── PensionReportDocument.ts # etichette e flussi per comparto del report pensione
 │   │   ├── settings/
 │   │   │   └── SettingsService.ts      # preferenze locali atomiche
 │   │   └── spreadsheet/
@@ -100,6 +104,7 @@ ContaMì/
 │   │       ├── ImportTemplateService.ts # dialogo nativo e generazione template isolata
 │   │       ├── PropertyReportService.ts # proiezione e stampa/PDF degli immobili
 │   │       ├── InvestmentReportService.ts # proiezione e stampa/PDF degli investimenti
+│   │       ├── PensionReportService.ts # proiezione e stampa/PDF delle pensioni
 │   │       └── LocalPdfReport.ts         # finestra isolata, dialogo, stampa e salvataggio PDF condivisi
 │   ├── preload/
 │   │   └── index.ts                    # bridge minimo e congelato verso la UI
@@ -113,7 +118,9 @@ ContaMì/
 │   │   │   ├── ImportPreviewDialog.tsx # riepilogo, diagnostica e conferma accessibile
 │   │   │   ├── IsinField.tsx            # textbox ISIN bilingue con errore accessibile e normalizzazione
 │   │   │   ├── InvestmentMovementSummary.tsx # quattro KPI/fatti e freccia di tendenza riusati da investimenti e pensioni
-│   │   │   ├── InvestmentReportDialog.tsx # scelta periodo e stampa/PDF investimenti
+│   │   │   ├── AssetReportDialog.tsx   # scelta periodo e stampa/PDF condivisa
+│   │   │   ├── InvestmentReportDialog.tsx # ingresso UI del report investimenti
+│   │   │   ├── PensionReportDialog.tsx # ingresso UI del report pensione
 │   │   │   ├── InvestmentUnitChart.tsx # andamento separato delle quote per posizione
 │   │   │   ├── PaymentAccountField.tsx # selezione coerente di conto o Cassa per metodo
 │   │   │   ├── PropertyReportDialog.tsx # periodo e nomi effimeri dei proprietari, stampa/salvataggio
@@ -144,7 +151,7 @@ ContaMì/
 │   │   │   ├── OverviewView.tsx     # patrimonio totale/al netto immobili, liquidità e saldo Casse
 │   │   │   ├── TransactionsView.tsx # saldi filtrati puri e riepiloghi ad oggi separati tra conti e Casse
 │   │   │   ├── InvestmentsView.tsx  # portafoglio, risultato complessivo, quote e rendimenti
-│   │   │   ├── PensionsView.tsx     # pensioni/comparti con quattro riepiloghi aggregati, dettagli e CRUD
+│   │   │   ├── PensionsView.tsx     # pensioni/comparti, dettagli, CRUD e accesso ai report
 │   │   │   └── VehiclesView.tsx     # dashboard automobili, confronto e registrazioni
 │   │   ├── App.tsx                     # orchestrazione UI e stato applicativo
 │   │   ├── main.tsx                    # entry point React
@@ -155,6 +162,7 @@ ContaMì/
 │   │   ├── ipc.ts                      # nomi canali IPC consentiti
 │   │   ├── ipcValidation.ts            # tuple e limiti degli argomenti IPC
 │   │   ├── investmentReportContracts.ts # richiesta stretta e testi report IT/EN
+│   │   ├── pensionReportContracts.ts # richiesta stretta e testi pensione IT/EN
 │   │   └── propertyReportContracts.ts  # richiesta/report result validati e testi documento IT/EN
 │   └── test/setup.ts                   # ambiente comune Vitest
 ├── tests/
@@ -176,6 +184,7 @@ ContaMì/
 │   │   ├── import-template-service.test.ts # dialogo e mancata esposizione del percorso
 │   │   ├── property-report-service.test.ts # dialogo, stampa/PDF, verifica e percorso redatto
 │   │   ├── investment-report-service.test.ts # generazione, stampa, annullamento e rollback PDF
+│   │   ├── pension-report-service.test.ts # PDF pensione, stampa, annullamento e rollback
 │   │   ├── revision-guard.test.ts      # hash e blocco modifiche concorrenti
 │   │   ├── settings.test.ts            # preferenze validate e atomiche
 │   │   ├── workbook-preflight.test.ts  # rifiuto prima di ExcelJS e compatibilità v1/v2
@@ -192,6 +201,8 @@ ContaMì/
 │       ├── propertyReport.test.ts         # periodi, quote, previsioni, limiti, HTML ed escaping
 │       ├── investmentReport.test.ts       # capitale, valute, storico, HTML ed escaping
 │       ├── investmentReportDialog.test.tsx # dialogo e azioni IT/EN
+│       ├── pensionReport.test.ts          # comparti, aggregati, rollover, valute e HTML
+│       ├── pensionReportDialog.test.tsx   # dialogo pensione IT/EN e annullamento
 │       ├── propertyReportDialog.test.tsx  # dialogo bilingue, azioni e stati disabilitati
 │       ├── annualHistory.test.ts        # aggregati utenze e automobili
 │       ├── assetReturns.test.ts         # formule, copertura, flussi, aggregati, valute e affitti sintetici

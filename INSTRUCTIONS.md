@@ -199,6 +199,14 @@ The pension card totals its active compartments without duplication. The page, c
 
 Monthly and annual return charts follow the same rules as investments. Each compartment and collector also shows an **Overall result** separately from the period return. For a pension collector, ContaMì aggregates the values and flows of compartments applicable to each period before calculating the percentage; it never adds or arithmetically averages child returns. If compartments use different currencies and no conversion rate exists, the aggregate return is hidden while individual returns remain available.
 
+### Private pension reports
+
+On the **Private pension** page, choose **Private pension report** for all pensions, or use the action on a collector or compartment for a focused report. Choose **Current year** (monthly) or **Full history** (yearly), then **Print** or **Save PDF**. Printing uses the system dialog; PDF export uses a native destination dialog. If there are no compartments, the document shows an empty state rather than invented values.
+
+For each currency, the report shows initial capital, later contributions, withdrawals, net capital, value, overall result, and its percentage when defined. The compartment table shows these flows per position; the charts compare capital with value and show period returns. Collector and all-pension totals include active final compartments only, never the collector itself. Currencies are separated without conversion, and aggregate returns are calculated from combined values and flows rather than averaging compartment percentages.
+
+Overall result and period return have different meanings, as in [Investment reports](#investment-reports). Missing valuations, partial periods, and archived annual summaries are marked; future annuities, tax benefits, and unrecorded costs are not estimated. Details are capped at 2,000 rows per currency without truncating totals. Generation is local and read-only: the PDF is not added to the workbook or backups and should be protected like other personal financial data.
+
 In the workbook, pensions and compartments remain in the `Investments` table, identified by the reserved pension type and parent/child relationship. Corrections use explicit kinds in `Investment Entries`; older files migrate deterministically without changing existing columns.
 
 ## 10. Recurring items and installments

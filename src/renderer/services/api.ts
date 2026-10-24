@@ -257,6 +257,9 @@ function createDevelopmentApi(): ContaMiApi {
     generateInvestmentReport: async (request) => request.action === "save-pdf"
       ? ({ canceled: false, fileName: `ContaMi-investment-report-demo-${request.scope}.pdf` })
       : ({ canceled: false }),
+    generatePensionReport: async (request) => request.action === "save-pdf"
+      ? ({ canceled: false, fileName: `ContaMi-pension-report-demo-${request.scope}.pdf` })
+      : ({ canceled: false }),
   };
 }
 

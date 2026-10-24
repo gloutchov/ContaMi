@@ -212,6 +212,14 @@ Il riquadro della pensione mostra il totale dei comparti attivi senza duplicazio
 
 I grafici mensili e annuali seguono le stesse regole degli investimenti. Ogni comparto e raccoglitore mostra anche il **Risultato complessivo**, distinto dal rendimento del periodo. Per il raccoglitore, ContaMì aggrega prima valori e flussi dei comparti applicabili al periodo e calcola poi la percentuale: non somma né media i rendimenti. Se i comparti usano valute diverse e non esiste un tasso di conversione, il rendimento aggregato non viene mostrato ma restano disponibili quelli individuali.
 
+### Report pensione integrativa
+
+Nella pagina **Pensione integrativa**, scegli **Report pensione integrativa** per tutte le pensioni oppure usa l’azione del fondo o del comparto per un resoconto mirato. Seleziona **Anno corrente** (mesi) o **Intera storia** (anni), poi **Stampa** o **Salva PDF**. La stampa usa il dialogo del sistema; il PDF usa un dialogo nativo per la destinazione. Anche senza comparti il documento mostra uno stato vuoto, senza inventare valori.
+
+Per ogni valuta il report presenta capitale iniziale, versamenti successivi, liquidazioni, capitale netto, controvalore, risultato complessivo e relativa percentuale quando definita. La tabella dei comparti mostra questi flussi per ogni posizione; i grafici confrontano capitale e controvalore e mostrano il rendimento per periodo. Fondo e totale generale includono solo i comparti finali attivi, senza sommare il raccoglitore; le valute sono separate e non convertite. Il rendimento aggregato deriva da valori e flussi aggregati, non dalla media delle percentuali dei comparti.
+
+Il risultato complessivo e il rendimento del periodo hanno definizioni distinte, come nel [report investimenti](#report-investimenti). Valutazioni mancanti, periodi parziali e consuntivi storici sono indicati; rendita futura, benefici fiscali e costi non registrati non vengono stimati. Il dettaglio è limitato a 2.000 righe per valuta senza tagliare i totali. La generazione è locale e in sola lettura: il PDF non entra nel workbook o nei backup e va custodito come gli altri dati finanziari personali.
+
 Nel workbook pensioni e comparti restano nella tabella `Investments`, identificati dal tipo pensione e dalla relazione padre/figlio. Le Correzioni usano tipi espliciti nella tabella `Investment Entries`; i file precedenti vengono migrati in modo deterministico senza cambiare le colonne esistenti.
 
 ## 10. Ricorrenze e rate

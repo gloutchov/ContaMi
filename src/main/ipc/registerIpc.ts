@@ -10,6 +10,7 @@ import {
   noIpcArgumentsSchema,
   propertyReportIpcArgumentsSchema,
   investmentReportIpcArgumentsSchema,
+  pensionReportIpcArgumentsSchema,
   settingsUpdateIpcArgumentsSchema,
   workbookCreateIpcArgumentsSchema,
 } from "../../shared/ipcValidation";
@@ -19,6 +20,7 @@ import type { ImportTemplateService } from "../services/ImportTemplateService";
 import type { ImportDataService } from "../services/ImportDataService";
 import type { PropertyReportService } from "../services/PropertyReportService";
 import type { InvestmentReportService } from "../services/InvestmentReportService";
+import type { PensionReportService } from "../services/PensionReportService";
 
 function safeError(error: unknown): Error {
   const code = error instanceof Error ? error.message : "UNKNOWN_ERROR";
@@ -34,7 +36,7 @@ function safeError(error: unknown): Error {
     "INVALID_IMPORT_TEMPLATE", "IMPORT_FILE_UNSAFE", "IMPORT_FILE_TOO_LARGE", "IMPORT_FORMULA_NOT_ALLOWED",
     "IMPORT_HEADERS_INVALID", "IMPORT_TEMPLATE_VERSION_UNSUPPORTED", "IMPORT_ROW_LIMIT", "IMPORT_PLAN_INVALID",
     "IMPORT_PREVIEW_EXPIRED", "IMPORT_NO_VALID_ROWS",
-    "PROPERTY_REPORT_FAILED", "INVESTMENT_REPORT_FAILED",
+    "PROPERTY_REPORT_FAILED", "INVESTMENT_REPORT_FAILED", "PENSION_REPORT_FAILED",
   ]);
   return new Error(allowed.has(code) ? code : "OPERATION_FAILED");
 }
@@ -47,6 +49,7 @@ export function registerIpc(
   imports: ImportDataService,
   propertyReports: PropertyReportService,
   investmentReports: InvestmentReportService,
+  pensionReports: PensionReportService,
 ): void {
   for (const channel of Object.values(IPC)) ipcMain.removeHandler(channel);
   const trusted = (event: IpcMainInvokeEvent): void => {
@@ -87,4 +90,5 @@ export function registerIpc(
   handle(IPC.importDiscard, importPreviewIdIpcArgumentsSchema, ([previewId]) => imports.discard(previewId));
   handle(IPC.propertyReportGenerate, propertyReportIpcArgumentsSchema, ([request]) => propertyReports.generate(request));
   handle(IPC.investmentReportGenerate, investmentReportIpcArgumentsSchema, ([request]) => investmentReports.generate(request));
+  handle(IPC.pensionReportGenerate, pensionReportIpcArgumentsSchema, ([request]) => pensionReports.generate(request));
 }

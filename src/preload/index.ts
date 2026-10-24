@@ -6,6 +6,7 @@ import type { ImportDuplicateStrategy } from "../domain/imports";
 import { IPC } from "../shared/ipc";
 import type { PropertyReportRequest } from "../shared/propertyReportContracts";
 import type { InvestmentReportRequest } from "../shared/investmentReportContracts";
+import type { PensionReportRequest } from "../shared/pensionReportContracts";
 
 const api: ContaMiApi = Object.freeze({
   getSettings: () => ipcRenderer.invoke(IPC.settingsGet),
@@ -24,6 +25,7 @@ const api: ContaMiApi = Object.freeze({
   discardImport: (previewId: string) => ipcRenderer.invoke(IPC.importDiscard, previewId),
   generatePropertyReport: (request: PropertyReportRequest) => ipcRenderer.invoke(IPC.propertyReportGenerate, request),
   generateInvestmentReport: (request: InvestmentReportRequest) => ipcRenderer.invoke(IPC.investmentReportGenerate, request),
+  generatePensionReport: (request: PensionReportRequest) => ipcRenderer.invoke(IPC.pensionReportGenerate, request),
 });
 
 contextBridge.exposeInMainWorld("contami", api);

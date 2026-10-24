@@ -1,10 +1,17 @@
 import { propertyReportTranslations } from "../../shared/propertyReportContracts";
 import { investmentReportTranslations } from "../../shared/investmentReportContracts";
+import { pensionReportTranslations } from "../../shared/pensionReportContracts";
 
 export const translations = {
   it: {
     ...propertyReportTranslations.it,
     ...investmentReportTranslations.it,
+    pensionReport: pensionReportTranslations.it.pensionReport,
+    pensionReportAll: pensionReportTranslations.it.pensionReportAll,
+    pensionReportDescription: pensionReportTranslations.it.pensionReportDescription,
+    pensionReportSaved: pensionReportTranslations.it.pensionReportSaved,
+    pensionReportPrintOpened: pensionReportTranslations.it.pensionReportPrintOpened,
+    pensionReportError: pensionReportTranslations.it.pensionReportError,
     appName: "ContaMì",
     appTagline: "Le tue finanze, finalmente semplici.",
     mainNavigation: "Navigazione principale",
@@ -655,6 +662,12 @@ export const translations = {
   en: {
     ...propertyReportTranslations.en,
     ...investmentReportTranslations.en,
+    pensionReport: pensionReportTranslations.en.pensionReport,
+    pensionReportAll: pensionReportTranslations.en.pensionReportAll,
+    pensionReportDescription: pensionReportTranslations.en.pensionReportDescription,
+    pensionReportSaved: pensionReportTranslations.en.pensionReportSaved,
+    pensionReportPrintOpened: pensionReportTranslations.en.pensionReportPrintOpened,
+    pensionReportError: pensionReportTranslations.en.pensionReportError,
     appName: "ContaMì",
     appTagline: "Your finances, finally simple.",
     mainNavigation: "Main navigation",

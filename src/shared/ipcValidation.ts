@@ -5,6 +5,7 @@ import { importDuplicateStrategySchema } from "../domain/imports";
 import { appSettingsSchema } from "./contracts";
 import { propertyReportRequestSchema } from "./propertyReportContracts";
 import { investmentReportRequestSchema } from "./investmentReportContracts";
+import { pensionReportRequestSchema } from "./pensionReportContracts";
 
 export const noIpcArgumentsSchema = z.tuple([]);
 export const settingsUpdateIpcArgumentsSchema = z.tuple([
@@ -17,3 +18,4 @@ export const importPreviewIpcArgumentsSchema = z.tuple([importDuplicateStrategyS
 export const importPreviewIdIpcArgumentsSchema = z.tuple([z.string().uuid()]);
 export const propertyReportIpcArgumentsSchema = z.tuple([propertyReportRequestSchema]);
 export const investmentReportIpcArgumentsSchema = z.tuple([investmentReportRequestSchema]);
+export const pensionReportIpcArgumentsSchema = z.tuple([pensionReportRequestSchema]);
