@@ -1,6 +1,6 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-10-24 · Applicazione / Application: 1.26.0
+Versione del documento / Document version: 2026-10-27 · Applicazione / Application: 1.26.0
 
 ## Italiano
 
@@ -152,6 +152,8 @@ La landing pubblica è un artifact web statico separato dall’app desktop ed è
 Screenshot e dimostrazioni della landing devono contenere esclusivamente dati sintetici e non possono mostrare percorsi completi, workbook privati o informazioni identificative. I poster PNG coprono IT/EN e tema chiaro/scuro; le GIF di produzione restano sorgenti locali ignorate da Git e vengono pubblicate come MP4 H.264 ridimensionati e caricati con `preload="none"`. La validazione automatica controlla parità dei dizionari, asset richiesti, CSP, origine canonica personalizzata, assenza di indirizzi pubblici alternativi, percorsi relativi e budget massimo dei video. GitHub Pages pubblica direttamente `main` + `/docs` in modalità branch, senza workflow di deploy versionato nel repository; `.nojekyll` evita elaborazioni Jekyll. Tutto ciò che entra in `docs/` è quindi contenuto pubblico, mentre specifiche e note di manutenzione restano in `documents/`.
 
 ### 12. Dipendenze e supply chain
+
+M42 combina le PR Dependabot #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0 e typescript-eslint 8.72.0. I due requisiti diretti Playwright sono allineati alla stessa versione. Il grafo bloccato contiene soltanto le modifiche delle cinque PR; permessi, rete dell'app, IPC, persistenza, schema v15, allowlist npm e workflow restano invariati. Le verifiche sul changeset combinato e sul packaging sono registrate in M42 di `PLAN.md`; quelle remote precedono il merge e richiedono prima l'approvazione del commit locale. Non è prevista una nuova release.
 
 - `package-lock.json` rende riproducibili le versioni installate con `npm ci`.
 - L’audit npm è eseguito localmente e in CI senza ignorare le vulnerabilità moderate; al 2026-09-29 riporta 0 vulnerabilità note. M31 ha sostituito le versioni transitive vulnerabili di `undici` con `6.29.0`, `7.30.0` e `8.11.2`, risolvendo `GHSA-3wwx-pv8p-q78v`, e ha aggiornato in modo compatibile il grafo bloccato.
@@ -333,6 +335,8 @@ The public landing page is a static web artifact separate from the desktop appli
 Landing screenshots and demonstrations must contain synthetic data only and must not expose full paths, private workbooks, or identifying information. PNG posters cover Italian/English and light/dark themes; production GIFs remain local, Git-ignored sources and are published as resized H.264 MP4 files loaded with `preload="none"`. Automated validation checks translation parity, required assets, CSP, the custom canonical origin, absence of alternative public addresses or remote runtime dependencies, relative paths, and video budgets. GitHub Pages publishes `main` + `/docs` directly in branch mode, without a repository-managed deployment workflow; `.nojekyll` prevents Jekyll processing. Everything under `docs/` is therefore public content, while specifications and maintenance notes remain under `documents/`.
 
 ### 10. Supply chain and verification
+
+M42 combines Dependabot PRs #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0, and typescript-eslint 8.72.0. Both direct Playwright requirements use the same version. The locked graph contains only the five PRs' changes; permissions, application network access, IPC, persistence, schema v15, the npm allowlist, and workflows remain unchanged. Combined and packaging checks are recorded under M42 in `PLAN.md`; remote checks precede merging and first require approval of the local commit. No new release is planned.
 
 `package-lock.json` plus `npm ci` provide deterministic dependency resolution. npm audit runs locally and in CI without ignoring moderate findings; as of 2026-10-07 it reports zero known vulnerabilities. M31 replaced the vulnerable transitive `undici` versions with `6.29.0`, `7.30.0`, and `8.11.2`, resolving `GHSA-3wwx-pv8p-q78v`, and compatibly refreshed the locked graph. npm 11 denies unlisted install scripts; the versioned allowlist permits only `esbuild@0.28.2` and `electron-winstaller@5.4.0`, required for builds and Windows packaging. Development, CI, and packaging use Node.js 24 LTS from version 24.15.0. `.node-version` is the single baseline source; preflight verifies it against `engines`, direct-dependency requirements, CI, and documentation. `jsdom` 30.1.2 uses the same baseline. Dependabot monitors npm and Actions weekly; every Action used by CI and release is pinned to a commit SHA resolved from its official repository. CI runs hygiene checks, lint, typecheck, tests, build, 1080-px Playwright checks, and a complete audit on macOS and Windows. Tagged releases repeat the audit, inspect the actual `app.asar` content, launch the unpacked executable, install the DMG/NSIS in a temporary platform-specific location, verify launch and removal, and publish SHA-256 checksums.
 

@@ -84,6 +84,8 @@ ContaMì needs no account, cloud, telemetry, or network during normal use. Workb
 
 Richiede Node.js 24 LTS **>=24.15.0**, npm e Git. Requires Node.js 24 LTS **>=24.15.0**, npm, and Git.
 
+La manutenzione M42 integra le PR Dependabot #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0 e typescript-eslint 8.72.0. Versione sorgente `1.26.0` e schema workbook v15 invariati; non è prevista una nuova release desktop. / M42 maintenance integrates Dependabot PRs #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0, and typescript-eslint 8.72.0. Source version `1.26.0` and workbook schema v15 are unchanged; no new desktop release is planned.
+
 ```bash
 npm ci
 npm run dev

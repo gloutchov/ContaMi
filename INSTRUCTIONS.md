@@ -341,3 +341,5 @@ Workbook schema v15 adds optional `purchasePaymentMode`, `purchaseDownPayment`, 
 Version 1.24.0 adds operating and overall cost/km and upgrades the workbook to schema v15 with backup and conservative migration. It also includes Km/l, rectangular columns, LibreOffice boolean constant compatibility and save feedback inside dialogs. It retains Electron 44 and the macOS 13 minimum from 1.23.0. The following dependency maintenance, including Lucide 1.57.0, Node types 26.6.5, and typescript-eslint 8.71.2, does not change features, the workbook schema, or the app version.
 
 Source version 1.25.0 adds printable investment reports; 1.26.0 adds private pension reports using the same local PDF engine. Both keep workbook schema v15. For published packages and checksums, see [Releases](https://github.com/gloutchov/Contami/releases).
+
+M42 maintenance updates React and the tools used for testing, static checks, and packaging. The source version remains `1.26.0`: it requires no workbook migration or changes, keeps the application workflows unchanged, and does not include a new installer. Available packages remain those listed on the Releases page.
