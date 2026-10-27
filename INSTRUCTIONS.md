@@ -342,4 +342,4 @@ Version 1.24.0 adds operating and overall cost/km and upgrades the workbook to s
 
 Source version 1.25.0 adds printable investment reports; 1.26.0 adds private pension reports using the same local PDF engine. Both keep workbook schema v15. For published packages and checksums, see [Releases](https://github.com/gloutchov/Contami/releases).
 
-M42 maintenance updates React and the tools used for testing, static checks, and packaging. The source version remains `1.26.0`: it requires no workbook migration or changes, keeps the application workflows unchanged, and does not include a new installer. Available packages remain those listed on the Releases page.
+C42 maintenance prepares patch release `1.26.1`, updating React and the tools used for testing, static checks, and packaging. It requires no workbook migration or changes and keeps application workflows unchanged. Before updating, retain a copy of your data and verify the checksum of the package published on the Releases page. macOS 13+ and Windows x64 requirements and unsigned-build warnings still apply.

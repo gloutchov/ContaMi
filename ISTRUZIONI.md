@@ -375,4 +375,4 @@ La versione 1.24.0 aggiunge costo d’uso/km e costo complessivo/km e aggiorna i
 
 La sorgente 1.25.0 aggiunge i report stampabili degli investimenti; la 1.26.0 aggiunge quelli della pensione integrativa, usando lo stesso motore PDF locale. Entrambe mantengono lo schema workbook v15. Per pacchetti effettivamente pubblicati e checksum consulta la pagina [Releases](https://github.com/gloutchov/Contami/releases).
 
-La manutenzione M42 aggiorna React e gli strumenti di test, controllo del codice e creazione dei pacchetti. La versione sorgente resta `1.26.0`: non richiede migrazioni o modifiche ai workbook, non cambia i flussi dell'app e non prevede un nuovo installer. I pacchetti disponibili restano quelli indicati nella pagina Releases.
+La manutenzione C42 prepara la release correttiva `1.26.1`, aggiornando React e gli strumenti di test, controllo del codice e creazione dei pacchetti. Non richiede migrazioni o modifiche ai workbook e non cambia i flussi dell'app. Prima di aggiornare, conserva una copia dei dati e verifica il checksum del pacchetto pubblicato nella pagina Releases. Restano i requisiti macOS 13+ e Windows x64 e gli avvisi per le build non firmate.

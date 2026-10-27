@@ -8,7 +8,7 @@
 
 [**Sito / Website**](https://contami.glaucosilvestri.it/) · [**Release e checksum / Releases and checksums**](https://github.com/gloutchov/Contami/releases) · [**Avvio rapido / Quick start**](QUICK-START_Desktop.md) · [**Manuale IT**](ISTRUZIONI.md) · [**User manual EN**](INSTRUCTIONS.md)
 
-> **Stato / Status:** alpha funzionante / functional alpha · **1.26.0 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v15 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
+> **Stato / Status:** alpha funzionante / functional alpha · **1.26.1 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v15 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
 
 ![Panoramica di ContaMì con dati dimostrativi](docs/assets/panoramica_whi.png)
 
@@ -84,7 +84,7 @@ ContaMì needs no account, cloud, telemetry, or network during normal use. Workb
 
 Richiede Node.js 24 LTS **>=24.15.0**, npm e Git. Requires Node.js 24 LTS **>=24.15.0**, npm, and Git.
 
-La manutenzione M42 integra le PR Dependabot #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0 e typescript-eslint 8.72.0. Versione sorgente `1.26.0` e schema workbook v15 invariati; non è prevista una nuova release desktop. / M42 maintenance integrates Dependabot PRs #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0, and typescript-eslint 8.72.0. Source version `1.26.0` and workbook schema v15 are unchanged; no new desktop release is planned.
+La manutenzione C42 prepara la release correttiva `1.26.1` e integra le PR Dependabot #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0 e typescript-eslint 8.72.0. Schema workbook v15 e funzioni dell'app invariati. / C42 maintenance prepares patch release `1.26.1` and integrates Dependabot PRs #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0, and typescript-eslint 8.72.0. Workbook schema v15 and application features are unchanged.
 
 ```bash
 npm ci
