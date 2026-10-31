@@ -584,3 +584,39 @@ optional ExcelJS shared-string stream-reader ordering issue exists on C44 and M4
 the app's standard reader is verified without value loss. Zero known advisories do
 not guarantee absence of future defects. Cross-platform install/package/inspection
 and native smoke gates remain required before closure.
+
+
+### Chiusura C45 verificata / Verified C45 closure — 2026-10-31
+
+Il commit corretto `18584fda0e3788ae5e7c0b11a106cc312d2c96ea` è stato nuovamente
+controllato e approvato, integrato su main e pubblicato con i tag annotati
+`milestone/C45` / `v1.27.1`. I gate remoti prima indicati come pendenti sono passati:
+CI branch/main/versione e packaging preliminare/finale su macOS e Windows, audit
+completo zero, ispezione e smoke unpacked/installato su macOS ARM64 e Windows x64.
+Il solo test Universal completo gira sul suo host macOS; i controlli ASAR del
+builder/installer, matcher, workbook, temp e audit passano anche su Windows.
+
+I sei pacchetti e SHA256SUMS.txt pubblicati sono stati scaricati e riconciliati con
+digest/dimensioni GitHub e manifesto. Tre ASAR verificati, due DMG integri e coerenti
+con gli ZIP; entrambi gli archivi sorgente corrispondono ai 322 file del commit
+approvato. Branch/worktree M45 rimossi solo dopo i gate, con 38 evidenze sintetiche
+conservate e checksum verificati. Le eccezioni storiche e la scadenza del 14 novembre
+non si applicano a 1.27.1. Restano pacchetti non firmati, Mac Intel statico e il limite
+upstream opzionale ExcelJS già documentato; nessun dato privato aperto o modificato.
+
+Corrected commit `18584fda0e3788ae5e7c0b11a106cc312d2c96ea` was personally reviewed
+and approved again, merged on main and published with annotated `milestone/C45` /
+`v1.27.1` tags. The previously pending remote gates passed: branch/main/version CI,
+preliminary/final packaging on macOS and Windows, a fully clean audit, inspection,
+and unpacked/installed smoke on macOS ARM64 and Windows x64. Only the complete
+Universal test runs on its macOS host; builder/installer ASAR, matcher, workbook,
+temp and audit checks pass on Windows too.
+
+The six published packages and SHA256SUMS.txt were downloaded and reconciled with
+GitHub digests/sizes and the manifest. Three ASAR archives passed inspection; both
+DMGs are valid and match their ZIP apps. Both source archives match all 322 approved
+files. M45 branches/worktree were removed after these gates, preserving 38 synthetic
+evidence files with verified checksums. Historical exceptions and the November 14
+expiry no longer apply to 1.27.1. Unsigned packages, static-only Intel Mac validation
+and the documented optional ExcelJS upstream limit remain; no private data was opened
+or modified. App permissions, networking, IPC, storage and workbook v16 are unchanged.

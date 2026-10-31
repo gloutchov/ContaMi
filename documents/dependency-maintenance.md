@@ -241,7 +241,7 @@ on ZIP entry order. The app uses the standard reader, which preserves values. Te
 cover streaming writer output with/without shared strings through the standard reader,
 and the streaming reader with inline strings; they do not claim to fix the upstream
 ordering issue. Finance/import/rollover/v16 round-trips exercise the app's actual APIs
-with synthetic data. Results and remaining remote gates are recorded under M45 in PLAN.md.
+with synthetic data. Final results and residual limits are recorded under C45 in PLAN.md.
 
 ### Correzione del test multipiattaforma / Cross-platform test correction
 
@@ -261,3 +261,24 @@ on macOS. Builder ASAR, electron-winstaller CJS imports, matchers and shipped
 consumer tests remain enabled on both platforms. The upstream library is not
 modified or bypassed. Windows packaging/smoke remain mandatory gates before merging
 and releasing the new commit.
+
+
+### Chiusura verificata / Verified closure — C45, v1.27.1
+
+Il commit corretto `18584fd` è approvato e rilasciato: CI branch/main/tag e packaging
+preliminare/finale macOS/Windows verdi, audit completo zero senza eccezioni.
+macOS passa 436 test, Windows 435 con il solo merge Universal macOS escluso; entrambi
+passano 11 test browser app e 7 landing. Ispezione e smoke unpacked/installato dei
+pacchetti finali passano su macOS ARM64 e Windows x64; Mac Intel resta statico.
+I sei pacchetti pubblicati, manifesto SHA-256, digest GitHub, tre ASAR, due DMG e
+322 file in ciascun archivio sorgente sono verificati dopo il download. I dettagli
+con link ai run e i limiti residui sono in [C45](../PLAN.md#c45--minimatch-legacy-e-audit-completo-senza-eccezioni).
+
+Corrected commit `18584fd` is approved and released: branch/main/tag CI and
+preliminary/final macOS/Windows packaging passed, with a fully clean audit and no
+exceptions. macOS passes 436 tests; Windows passes 435, excluding only macOS Universal
+merge. Both pass 11 app and 7 landing browser tests. Final package inspection and
+unpacked/installed smoke passed on macOS ARM64 and Windows x64; Intel Mac remains
+statically checked. Downloaded artifacts were verified: six packages, SHA-256
+manifest, GitHub digests, three ASAR archives, two DMGs and all 322 files in each
+source archive. C45 in PLAN.md records workflow links and residual limits.
