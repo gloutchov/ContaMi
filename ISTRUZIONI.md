@@ -27,7 +27,7 @@ L’app è local-first: non richiede account, non usa servizi cloud e non invia 
 
 ## 2. Requisiti e installazione
 
-- per le build dalla `1.23.0` con Electron 44: macOS 13 o successivo a 64 bit; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12;
+- per le build dalla `1.23.0`: macOS 13 o successivo a 64 bit; la precedente release `v1.22.2` con Electron 43 resta disponibile per macOS 12;
 - oppure Windows a 64 bit (`x64`);
 - spazio sufficiente per l’app, il workbook e i backup;
 - Apple Numbers installato solo se vuoi una copia `.numbers` nativa;
@@ -244,7 +244,7 @@ La spesa inserita diventa la prima occorrenza: non viene aggiunto un secondo pag
 
 Togliere la ricorrenza in una Transazione o Spesa condivisa scollega soltanto quella registrazione: non chiude il piano. Cambiare condivisione o quote sulla singola registrazione non cambia la serie; per le scadenze future modifica il piano. I collegamenti usano gli identificativi espliciti: una descrizione simile non ricollega automaticamente una spesa scollegata. Per esempio, una spesa sintetica di 100,01 € con quota personale 30 € mantiene 30 €/70,01 € come proporzione iniziale del piano.
 
-Lo **schema v16**, introdotto in 1.27.0 con backup, resta invariato nella patch sorgente **1.27.1**. La migrazione lascia le ricorrenze esistenti senza condivisione di serie e conserva le eventuali singole spese già condivise. Lo schema v16 richiede 1.27.0 o una versione successiva: conserva il backup se devi tornare a un'app precedente.
+Lo **schema v16**, introdotto in 1.27.0 con backup, resta invariato nella patch sorgente **1.27.2**. La migrazione lascia le ricorrenze esistenti senza condivisione di serie e conserva le eventuali singole spese già condivise. Lo schema v16 richiede 1.27.0 o una versione successiva: conserva il backup se devi tornare a un'app precedente.
 
 ## 11. Spese condivise
 
@@ -397,3 +397,5 @@ La versione 1.24.0 aggiunge costo d’uso/km e costo complessivo/km e aggiorna i
 La sorgente 1.25.0 aggiunge i report stampabili degli investimenti; la 1.26.0 aggiunge quelli della pensione integrativa, usando lo stesso motore PDF locale. Entrambe mantengono lo schema workbook v15. Per pacchetti effettivamente pubblicati e checksum consulta la pagina [Releases](https://github.com/gloutchov/Contami/releases).
 
 La manutenzione C42 prepara la release correttiva `1.26.1`, aggiornando React e gli strumenti di test, controllo del codice e creazione dei pacchetti. Non richiede migrazioni o modifiche ai workbook e non cambia i flussi dell'app. Prima di aggiornare, conserva una copia dei dati e verifica il checksum del pacchetto pubblicato nella pagina Releases. Restano i requisiti macOS 13+ e Windows x64 e gli avvisi per le build non firmate.
+
+La sorgente candidata **1.27.2** aggiorna il runtime a Electron 45.1.0 e integra le cinque proposte Dependabot #136–#140. Vitest e coverage sono allineati a 5.0.5. I flussi applicativi, i file e lo schema v16 restano invariati; l’audit completo mantiene i controlli senza eccezioni di C45. La versione distribuita è indicata in Releases.

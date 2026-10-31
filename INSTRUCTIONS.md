@@ -27,7 +27,7 @@ The app is local-first: it requires no account, uses no cloud service, and sends
 
 ## 2. Requirements and installation
 
-- for builds from version 1.23.0 with Electron 44: 64-bit macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12;
+- for builds from version 1.23.0: 64-bit macOS 13 or later; the previous `v1.22.2` release with Electron 43 remains available for macOS 12;
 - or 64-bit Windows (`x64`);
 - enough space for the app, workbook, and backups;
 - Apple Numbers only if you want a native `.numbers` mirror;
@@ -231,7 +231,7 @@ The entered expense becomes the first occurrence without creating another paymen
 
 Disabling recurrence on a Transaction or Shared expense detaches that record only; it does not close the plan. Changing one record's sharing or shares does not change the series; edit the plan for future occurrences. Links use explicit identifiers: similar descriptions never automatically reattach a detached expense. For example, a synthetic €100.01 expense with a €30 personal share retains the initial €30/€70.01 ratio in its plan.
 
-**Schema v16**, introduced in 1.27.0 with a backup, is unchanged in source patch **1.27.1**. Migration leaves existing schedules without series sharing and preserves individually shared expenses. Schema v16 requires 1.27.0 or later; keep the backup if returning to an older app.
+**Schema v16**, introduced in 1.27.0 with a backup, is unchanged in source patch **1.27.2**. Migration leaves existing schedules without series sharing and preserves individually shared expenses. Schema v16 requires 1.27.0 or later; keep the backup if returning to an older app.
 
 ## 11. Shared expenses
 
@@ -366,3 +366,5 @@ Version 1.24.0 adds operating and overall cost/km and upgrades the workbook to s
 Source version 1.25.0 adds printable investment reports; 1.26.0 adds private pension reports using the same local PDF engine. Both keep workbook schema v15. For published packages and checksums, see [Releases](https://github.com/gloutchov/Contami/releases).
 
 C42 maintenance prepares patch release `1.26.1`, updating React and the tools used for testing, static checks, and packaging. It requires no workbook migration or changes and keeps application workflows unchanged. Before updating, retain a copy of your data and verify the checksum of the package published on the Releases page. macOS 13+ and Windows x64 requirements and unsigned-build warnings still apply.
+
+Candidate source **1.27.2** updates the runtime to Electron 45.1.0 and integrates the five Dependabot proposals #136–#140. Vitest and coverage are aligned at 5.0.5. Workflows, files and schema v16 are unchanged; the full audit retains C45’s unconditional checks. Releases lists the distributed version.

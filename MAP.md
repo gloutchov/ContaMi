@@ -198,6 +198,7 @@ ContaMì/
 │   │   ├── dependencyAuditGate.test.mjs # gate npm reale: audit pulito, moderato e errore su registry sintetico
 │   │   ├── legacyDependencyCompatibility.test.mjs # API archive, ExcelJS streaming, Universal e cleanup temp
 │   │   ├── modernDependencyCompatibility.test.mjs # filtri moderni, ASAR, ESLint, project service e advisory
+│   │   ├── sandboxedPreloadCompatibility.test.mjs # preload compilato senza shim Node rimossi da Electron 45
 │   │   ├── finance-file-service.test.ts # recupero avvio e copia report con revisione verificata
 │   │   ├── import-template-generator.test.ts # struttura, liste e limite dei template
 │   │   ├── import-template-parser.test.ts # otto import v3, compatibilità v1/v2, ISIN, sicurezza e duplicati

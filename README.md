@@ -8,7 +8,7 @@
 
 [**Sito / Website**](https://contami.glaucosilvestri.it/) · [**Release e checksum / Releases and checksums**](https://github.com/gloutchov/Contami/releases) · [**Avvio rapido / Quick start**](QUICK-START_Desktop.md) · [**Manuale IT**](ISTRUZIONI.md) · [**User manual EN**](INSTRUCTIONS.md)
 
-> **Stato / Status:** alpha funzionante / functional alpha · **1.27.1 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v16 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
+> **Stato / Status:** alpha funzionante / functional alpha · **1.27.2 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v16 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
 
 ![Panoramica di ContaMì con dati dimostrativi](docs/assets/panoramica_whi.png)
 
@@ -114,6 +114,8 @@ npm run dist:win  # su Windows / on Windows
 Il collaudo browser richiede prima `npm run test:e2e:install`; le istruzioni per packaging, smoke e landing sono nel [manuale](ISTRUZIONI.md), nel [piano](PLAN.md) e nella [mappa del repository](MAP.md). Le build e i dati locali generati, inclusi `sources/`, workbook e backup, non devono entrare in commit o artifact.
 
 Browser checks first need `npm run test:e2e:install`. Packaging, smoke, and landing instructions are in the [English manual](INSTRUCTIONS.md), [plan](PLAN.md), and [repository map](MAP.md). Generated local output and data, including `sources/`, workbooks, and backups, must stay out of commits and artifacts.
+
+La sorgente candidata **1.27.2** integra le PR Dependabot #136–#140: Electron 45.1.0, strumenti di sviluppo aggiornati e Vitest/coverage allineati a 5.0.5. Conserva le correzioni audit di C45 e lo schema v16; i pacchetti distribuiti restano indicati in Releases. / Candidate source **1.27.2** integrates Dependabot PRs #136–#140: Electron 45.1.0, updated development tools and Vitest/coverage aligned at 5.0.5. C45 audit fixes and schema v16 are preserved; Releases lists the distributed packages.
 
 ## Documentazione / Documentation
 

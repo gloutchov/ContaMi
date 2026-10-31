@@ -1,6 +1,6 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-10-31 · Applicazione / Application: 1.27.1
+Versione del documento / Document version: 2026-10-31 · Applicazione / Application: 1.27.2
 
 ## Italiano
 
@@ -620,3 +620,47 @@ evidence files with verified checksums. Historical exceptions and the November 1
 expiry no longer apply to 1.27.1. Unsigned packages, static-only Intel Mac validation
 and the documented optional ExcelJS upstream limit remain; no private data was opened
 or modified. App permissions, networking, IPC, storage and workbook v16 are unchanged.
+
+
+### M46 — Electron 45 e manutenzione Dependabot / Electron 45 and Dependabot maintenance
+
+La sorgente candidata 1.27.2 integra #136–#140, mantenendo tutti gli override C45,
+la copia auditabile temp, audit completo senza eccezioni, Node di sviluppo 24 e
+schema v16. Electron passa da 44.9.3 a 45.1.0; Vitest e coverage sono allineati a
+5.0.5 per il peer esatto. Le versioni e le variazioni transitive sono inventariate.
+
+Le [breaking changes Electron 45](https://www.electronjs.org/docs/latest/breaking-changes#breaking-api-changes-450)
+rimuovono gli shim Node events/timers/url e Buffer/setImmediate/clearImmediate nel
+preload sandboxed. Il preload ContaMì richiede soltanto electron e non usa questi
+shim. Una regressione compila il file con lo script di produzione e lo esegue in
+un contesto privo di questi globali, verificando bridge congelato e canali IPC
+dedicati. Non amplia IPC, permessi, rete o capacità del renderer. La prova Electron
+nativa locale usa un harness sintetico distinto dal main ContaMì, con userData/sessionData
+in una directory temporanea impostata prima di app.whenReady, senza servizi finanziari
+o impostazioni reali. Non avviare lo smoke normale locale con preferenze utente:
+lo smoke installato resta un gate su runner effimeri macOS/Windows dopo approvazione.
+
+[Electron 45.1.0](https://releases.electronjs.org/release/v45.1.0) usa Node 24.22.1 e
+Chromium 156. Il binario di sviluppo è scaricato tramite installer ufficiale e
+checksum upstream; il download a richiesta è già il comportamento upstream,
+non una nuova capacità di rete dell'app pacchettizzata. Certificati, firma e
+notarizzazione restano non configurati. Le verifiche locali e i gate remoti
+pendenti sono riportati in M46 del piano; nessun dato privato usato come fixture.
+
+Candidate source 1.27.2 integrates #136–#140 while preserving C45 overrides, the
+auditable temp copy, full unconditional audit, development Node 24 and schema v16.
+Electron moves from 44.9.3 to 45.1.0; Vitest and coverage are aligned at 5.0.5 for
+the exact peer. The inventory records versions and transitive changes.
+
+Electron 45 removes Node events/timers/url shims and Buffer/setImmediate/clearImmediate
+from sandboxed preloads. ContaMì requires only electron and uses none of these shims.
+A regression compiles the production preload and runs it without those globals,
+checking its frozen bridge and dedicated IPC channels. No IPC, renderer, network
+or permission capabilities are expanded. The native local Electron probe runs a
+separate synthetic harness, setting temporary userData/sessionData before readiness
+and loading no finance services or real settings. Do not run the ordinary local
+smoke with user preferences: installed smoke remains a post-approval gate on
+ephemeral macOS/Windows runners. Electron 45.1.0 includes Node 24.22.1/Chromium 156;
+the development binary uses the official installer/upstream checksums. On-demand
+download is existing upstream behavior, not new packaged-app networking. Signing
+and notarization remain unconfigured; M46 records results and pending remote gates.

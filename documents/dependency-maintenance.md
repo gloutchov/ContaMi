@@ -282,3 +282,52 @@ unpacked/installed smoke passed on macOS ARM64 and Windows x64; Intel Mac remain
 statically checked. Downloaded artifacts were verified: six packages, SHA-256
 manifest, GitHub digests, three ASAR archives, two DMGs and all 322 files in each
 source archive. C45 in PLAN.md records workflow links and residual limits.
+
+
+## M46 — PR Dependabot #136–#140 / Grouped Dependabot update
+
+Base: main bb731ae, checkpoint C45 18584fd verificati. Sorgente candidata 1.27.2;
+schema v16 e Node di sviluppo 24 invariati. / Verified base: main bb731ae,
+checkpoint C45 18584fd. Candidate source 1.27.2; schema v16/development Node 24 unchanged.
+
+| PR | Dipendenza / Dependency | Prima / Before | Dopo / After |
+|---|---|---|---|
+| #136 | @types/node | 26.6.5 | 26.6.6 |
+| #137 | concurrently | 10.0.5 | 10.0.6 |
+| #138 | @vitest/coverage-v8 | 5.0.3 | 5.0.5 |
+| peer #138 | vitest, @vitest/mocker, @vitest/spy | 5.0.3 | 5.0.5 |
+| #139 | @testing-library/user-event | 14.6.7 | 14.6.8 |
+| #140 | electron | 44.9.3 | 45.1.0 |
+
+Il provider coverage richiede Vitest 5.0.5 esatto: aggiornati insieme e verificati
+con test:coverage, non soltanto tramite npm test. Le sole altre variazioni di versione
+sono richieste dalle nuove catene Vitest: magic-string 1.4.3→1.4.5, obug 2.2.1→3.0.0,
+tinybench 6.2.1→6.2.2, tinyrainbow 3.1.1→3.2.0. Restano invariati dipendenze di
+produzione e override C45, inclusi glob/minimatch corretti e temp locale auditabile.
+Le PR #136–#139 erano basate su C44: sono state applicate le variazioni semantiche
+al lockfile C45, senza reintrodurre vecchie catene o eccezioni. La vecchia CI Windows
+fallita di #139 segnalava AUDIT_COMMAND_FAILED, dopo i test; l'audit del grafo combinato
+è ricontrollato come parte dei gate ordinari.
+
+The coverage provider requires exact Vitest 5.0.5: update them together and verify
+actual test:coverage output. The only other version changes belong to the new
+Vitest chains: magic-string 1.4.3→1.4.5, obug 2.2.1→3.0.0, tinybench 6.2.1→6.2.2,
+tinyrainbow 3.1.1→3.2.0. Production dependencies and all C45 overrides are preserved,
+including fixed matchers and auditable local temp. PRs #136–#139 were based on C44;
+apply their semantic changes to C45's lockfile without restoring old chains or
+exceptions. The old Windows failure on #139 was AUDIT_COMMAND_FAILED after tests;
+check the combined graph through the ordinary full audit gate.
+
+[Electron 45 release notes](https://releases.electronjs.org/release/v45.1.0) e
+[breaking changes](https://www.electronjs.org/docs/latest/breaking-changes#breaking-api-changes-450)
+verificati. La regressione del preload compilato non fornisce gli shim rimossi e
+controlla il bridge; l'harness nativo locale usa soltanto profilo/dati sintetici.
+Il main dell'app, i servizi finanziari, i workbook e le preferenze reali non vengono
+caricati dalla prova. CI e pacchetti macOS/Windows del gruppo richiedono prima la
+revisione/approvazione del commit locale; le PR bot si chiudono dopo integrazione.
+
+Official Electron release/breaking notes were checked. The compiled-preload
+regression provides none of the removed shims and checks the bridge; the native
+local harness uses only synthetic data/profile and loads no app main, finance
+services, workbook or real preferences. Combined macOS/Windows CI/packaging require
+prior approval of the frozen local commit; bot PRs close after verified integration.
