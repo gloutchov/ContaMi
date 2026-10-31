@@ -23,7 +23,7 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** C42 è il checkpoint di partenza remoto verificato (`milestone/C42` e `v1.26.1`, `79c5d39347b8deddcda0cc0e603cbd933ab2763a`). M43 prepara la sorgente `1.27.0` e lo schema workbook v16 per ricorrenza e condivisione nei tre moduli di spesa. La pubblicazione segue il controllo personale del commit finale e i gate di distribuzione. La proposta locale descritta in coda corregge i due avvisi alti e richiede una nuova approvazione esplicita per due sole eccezioni moderate temporanee, in sostituzione della precedente condizione di risoluzione completa dell'audit. Le sezioni delle milestone chiuse conservano risultati e limiti storici.
+**Stato corrente:** C43 è completata e pubblicata come `v1.27.0`, schema workbook v16: `main` e i tag annotati `milestone/C43` / `v1.27.0` puntano a `1890b7ef5b1477798cd3ebe7de8d9feb4b56d0ef`. Il nuovo piano esecutivo comprende M44 e M45, in questo ordine, per eliminare le vulnerabilità residue e rimuovere le eccezioni audit entro il 14 novembre 2026 incluso (UTC). Le due milestone sono programmate, non avviate: questa modifica prepara soltanto il piano. Le sezioni delle milestone chiuse conservano risultati e limiti storici.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -80,11 +80,13 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | C40 — Report investimenti | `milestone/40-investment-reports` | `milestone/C40`; sorgente `1.25.0`, senza tag versione | Sorgente completata; GitHub Release differita a M41 |
 | C41 — Report pensione integrativa | `milestone/41-pension-reports` | `milestone/C41`, `v1.26.0` | Pubblicata; checkpoint remoto verificato |
 | C42 — Manutenzione Dependabot #131–#135 | `milestone/42-dependabot-maintenance` | `milestone/C42`, release correttiva `1.26.1` | Sorgente completata; versione e chiusura in revisione prima della pubblicazione |
-| M43 — Spese ricorrenti e condivise da ogni modulo | `milestone/43-shared-recurring-expenses` | `milestone/C43`, `1.27.0` | Implementata e verificata localmente; in attesa del controllo del commit |
+| C43 — Spese ricorrenti e condivise da ogni modulo | `milestone/43-shared-recurring-expenses` | `milestone/C43`, `v1.27.0` | Pubblicata; CI, pacchetti, checksum e pulizia verificati |
+| M44 — Glob corretto e consumatori moderni di minimatch | `milestone/44-glob-modern-minimatch` | `milestone/C44`; versione invariata `1.27.0` | Programmata; prima fase, obiettivo 06/11/2026 |
+| M45 — Minimatch legacy e audit senza eccezioni | `milestone/45-legacy-minimatch-audit` | `milestone/C45`; patch prevista `1.27.1` | Programmata dopo C44; obiettivo 12/11/2026 |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1` → manutenzione dipendenze e catena di rilascio `v1.21.0` → letture acqua delle residenze `v1.22.0` → compatibilità configurazione Vite `v1.22.1` → trasparenza costo/km Automobile `v1.22.2` → release Electron 44 `v1.23.0` → costo d’uso e costo complessivo/km `v1.24.0`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
-**Checkpoint desktop rilasciato:** `v1.24.0`, costo d’uso e costo complessivo/km con schema workbook v15; macOS 13+ e Windows x64. `v1.22.2` resta disponibile per macOS 12. `v1.20.0` include la sorgente della patch desktop `1.19.1` senza un tag separato.
+**Checkpoint desktop rilasciato:** `v1.27.0`, ricorrenza e condivisione da ogni modulo di spesa, riepiloghi corretti e schema workbook v16; macOS 13+ ARM64/x64 e Windows x64. `v1.22.2` resta disponibile per macOS 12. Le release e i checkpoint precedenti restano recuperabili tramite i relativi tag.
 
 **Patch costo/km Automobile (completata e rilasciata).** Il confronto divideva `totalCosts` per `distanceKm`, ma il dettaglio mostrava soltanto sette componenti nominali: i costi `other` e la quota dei consuntivi storici non suddivisa per categoria rimanevano invisibili. La vista ora espone tale differenza, il totale e la distanza usati dal rapporto, con riconciliazione annuale. Inoltre le rate ancora pianificate erano incluse nei costi correnti e nei consuntivi al passaggio d’anno; i selettori condivisi le escludono finché la Transazione collegata non è confermata. I dati storici persistiti non vengono reinterpretati o modificati dal codice; le rettifiche al workbook personale restano locali e fuori da Git e release. La patch non aggiunge campi, canali IPC, rete o dipendenze da Numbers. Gate locali verdi: lint, typecheck, 300 test in 50 file, build, documentazione obbligatoria, audit npm (0 vulnerabilità). Playwright CLI ha verificato IT/EN, chiaro/scuro, 1080 px, focus, costo/km e riepilogo annuale con dati sintetici; una rata pianificata sintetica rimane visibile ma esclusa dai totali, senza errori console o overflow orizzontale. La [PR #110](https://github.com/gloutchov/ContaMi/pull/110) è stata integrata nel commit `8cd29b0`; la [CI di `main`](https://github.com/gloutchov/ContaMi/actions/runs/36757056589) è verde su macOS e Windows. Il branch `patch/1.22.2-release-closure` ha fissato versione `1.22.2`, manuali e istruzioni operative: lint, typecheck, 300 test in 50 file, build, controllo dei documenti, audit npm (0 vulnerabilità), baseline Node, landing e CSP sono verdi anche su questo branch.
 
@@ -1352,7 +1354,7 @@ La checklist seguente è un gate riutilizzabile da verificare alla chiusura di c
 - [ ] Commit finale creato e diff controllato.
 - [ ] PR/merge verso `main` eseguito secondo il flusso previsto.
 - [ ] CI verificata sul branch/PR e su `main`.
-- [ ] Tag/release creati soltanto per milestone rilasciabili.
+- [ ] Tag annotato di checkpoint `milestone/C<numero>` creato su `main`, pubblicato e verificato per ogni milestone; tag versione e release soltanto quando previsti e approvati.
 - [ ] Artifact e checksum verificati quando esiste una release.
 - [ ] Branch obsoleto eliminato solo dopo merge e verifiche.
 
@@ -1653,7 +1655,7 @@ Il criterio di completamento è soddisfatto dalla release privata `v1.0.0`: incl
 **Chiusura del codice:** sorgente `1.26.1` completata per C42; checkpoint `milestone/C42` e tag versione `v1.26.1` previsti sul commit finale di `main`. Il controllo personale e la nuova approvazione del commit di versione/chiusura precedono la sua pubblicazione; CI del commit finale e di `main`, release, checksum, contenuti degli artifact e presenza dei tag sul remoto sono gate della chiusura operativa. I branch si rimuovono soltanto dopo tali gate. Qualsiasi modifica successiva al controllo richiede una nuova approvazione. **Stato:** sorgente completata; pubblicazione ancora da eseguire.
 
 
-## M43 — Spese ricorrenti e condivise da ogni modulo
+## C43 — Spese ricorrenti e condivise da ogni modulo
 
 **Obiettivo:** scegliere ricorrenza e condivisione nelle finestre di creazione/modifica di Ricorrenze, Spese condivise e Transazioni, mantenendo una sola registrazione finanziaria per scadenza.
 
@@ -1667,7 +1669,7 @@ Il criterio di completamento è soddisfatto dalla release privata `v1.0.0`: incl
 
 **Documentazione:** README, manuali IT/EN, MAP, SECURITY_MODEL, AGENTS per la versione schema e PLAN.
 
-**Checklist:** branch dedicato creato; implementazione, test e smoke locali; versione/documentazione sincronizzate; commit locale congelato con hash/diff/esiti/limiti; controllo personale e approvazione del preciso commit prima di merge, tag, push, release o rimozione branch; CI necessaria, checkpoint/versione remoti e artifact/checksum verificati dopo approvazione. **Stato:** implementazione e verifiche locali completate; milestone aperta per controllo personale del commit e chiusura operativa.
+**Checklist:** branch dedicato, implementazione, test, smoke, versione e documentazione completati; commit finale controllato e approvato; CI branch/main/tag e packaging macOS/Windows verdi; merge, tag annotati, release, artifact/checksum e pulizia verificati. **Stato:** completata e pubblicata; il registro seguente conserva le fasi di preparazione e la chiusura definitiva in coda.
 
 
 **Riepilogo locale M43 — 2026-10-31:** sorgente `1.27.0`, schema workbook v16. Nuova/Modifica ricorrenza include condivisione, pagante e percentuale personale; Nuova/Modifica Transazione e Spesa condivisa includono creazione di un piano o collegamento a uno esistente. La prima registrazione viene riutilizzata, con data effettiva distinta dalla scadenza e quote personalizzate conservate. I collegamenti sono espliciti, i duplicati confermati sono rifiutati e una pianificazione sostituita da un pagamento aggiorna correttamente le rate residue una sola volta. Le modifiche al piano agiscono sulle sole pianificazioni; lo scollegamento non chiude la serie. Saldi, lista, stampa e saldo mensile delle Spese condivise escludono le pianificazioni. Rollover e migrazione conservano storico e pendenze effettive; i template v1/v2/v3 preservano la condivisione esistente senza nuove colonne di importazione.
@@ -1699,3 +1701,89 @@ La proposta sul branch separato `patch/1.27.0-release-audit`, nel worktree `/pri
 
 
 **Verifiche della proposta di pubblicazione:** Node 24.18.1/npm 11.16.0, installazione pulita e `npm ls --all` verdi. `npm run preflight` verde con 420 test su 64 file, inclusi 13 casi sintetici del gate per advisory note/nuove, gravità, catene, cicli, report invalidi, conteggi incoerenti, policy duplicata/data invalida e scadenza; lint, typecheck, build renderer/Electron, baseline Node, landing e CSP superati. Gli 11 test browser dell'app e i 7 della landing sono verdi; nessuna UI modificata rispetto al commit applicativo già verificato in IT/EN e chiaro/scuro. Il controllo completo `npm audit` resta non verde con 31 moderati e zero alte/critiche; `npm run audit:release` passa solo applicando la policy proposta e mostra integralmente le stesse segnalazioni. I 15 documenti richiesti e `git diff --check` sono verificati. DMG e ZIP macOS ARM64 costruiti localmente, ispezione ASAR senza file privati e verifica integrità DMG superate. Smoke nativi locali non eseguiti per evitare l'accesso alle preferenze/workbook reali da parte dell'app installata; smoke e packaging macOS/Windows in CI, artifact finali/checksum, merge, tag e pulizia restano gate successivi al nuovo controllo e all'approvazione della proposta. Le build locali restano non firmate e non pubblicate; nessun dato privato è stato aperto o modificato.
+
+
+**Chiusura definitiva C43 — 2026-10-31:** il proprietario ha approvato il commit `1890b7ef5b1477798cd3ebe7de8d9feb4b56d0ef`, comprese le due eccezioni moderate temporanee. Merge fast-forward e push di `main` completati; tag annotati `milestone/C43` e `v1.27.0` pubblicati sullo stesso commit, senza modifiche successive al contenuto controllato. [Release 1.27.0](https://github.com/gloutchov/ContaMi/releases/tag/v1.27.0), [CI main](https://github.com/gloutchov/ContaMi/actions/runs/41216708156) e [workflow Release](https://github.com/gloutchov/ContaMi/actions/runs/41217179414) verificati. Gate locali e CI: 420 test in 64 file, 11 test browser app e 7 landing; pacchetti macOS ARM64/x64 e Windows x64, ispezione ASAR e smoke unpacked/installato verdi. Sei pacchetti e manifesto scaricati coincidono con SHA-256, dimensioni e digest GitHub; i due archivi sorgente contengono 315 file identici al commit approvato. SHA-256 di `SHA256SUMS.txt`: `2d6c992c9aaa467b55bce76e8435423c07d49a9cb2d9c8166112fd86c09d4825`. Branch milestone remoto e branch locali milestone/patch rimossi dopo le verifiche, worktree temporaneo rimosso, `main` pulito. Restano build non firmate e 31 segnalazioni moderate da due advisory, con eccezione fino al 14/11/2026 incluso UTC. Gli smoke nativi usano l'architettura del runner; entrambe le architetture macOS sono state anche ispezionate staticamente. Nessun workbook privato aperto o modificato. Questo successivo aggiornamento documentale riallinea lo stato del piano senza spostare i tag o alterare il commit rilasciato.
+
+## Piano esecutivo vulnerabilità — decisione 2026-10-31
+
+La richiesta del proprietario aggiunge **due milestone M**, da eseguire in sequenza; la preparazione del piano non avvia la loro implementazione. Base: C43 / `v1.27.0`, Node.js 24 LTS ≥24.15.0, schema workbook v16. L'audit completo del lockfile corrente rileva 31 segnalazioni moderate, zero alte/critiche. Si tratta di due advisory propagate fra dipendenze dirette/transitive, non di 31 difetti indipendenti dell'app:
+
+- [GHSA-3g3m-2fjr-6pw4 — glob](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4): versione corretta minima attualmente indicata `14.0.2`; l'interruzione deve arrestare il traversal anziché proseguirlo dopo l'annullamento.
+- [GHSA-g3hv-75wg-m249 — minimatch](https://github.com/advisories/GHSA-g3hv-75wg-m249): versione corretta minima attualmente indicata `11.0.1`; i pattern possono causare un'espansione costosa nelle versioni vulnerabili. Rivalutare versioni e advisory all'avvio di ciascuna milestone.
+
+Le correzioni sono accoppiate: aggiornare soltanto il pacchetto radice non rimuove le copie annidate e i consumatori legacy possono usare API differenti. M44 tratta insieme glob e i consumatori moderni di minimatch; M45 elimina le catene legacy residue e chiude l'intero audit. Obiettivi indicativi: C44 entro **6 novembre**, C45 pronta per revisione/rilascio entro **12 novembre 2026**, lasciando margine rispetto al 14 novembre. Le date non autorizzano proroghe o riduzioni dei controlli: un impedimento va documentato e segnalato prima della scadenza, senza dichiarare chiusa una milestone incompleta.
+
+**Vincoli comuni:** usare un worktree dedicato e dati sintetici; conservare comportamento, formule, collegamenti, workbook v16, backup/rollback, IPC, sandbox, CSP e blocco rete dell'app. Preferire aggiornamenti upstream compatibili; eventuali adattamenti o sostituzioni di un consumatore devono essere minimi, motivati e verificati. Nessun `npm audit fix --force`, downgrade verso pacchetti obsoleti, override major globale non verificato, modifica manuale di `node_modules` o falsificazione delle versioni. Le eccezioni attuali non vengono ampliate o prorogate automaticamente. Ogni chiusura richiede commit locale congelato, hash/diff/test/limiti e controllo personale del proprietario prima di pubblicazione, merge, tag o pulizia.
+
+## M44 — Glob corretto e consumatori moderni di minimatch
+
+**Obiettivo:** eliminare l'advisory di glob e le istanze vulnerabili dei matcher nelle catene moderne, costruendo la base compatibile necessaria per M45 e mantenendo l'app installabile. Il risultato verificabile è un grafo più sicuro con packaging e flussi applicativi equivalenti; non è ancora la chiusura dell'intero audit.
+
+**Branch previsto:** `milestone/44-glob-modern-minimatch`, da `main` dopo verifica del checkpoint remoto C43. **Tag di checkpoint previsto:** `milestone/C44`. **Versione:** nessun incremento applicativo; `1.27.0` e workbook v16 invariati. **GitHub Release:** non prevista in questa fase intermedia; la patch distribuibile è pianificata in M45. **Priorità:** alta; obiettivo di chiusura 06/11/2026. **Stato:** programmata, non avviata.
+
+**Attività principali:**
+
+- Ricostruire l'inventario con installazione pulita, `npm audit --include=dev --json`, `npm ls --all` e catene `npm explain`, distinguendo produzione, sviluppo e copie annidate; registrare versioni, advisory e consumatori prima/dopo.
+- Aggiornare il gruppo moderno in modo coerente: `glob` 13.x e i requisiti minimatch 9/10 di `@electron/asar` 4.x, `@electron/universal`, `app-builder-lib`, ESLint/config-array e typescript-eslint. Verificare le versioni effettive all'avvio; il lockfile C43 è la baseline, non un elenco immutabile di target.
+- Adottare glob corretto (attualmente ≥14.0.2) e minimatch corretto (attualmente ≥11.0.1) tramite versioni upstream compatibili o un adattamento localizzato dimostrato. Verificare import nominati, matcher, esclusioni, dotfile e percorsi Windows prima di cambiare requisiti transitivi.
+- Se manca supporto upstream compatibile, documentare il consumatore responsabile e validare la minima migrazione/sostituzione necessaria; non chiudere la milestone limitandosi a nascondere la segnalazione.
+- Confermare con audit completo che l'advisory glob sia scomparsa da tutto il grafo; solo allora eliminare la relativa eccezione. L'eventuale eccezione minimatch residua deve riguardare esclusivamente le catene legacy inventariate per M45, mantenendo la scadenza originale.
+
+**Criteri di accettazione:**
+
+- Nessuna segnalazione `GHSA-3g3m-2fjr-6pw4` nell'audit completo e nessuna copia vulnerabile di glob nel relativo intervallo; assenza di minimatch vulnerabile nei consumatori moderni identificati, comprese le copie annidate.
+- Riduzione delle segnalazioni riconciliata per advisory e percorso di dipendenza; quelle rimaste sono soltanto le catene legacy assegnate a M45. Zero nuovi avvisi, zero alte/critiche, peer dependency coerenti e installazione riproducibile.
+- Risultati di inclusione/esclusione e archivi corretti anche con nomi Unicode, spazi, dotfile e percorsi Windows; annullamento dei traversal verificato con fixture sintetiche e processo di test limitato.
+- Lint, typecheck, test, build, CSP, documenti, flussi principali IT/EN e chiaro/scuro e pacchetti macOS/Windows verificati; nessuna modifica ai dati finanziari o al formato workbook.
+
+**Test richiesti:** test mirati sulle API realmente usate e sulle regressioni degli advisory, con timeout e input sintetici; `npm ci`, `npm ls --all`, `npm run preflight`, test browser app/landing e Playwright CLI IT/EN chiaro/scuro a 1080 px. Audit completo e gate temporaneo eseguiti entrambi: il primo può ancora fallire soltanto per le catene legacy dichiarate, il secondo non sostituisce la riconciliazione. Round-trip e regressioni workbook/import/rollover esistenti. Prima del merge, un controllo CI e un packaging senza pubblicazione macOS/Windows, necessari per le API di selezione file e archiviazione cambiate: ispezione ASAR, smoke unpacked/installato e verifica locale degli artifact scaricati. Evitare run remoti intermedi duplicati.
+
+**Documentazione da aggiornare:** PLAN con inventario/esiti/limiti e passaggio M44→C44; SECURITY_MODEL con advisory rimossa e residui; README e manuali IT/EN per lo stato di manutenzione; MAP e AGENTS se cambiano struttura, comandi o regole; policy audit solo per eliminare un'eccezione ormai inutile.
+
+**Checklist di chiusura:**
+
+- [ ] Branch dedicato creato; implementazione e inventario prima/dopo completati.
+- [ ] Test automatici, smoke, audit completo e controlli cross-platform eseguiti; residui M45 espliciti.
+- [ ] Documentazione pertinente aggiornata; versione/schema invariati verificati.
+- [ ] Commit locale congelato, hash/diff/test/limiti presentati e controllo/approvazione esplicita ottenuti.
+- [ ] Merge e CI necessaria verificati; M44 rinominata C44 con riepilogo e tag di checkpoint.
+- [ ] Tag annotato `milestone/C44` su `main`, push e presenza remota verificati; niente tag versione/release.
+- [ ] Branch rimosso soltanto dopo i gate; M45 avviabile solo dal checkpoint C44 pubblicato.
+
+## M45 — Minimatch legacy e audit completo senza eccezioni
+
+**Obiettivo:** eliminare le copie legacy vulnerabili rimaste dopo C44 e consegnare un'app con **`npm audit` completo a zero vulnerabilità note**, senza l'accettazione temporanea del rischio introdotta in C43.
+
+**Prerequisito:** C44 integrata e tag remoto verificato; nuovo inventario e audit sulla sua `main`. **Branch previsto:** `milestone/45-legacy-minimatch-audit`. **Tag di checkpoint previsto:** `milestone/C45`. **Tipo incremento:** patch `+0.0.1`, prevista `1.27.0`→`1.27.1` (usare la successiva patch libera se la versione cambia prima dell'avvio); schema workbook v16 invariato. **GitHub Release:** patch di manutenzione candidata alla distribuzione; la decisione del proprietario sulla pubblicazione va raccolta alla revisione del commit finale, come richiesto per le patch ordinarie. **Priorità:** alta; obiettivo pronta per revisione/rilascio entro 12/11/2026. **Stato:** programmata dopo C44, non avviata.
+
+**Attività principali:**
+
+- Risolvere i consumatori rimasti su minimatch 3/5 e le relative copie annidate: `dir-compare`, `filelist`, `readdir-glob`, `rimraf`, archiver/archiver-utils/zip-stream ed eventuali `@electron/asar` 3.x sotto universal, app-builder-lib o electron-winstaller. I vecchi glob 7 non sono inclusi nell'intervallo dell'advisory di cancellazione citata, ma possono conservare minimatch vulnerabile: verificare le due condizioni separatamente.
+- Migrare i consumatori legacy attraverso aggiornamenti upstream o sostituzioni/adattamenti minimi, preservando chiamate callable/named export e semantica di globstar, matcher e filtri. Ogni nuova dipendenza o adattamento richiede motivazione, provenienza verificabile e test; nessun refactor generale del motore spreadsheet.
+- Verificare tutte le catene distribuite con ExcelJS e tutte quelle della toolchain Electron, comprese dipendenze opzionali e installate su Windows/macOS; una catena non usata da un singolo test non è motivo sufficiente per sopprimerla dall'audit.
+- Eliminare le eccezioni e la scadenza temporanea di C43. Ripristinare `npm audit` completo e bloccante nei workflow CI/Release; rimuovere o semplificare coerentemente comando, configurazione, helper e test dedicati alle eccezioni rimasti senza uso, aggiornando MAP e istruzioni operative.
+- Preparare la patch con versione sincronizzata, note IT/EN, pacchetti e checksum secondo la decisione di pubblicazione del proprietario. Se non viene pubblicata una release, restano comunque obbligatori il checkpoint C45, i controlli dei pacchetti e la loro evidenza locale/remota.
+
+**Criteri di accettazione:**
+
+- `npm ci` riproducibile; `npm ls --all` senza dipendenze invalide; **`npm audit --include=dev --json` e `npm audit` con exit code 0 e totale 0**, sull'intero grafo incluso nel lockfile. Nessuna advisory approvata come eccezione, dipendenza rinominata o versione falsificata per ottenere il risultato.
+- Nessuna occorrenza vulnerabile di minimatch o glob nell'intero grafo secondo gli advisory correnti. Eventuali nuove segnalazioni emerse durante l'esecuzione vanno risolte e registrate prima di dichiarare chiusa M45.
+- CI e Release non dipendono da `expiresOn` o da esenzioni per i due advisory; un audit non pulito o un errore del servizio torna a impedire la pubblicazione.
+- Apertura/salvataggio, migrazione, backup, rollback, importazione e rollover verificati con workbook sintetici, inclusi Unicode, celle come testo e collegamenti finanziari; struttura e dati v16 conservati.
+- Pacchetti macOS ARM64/x64 e Windows x64 costruiti e ispezionati; smoke unpacked/installato sulle architetture native dei runner disponibili e controllo statico di entrambe le architetture macOS. Le architetture non avviate su hardware nativo sono dichiarate fra i limiti. Versione, risorse, CSP, esclusione file privati e checksum riconciliati sui file scaricati.
+
+**Test richiesti:** regressioni degli advisory e dei consumatori legacy, confronto dei risultati sui percorsi sintetici prima/dopo la migrazione, suite unit/integration/workbook/import/rollover, test del gate su audit non pulito/errore, `npm run preflight`, browser app/landing e Playwright CLI IT/EN chiaro/scuro a 1080 px. Installazione pulita e audit su macOS/Windows; packaging senza pubblicazione, ispezione ASAR e smoke unpacked/installato su entrambe le piattaforme prima del merge. Se la release è approvata: CI di main/tag quando attivate, build finali, download e verifica dei sei pacchetti, del manifesto SHA-256 e degli archivi sorgente prima della pulizia. Non basta il verde del gate con una allowlist.
+
+**Documentazione da aggiornare:** PLAN con passaggio M45→C45, esiti e versione/checkpoint; SECURITY_MODEL con risoluzione effettiva degli advisory e rimozione delle eccezioni; README, ISTRUZIONI, INSTRUCTIONS e quick start per la patch e i limiti; MAP, AGENTS e note release per comandi/workflow/configurazione rimossi o cambiati. Conservare come storico gli esiti di audit delle release precedenti.
+
+**Checklist di chiusura:**
+
+- [ ] Branch dedicato da C44, migrazione dei consumatori e pulizia della policy completati.
+- [ ] Audit completo zero e regressioni automatiche/manuali/cross-platform superati; nessuna eccezione rimasta.
+- [ ] Versione patch sincronizzata; documentazione e note aggiornate; workbook v16 verificato.
+- [ ] Commit locale finale congelato e presentato con hash/diff/test/limiti; controllo e approvazione esplicita, inclusa la decisione sulla release.
+- [ ] Merge e CI necessaria verificati; M45 rinominata C45 con riepilogo, limiti e checkpoint.
+- [ ] Tag annotato `milestone/C45` su main, push e presenza remota verificati; tag versione/release solo secondo la decisione approvata.
+- [ ] Se pubblicata, release e sei pacchetti/checksum/sorgenti scaricati e verificati.
+- [ ] Branch eliminato soltanto dopo tutti i gate previsti; nessuna proroga automatica al 14 novembre.
