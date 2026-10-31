@@ -21,6 +21,7 @@ import { financeDataSchema } from "./models";
 import { repairOperationalData } from "./operationalDataRepair";
 import { waterReadingOverlaps } from "./propertyWater";
 import { confirmedVehicleEntries } from "./vehicleEntries";
+import { confirmedSharedExpenses, createExpenseSchedule, prepareExpenseOccurrence, syncExplicitExpenseLink } from "./recurringExpenses";
 import {
   assertConfirmedRatesUnchanged,
   recurringRateChangesFor,
@@ -44,7 +45,7 @@ export function createEmptyFinanceData(year = new Date().getFullYear()): Finance
   const category = (nameIt: string, nameEn: string, kind: "income" | "expense" | "both") => ({ id: randomUUID(), nameIt, nameEn, kind, active: true });
   const payment = (name: string, kind: "cash" | "card" | "bank_transfer" | "direct_debit" | "digital_wallet" | "other") => ({ id: randomUUID(), name, kind, active: true });
   return financeDataSchema.parse({
-    meta: { schemaVersion: 15, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
+    meta: { schemaVersion: 16, activeYear: year, createdAt: timestamp, updatedAt: timestamp },
     categories: [
       category("Stipendio", "Salary", "income"), category("Affitti", "Rent income", "income"),
       category("Alimentari", "Groceries", "expense"), category("Casa", "Home", "expense"),
@@ -392,11 +393,40 @@ function saveVehicleWithInstallment(
 
 function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand): void {
   switch (command.type) {
+    case "addTransactionWithRecurring":
+    case "updateTransactionWithRecurring": {
+      applyFinanceCommandInPlace(next, {
+        type: command.type === "addTransactionWithRecurring" ? "addTransaction" : "updateTransaction",
+        value: command.value.transaction,
+      });
+      const transaction = next.transactions.find((item) => item.id === command.value.transaction.id)!;
+      createExpenseSchedule(next, transaction, command.value.recurring);
+      break;
+    }
+    case "addSharedExpenseWithRecurring":
+    case "updateSharedExpenseWithRecurring": {
+      applyFinanceCommandInPlace(next, {
+        type: command.type === "addSharedExpenseWithRecurring" ? "addSharedExpense" : "updateSharedExpense",
+        value: command.value.expense,
+      });
+      const transaction = next.transactions.find((item) => item.sharedExpenseId === command.value.expense.id)!;
+      if (command.value.recurring) {
+        createExpenseSchedule(next, transaction, command.value.recurring);
+      } else {
+        const updated = { ...transaction, recurringId: command.value.recurringId, dueDate: command.value.recurringId ? command.value.dueDate : undefined };
+        const replacedOccurrence = prepareExpenseOccurrence(next, updated);
+        upsertTransactionWithLinks(next, updated, undefined, replacedOccurrence);
+        syncExplicitExpenseLink(next, updated, transaction.recurringId);
+      }
+      break;
+    }
     case "addTransaction": {
       ensureUnique(next.transactions, command.value.id);
       ensureInvestmentTransactionAccounts(next, command.value);
-      upsertTransactionWithLinks(next, command.value);
+      const replacedOccurrence = command.value.kind === "expense" && !command.value.investmentId ? prepareExpenseOccurrence(next, command.value) : undefined;
+      upsertTransactionWithLinks(next, command.value, undefined, replacedOccurrence);
       const transaction = next.transactions.find((item) => item.id === command.value.id);
+      if (transaction) syncExplicitExpenseLink(next, transaction);
       adjustInvestmentAnnualSummary(next, undefined, investmentEntryAnnualMovementEffect(next, linkedInvestmentEntryForTransaction(next, transaction)));
       break;
     }
@@ -405,8 +435,10 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       if (!previousTransaction) throw new Error("ENTITY_NOT_FOUND");
       const before = investmentEntryAnnualMovementEffect(next, linkedInvestmentEntryForTransaction(next, previousTransaction));
       ensureInvestmentTransactionAccounts(next, command.value, previousTransaction);
-      upsertTransactionWithLinks(next, command.value);
+      const replacedOccurrence = command.value.kind === "expense" && !command.value.investmentId ? prepareExpenseOccurrence(next, command.value) : undefined;
+      upsertTransactionWithLinks(next, command.value, undefined, replacedOccurrence);
       const transaction = next.transactions.find((item) => item.id === command.value.id);
+      if (transaction) syncExplicitExpenseLink(next, transaction, previousTransaction.recurringId);
       adjustInvestmentAnnualSummary(next, before, investmentEntryAnnualMovementEffect(next, linkedInvestmentEntryForTransaction(next, transaction)));
       break;
     }
@@ -575,8 +607,8 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
     }
     case "addRecurringItem": {
       ensureUnique(next.recurringItems, command.value.id);
-      const recurring = command.value.vehicleId ? prepareVehicleInstallment(next, command.value) : command.value;
-      if (recurring.vehicleId) validateVehicleInstallment(next, recurring);
+      const recurring = command.value.vehicleId && command.value.kind === "installment" ? prepareVehicleInstallment(next, command.value) : command.value;
+      if (recurring.vehicleId && recurring.kind === "installment") validateVehicleInstallment(next, recurring);
       recurring.accountId = resolvePaymentAccountId(next, recurring.paymentMethodId, recurring.accountId, recurring.nextDueDate);
       next.recurringItems.push(recurring);
       syncRecurringLink(next, recurring);
@@ -587,8 +619,8 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
       const previous = next.recurringItems.find((item) => item.id === command.value.id);
       if (!previous) throw new Error("ENTITY_NOT_FOUND");
       if (previous.vehicleId && previous.vehicleId !== command.value.vehicleId) throw new Error("INVALID_VEHICLE_INSTALLMENT");
-      const recurring = command.value.vehicleId ? prepareVehicleInstallment(next, command.value) : command.value;
-      if (recurring.vehicleId) validateVehicleInstallment(next, recurring, recurring.id);
+      const recurring = command.value.vehicleId && command.value.kind === "installment" ? prepareVehicleInstallment(next, command.value) : command.value;
+      if (recurring.vehicleId && recurring.kind === "installment") validateVehicleInstallment(next, recurring, recurring.id);
       if (Math.abs(previous.amount - recurring.amount) > 0.005
         && recurringBaseAmountIsLocked(next, command.value.id)) throw new Error("RECURRING_BASE_AMOUNT_LOCKED");
       recurring.accountId = resolvePaymentAccountId(next, recurring.paymentMethodId, recurring.accountId, recurring.nextDueDate);
@@ -752,13 +784,14 @@ function applyFinanceCommandInPlace(next: FinanceData, command: FinanceCommand):
     case "setSharedExpenseSettled": {
       const item = next.sharedExpenses.find((candidate) => candidate.id === command.id);
       if (!item) throw new Error("SHARED_EXPENSE_NOT_FOUND");
+      if (!confirmedSharedExpenses(next).some((candidate) => candidate.id === item.id)) throw new Error("SHARED_EXPENSE_NOT_CONFIRMED");
       item.settled = command.settled;
       const transaction = next.transactions.find((candidate) => candidate.id === item.transactionId);
       if (transaction) transaction.sharedSettled = command.settled;
       break;
     }
     case "settleSharedExpenseMonth":
-      next.sharedExpenses.filter((item) => item.date.startsWith(command.month)).forEach((item) => {
+      confirmedSharedExpenses(next).filter((item) => item.date.startsWith(command.month)).forEach((item) => {
         item.settled = command.settled;
         const transaction = next.transactions.find((candidate) => candidate.id === item.transactionId);
         if (transaction) transaction.sharedSettled = command.settled;
@@ -917,7 +950,7 @@ export function computeDashboard(data: FinanceData): DashboardMetrics {
     .reduce((sum, item) => sum + ((latestPropertyValues.get(item.id)?.amount ?? 0) || item.purchasePrice) * item.ownershipShare, 0);
   const { investments: investmentValue, pensions: pensionValue, combined: combinedInvestmentValue } = portfolioValues(data);
   const monthlyRecurring = data.recurringItems.filter((item) => item.active && item.direction !== "income").reduce((sum, item) => sum + monthlyAmount(item.amount, item.frequency), 0);
-  const sharedBalance = data.sharedExpenses.filter((item) => !item.settled).reduce((sum, item) => item.paidBy === "owner" ? sum + item.partnerShare : sum - item.ownerShare, 0);
+  const sharedBalance = confirmedSharedExpenses(data).filter((item) => !item.settled).reduce((sum, item) => item.paidBy === "owner" ? sum + item.partnerShare : sum - item.ownerShare, 0);
   const categories = data.categories.map((category) => ({
     id: category.id, nameIt: category.nameIt, nameEn: category.nameEn,
     amount: categoryExpenses.get(category.id) ?? 0,

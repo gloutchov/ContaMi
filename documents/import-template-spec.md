@@ -155,3 +155,10 @@ L’importatore riconosce i contratti v1, v2 e v3 tramite versione e intestazion
 Files are passive `.xlsx` workbooks and can be filled in Excel, LibreOffice, or Numbers to the extent each program preserves validations, named ranges, and `veryHidden` sheets. Do not rename the visible sheet, headers, or technical sheets; do not add macros, formulas, external links, or extra sheets.
 
 The importer recognizes v1, v2, and v3 contracts through exact version and header matching. Version 1 templates have no `account`, `periodic_account`, or `destination_account`: for compatible rows ContaMì assigns an account only when exactly one matches method, currency, and date; otherwise import is rejected without writes. Version 1/2 templates have no `isin` and do not invent one. Generate a new v3 template in the app to use every field.
+
+
+### Compatibilità con schema workbook v16 / Workbook schema v16 compatibility
+
+I template v1/v2/v3 restano invariati. Il template Ricorrenze non espone le opzioni di condivisione della serie: sugli aggiornamenti preserva `shared`, `sharedPaidBy` e `sharedOwnerRatio` già presenti. Per configurarle usa Nuova/Modifica ricorrenza nell'app.
+
+Templates v1/v2/v3 remain unchanged. The Recurring template does not expose series sharing: updates preserve existing `shared`, `sharedPaidBy`, and `sharedOwnerRatio`. Configure these options in the app's New/Edit recurring form.

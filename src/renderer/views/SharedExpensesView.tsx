@@ -1,6 +1,7 @@
 import { CheckCheck, CircleCheckBig, Clock3, Pencil, Printer, Trash2, UsersRound } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { FinanceCommand } from "../../domain/commands";
+import { confirmedSharedExpenses } from "../../domain/recurringExpenses";
 import type { FinanceData, SharedExpense } from "../../domain/models";
 import { EntryFilters } from "../components/EntryFilters";
 import { EmptyState } from "../components/EmptyState";
@@ -17,9 +18,10 @@ export function SharedExpensesView({ data, onSave }: { data: FinanceData; onSave
   const [editing, setEditing] = useState<SharedExpense | null | undefined>();
   const [month, setMonth] = useState(`${data.meta.activeYear}-${String(new Date().getMonth() + 1).padStart(2, "0")}`);
   const [search, setSearch] = useState("");
-  const rows = useMemo(() => filterDatedEntries([...data.sharedExpenses].sort((a, b) => b.date.localeCompare(a.date)), month, search), [data.sharedExpenses, month, search]);
+  const confirmed = useMemo(() => confirmedSharedExpenses(data), [data]);
+  const rows = useMemo(() => filterDatedEntries([...confirmed].sort((a, b) => b.date.localeCompare(a.date)), month, search), [confirmed, month, search]);
   const pending = rows.filter((item) => !item.settled);
-  const monthHasPending = Boolean(month && data.sharedExpenses.some((item) => item.date.startsWith(month) && !item.settled));
+  const monthHasPending = Boolean(month && confirmed.some((item) => item.date.startsWith(month) && !item.settled));
   const balance = pending.reduce((sum, item) => item.paidBy === "owner" ? sum + item.partnerShare : sum - item.ownerShare, 0);
   const total = rows.reduce((sum, item) => sum + item.amount, 0);
   const remove = (id: string) => { if (window.confirm(t("deleteConfirm"))) runUiAction(() => onSave({ type: "deleteEntity", entity: "sharedExpense", id })); };

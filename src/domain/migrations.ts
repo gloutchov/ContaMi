@@ -168,10 +168,15 @@ export function migrateFinanceData(rawValue: unknown): FinanceData {
   const raw = structuredClone(rawValue) as RawRecord;
   const meta = raw.meta as RawRecord | undefined;
   const version = Number(meta?.schemaVersion);
-  if (version === 15) return financeDataSchema.parse(raw);
+  if (version === 16) return financeDataSchema.parse(raw);
+  if (version === 15 && meta) {
+    // Existing schedules remain unshared; no past expense is reinterpreted.
+    meta.schemaVersion = 16;
+    return financeDataSchema.parse(raw);
+  }
   if (version === 14 && meta) {
     // No acquisition amounts or payment method are invented for legacy vehicles.
-    meta.schemaVersion = 15;
+    meta.schemaVersion = 16;
     return financeDataSchema.parse(raw);
   }
   if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11 && version !== 12 && version !== 13) || !meta) throw new Error("INVALID_WORKBOOK_SCHEMA");
@@ -257,6 +262,6 @@ export function migrateFinanceData(rawValue: unknown): FinanceData {
   if (version <= 11) {
     raw.investments = list(raw.investments).map((item) => ({ ...item, isin: undefined }));
   }
-  meta.schemaVersion = 15;
+  meta.schemaVersion = 16;
   return financeDataSchema.parse(raw);
 }

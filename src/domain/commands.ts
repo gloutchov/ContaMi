@@ -21,6 +21,29 @@ import {
 
 const entityId = z.string().uuid();
 const month = z.string().regex(/^\d{4}-\d{2}$/);
+export const expenseScheduleSchema = z.object({
+  id: entityId,
+  frequency: recurringItemSchema.shape.frequency,
+  nextDueDate: recurringItemSchema.shape.nextDueDate,
+  endDate: recurringItemSchema.shape.endDate,
+}).refine((value) => !value.endDate || value.endDate >= value.nextDueDate, {
+  message: "The end date cannot precede the first due date", path: ["endDate"],
+});
+export type ExpenseSchedule = z.infer<typeof expenseScheduleSchema>;
+const transactionWithRecurringSchema = z.object({
+  transaction: transactionSchema,
+  recurring: expenseScheduleSchema,
+}).refine(({ transaction }) => transaction.kind === "expense" && !transaction.investmentId && !transaction.recurringId, {
+  message: "A new expense schedule requires an unlinked expense", path: ["transaction", "recurringId"],
+});
+const sharedExpenseWithRecurringSchema = z.object({
+  expense: sharedExpenseSchema,
+  recurringId: entityId.optional(),
+  dueDate: recurringItemSchema.shape.nextDueDate.optional(),
+  recurring: expenseScheduleSchema.optional(),
+}).refine((value) => !value.recurring || !value.recurringId, {
+  message: "Choose a new or an existing schedule", path: ["recurringId"],
+});
 const commandMoney = z.number().finite().nonnegative().max(1_000_000_000_000);
 const sharedSplitSchema = z.object({
   id: entityId,
@@ -141,6 +164,10 @@ const vehicleWithInstallmentSchema = z.object({
 });
 
 export const financeCommandSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("addTransactionWithRecurring"), value: transactionWithRecurringSchema }),
+  z.object({ type: z.literal("updateTransactionWithRecurring"), value: transactionWithRecurringSchema }),
+  z.object({ type: z.literal("addSharedExpenseWithRecurring"), value: sharedExpenseWithRecurringSchema }),
+  z.object({ type: z.literal("updateSharedExpenseWithRecurring"), value: sharedExpenseWithRecurringSchema }),
   z.object({ type: z.literal("addTransaction"), value: transactionSchema }),
   z.object({ type: z.literal("updateTransaction"), value: transactionSchema }),
   z.object({ type: z.literal("addAccount"), value: accountSchema }),

@@ -8,7 +8,7 @@
 
 [**Sito / Website**](https://contami.glaucosilvestri.it/) · [**Release e checksum / Releases and checksums**](https://github.com/gloutchov/Contami/releases) · [**Avvio rapido / Quick start**](QUICK-START_Desktop.md) · [**Manuale IT**](ISTRUZIONI.md) · [**User manual EN**](INSTRUCTIONS.md)
 
-> **Stato / Status:** alpha funzionante / functional alpha · **1.26.1 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v15 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
+> **Stato / Status:** alpha funzionante / functional alpha · **1.27.0 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v16 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
 
 ![Panoramica di ContaMì con dati dimostrativi](docs/assets/panoramica_whi.png)
 
@@ -30,7 +30,7 @@ The app grew from a practical need: avoid entering one transaction in several sh
 | **Automobile / Vehicles** | Spese, rifornimenti, percorrenza, Km/l, costo d'uso e complessivo per km, confronto tra mezzi e rate. / Costs, fuel, distance, efficiency, operating and overall cost per km, vehicle comparison, and financing. |
 | **Investimenti / Investments** | Versamenti, liquidazioni, valutazioni, quote, risultato complessivo e rendimento periodico con copertura dichiarata. / Contributions, withdrawals, valuations, units, overall result, and period returns with stated coverage. |
 | **Pensione integrativa / Private pension** | Fondi raccoglitori e comparti, con capitale, controvalore e rendimenti aggregati senza doppio conteggio. / Pension collectors and compartments, with capital, value, and returns aggregated without double counting. |
-| **Ricorrenze e spese condivise / Recurring and shared expenses** | Scadenze, cambi tariffa che preservano lo storico e divisione delle spese. / Schedules, rate changes that preserve history, and expense splitting. |
+| **Ricorrenze e spese condivise / Recurring and shared expenses** | Ricorrenza e condivisione nei moduli Transazioni, Spese condivise e Ricorrenze; quote e cambi tariffa che preservano lo storico. / Recurrence and sharing in Transactions, Shared expenses, and Recurring forms; shares and rate changes that preserve history. |
 
 ### Report stampabili / Printable reports
 
@@ -84,7 +84,7 @@ ContaMì needs no account, cloud, telemetry, or network during normal use. Workb
 
 Richiede Node.js 24 LTS **>=24.15.0**, npm e Git. Requires Node.js 24 LTS **>=24.15.0**, npm, and Git.
 
-La manutenzione C42 prepara la release correttiva `1.26.1` e integra le PR Dependabot #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0 e typescript-eslint 8.72.0. Schema workbook v15 e funzioni dell'app invariati. / C42 maintenance prepares patch release `1.26.1` and integrates Dependabot PRs #131–#135: React/React DOM 19.3.1, Playwright 1.64.1, ESLint 10.13.0, electron-builder 26.18.0, and typescript-eslint 8.72.0. Workbook schema v15 and application features are unchanged.
+La sorgente `1.27.0` aggiunge ricorrenze condivise e creazione di un piano dai moduli Transazione e Spesa condivisa, anche in modifica. La prima spesa viene riutilizzata, le scadenze future restano pianificate e i saldi condivisi includono soltanto spese confermate. Schema v16 con migrazione conservativa e backup. / Source `1.27.0` adds shared recurring plans and plan creation from Transaction and Shared expense forms, including edits. The first expense is reused, future occurrences remain planned, and shared balances include confirmed expenses only. Schema v16 uses conservative migration and backups.
 
 ```bash
 npm ci

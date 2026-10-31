@@ -221,6 +221,18 @@ If an installment plan began before the current workbook, enter the first unpaid
 
 For non-installment recurring items, ContaMì generates **planned** transactions through the end date or year end. For installment plans, it generates only the remaining number of payments, always within the optional end date. Confirming an installment makes it effective, reduces the remaining count, and automatically closes the recurring item after the final payment while retaining confirmed rows in history. Loading also closes any installment plan that is still active after already reaching zero, removing only its obsolete planned rows. During year rollover, the new workbook keeps the updated balance and regenerates only the installments still due in the new year. The app never executes payments.
 
+### Recurrence and sharing on the same expense
+
+In expense **New/Edit recurring item** forms, select **Share every occurrence**, choose **Paid by** and **Your share (%)** (50 for equal halves). The partner receives the complementary share; rounding reconciles to the cent. Changing the plan's payer, percentage, or sharing updates planned occurrences only, preserving confirmed payments and settlements. Future rate changes scale shares using the configured ratio. Income and investment plans do not offer sharing.
+
+In expense **New/Edit transaction** and **New/Edit shared expense** forms, enable **Make this expense recurring**. Choose **Create a new recurring plan**, frequency, **First due date**, and an optional end date, or link the record to an existing plan and enter its **Due date**. The record's date remains the actual payment date and may differ from its due date. An already linked record can change plans or be detached; save the detachment first before creating a separate plan. Another confirmed record for the same occurrence blocks linking.
+
+The entered expense becomes the first occurrence without creating another payment for that due date. The plan takes its description, amount, category, payment method, and account from the expense, preserving the payer and custom share ratio when shared. Later occurrences are generated as **planned** until the end date or year-end. Confirm them under **Transactions** when paid; only then do they enter the **Shared expenses** list and balance. Use **Recurring** to edit or close the plan and retain it across year rollover.
+
+Disabling recurrence on a Transaction or Shared expense detaches that record only; it does not close the plan. Changing one record's sharing or shares does not change the series; edit the plan for future occurrences. Links use explicit identifiers: similar descriptions never automatically reattach a detached expense. For example, a synthetic €100.01 expense with a €30 personal share retains the initial €30/€70.01 ratio in its plan.
+
+Source version **1.27.0** upgrades the workbook to **schema v16** with a backup. Migration leaves existing schedules without series sharing and preserves individually shared expenses. This schema requires this app version or later; keep the backup if returning to an older app.
+
 ## 11. Shared expenses
 
 Create a shared expense in its dedicated view, select **Shared expense** on a Transaction, or choose **Split automatically in half** while entering a Property or Vehicle expense. Every route keeps exactly one record in each linked view. The default split is 50/50; the dedicated form can adjust the two shares.

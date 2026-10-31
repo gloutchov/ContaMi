@@ -68,12 +68,13 @@ ContaMì/
 │   │   ├── propertyReport.ts           # aggregazioni mensili/annuali, previsioni e quote dei report immobili
 │   │   ├── propertyWater.ts            # consumi progressivi, copertura e statistiche acqua condominiale
 │   │   ├── rent.ts                     # stato rate affitto da competenza e incasso effettivo
+│   │   ├── recurringExpenses.ts        # creazione atomica dei piani da spese, collegamenti espliciti e saldi confermati
 │   │   ├── recurringRates.ts           # tariffa per decorrenza, anteprima e protezione dello storico
 │   │   ├── vehicleCosts.ts             # costo d’uso/complessivo puro, acquisto pagato e copertura
 │   │   ├── vehicleEntries.ts           # conferma delle registrazioni, lettura precedente, percorrenza e litri suggeriti
 │   │   ├── vehicleInstallments.ts      # unicità, ciclo di vita e protezione dello storico dei finanziamenti auto
-│   │   ├── migrations.ts               # migrazione workbook v1–v14 → v15, inclusi valori acqua conservativi
-│   │   ├── models.ts                   # schema Zod v15 e modello finanziario
+│   │   ├── migrations.ts               # migrazione workbook v1–v15 → v16, inclusi valori acqua conservativi
+│   │   ├── models.ts                   # schema Zod v16 e modello finanziario
 │   │   ├── uuidRepair.ts               # unicità UUID e riallineamento conservativo dei collegamenti
 │   │   └── rollover.ts                 # passaggio d’anno, rendimenti e saldo quote noti, rate e affitti
 │   ├── infrastructure/
@@ -134,6 +135,11 @@ ContaMì/
 │   │   │   ├── PropertyForms.tsx   # immobili e registrazioni generiche, incluse spese condivise automatiche
 │   │   │   ├── PropertyExpenseForms.tsx # utenze/tasse, consumi e quote condivise
 │   │   │   ├── PropertyWaterReadingForm.tsx # letture acqua statistiche senza movimenti finanziari
+│   │   │   ├── RecurringForm.tsx        # ricorrenze, condivisione e proporzione delle quote
+│   │   │   ├── TransactionForm.tsx      # transazione, condivisione e creazione/collegamento ricorrenza
+│   │   │   ├── SharedExpenseForm.tsx    # quote personalizzate e creazione/collegamento ricorrenza
+│   │   │   ├── ExpenseRecurrenceFields.tsx # controlli comuni di frequenza, prima scadenza e termine
+│   │   │   ├── useExpenseRecurrence.ts # stato delle opzioni di ricorrenza dei moduli spesa
 │   │   │   ├── CatalogForms.tsx     # categorie, metodi, tipi investimento e tasse configurabili
 │   │   │   └── VehicleForms.tsx     # anagrafica automobile e costi/consumi
 │   │   ├── i18n/                       # dizionari IT/EN e provider lingua
@@ -190,6 +196,7 @@ ContaMì/
 │   │   ├── workbook-preflight.test.ts  # rifiuto prima di ExcelJS e compatibilità v1/v2
 │   │   ├── workbook-lock.test.ts       # lock attivo/scaduto e recupero dopo crash
 │   │   ├── workbook-save-integrity.test.ts # writer sovrapposti e gara pre-rename
+│   │   ├── recurringExpensesWorkbook.test.ts # round-trip v16 e migrazione v15 con backup e quote conservate
 │   │   └── workbook.test.ts            # round-trip e schema leggibile
 │   └── unit/
 │       ├── accounts.test.ts             # saldi Casse, trasferimenti interni e vincoli metodo
@@ -220,6 +227,8 @@ ContaMì/
 │       ├── migrations.test.ts            # compatibilità schema v1–v13 → v14 e idempotenza
 │       ├── investmentUnitChart.test.tsx   # grafico quote e messaggio saldo sconosciuto IT/EN
 │       ├── investmentUnits.test.ts       # quote datate, movimenti, rollover e confini monetari
+│       ├── recurringExpenses.test.ts     # quote, creazione/collegamento, scadenze, tariffa e rollover
+│       ├── expenseRecurrenceForms.test.tsx # sei moduli di creazione/modifica ricorrenza e condivisione IT/EN
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
 │       ├── vehicleEntries.test.ts         # contachilometri precedente, distanza e litri calcolati
 │       ├── vehicleInstallments.test.ts   # comando atomico, unicità, classificazione e ciclo di vita rate auto
@@ -271,7 +280,7 @@ Renderer UI ──typed bridge──> Preload ──validated IPC──> Main se
      └── shared contracts <── Domain rules ───────────────┤
                                                           ├── Settings
                                                           └── Spreadsheet adapters
-                                                               ├── canonical .xlsx v15 + migrations
+                                                               ├── canonical .xlsx v16 + migrations
                                                                └── optional .numbers mirror
 ```
 

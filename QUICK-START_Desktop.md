@@ -9,7 +9,7 @@
 3. In **Impostazioni**, crea almeno un **Conto**. Se usi contanti, crea anche una **Cassa**; il conto di alimentazione predefinito è solo un suggerimento per i trasferimenti.
 4. Registra entrate e uscite in **Transazioni**. Un movimento collegato a un immobile, un investimento o un comparto pensione compare anche nella vista pertinente. I filtri non cambiano i dati salvati.
 5. Aggiungi, secondo le tue esigenze, **Immobili**, **Automobile**, **Investimenti** e **Pensione integrativa**. La pensione è un fondo raccoglitore con comparti: inserisci versamenti, liquidazioni e valutazioni nei comparti, senza duplicarli nel fondo.
-6. Usa **Ricorrenze** per le scadenze e **Spese condivise** per gli importi ripartiti. **Cambia tariffa** modifica solo le scadenze pianificate dalla data scelta; le operazioni confermate restano nello storico.
+6. Usa **Ricorrenze** per le scadenze e **Spese condivise** per gli importi ripartiti. In una ricorrenza di spesa puoi scegliere **Condividi ogni scadenza**; da una Transazione o Spesa condivisa puoi scegliere **Rendi ricorrente la spesa**, anche in modifica. **Cambia tariffa** modifica solo le scadenze pianificate dalla data scelta; le operazioni confermate restano nello storico.
 7. Controlla valori e rendimenti nelle schede. Il risultato complessivo è distinto dal rendimento del periodo; una valutazione mancante resta una lacuna e le Correzioni non diventano rendimento.
 
 ### Stampare o salvare un report
@@ -31,7 +31,7 @@ A fine anno usa **Chiudi anno** e scegli il nuovo file: il precedente resta inta
 3. Under **Settings**, add at least one **Account**. If you use cash, add a **Cash register**; its default funding account is only a transfer suggestion.
 4. Record income and expenses under **Transactions**. A movement linked to a property, investment, or pension compartment also appears in the relevant view. Filters do not change saved data.
 5. Add **Properties**, **Vehicles**, **Investments**, and **Private Pension** as needed. A pension collector contains compartments: enter contributions, withdrawals, and valuations in the compartments without duplicating them in the collector.
-6. Use **Recurring items** for schedules and **Shared expenses** for split amounts. **Change rate** affects only planned occurrences from the selected date; confirmed records remain in history.
+6. Use **Recurring items** for schedules and **Shared expenses** for split amounts. Choose **Share every occurrence** on an expense plan, or **Make this expense recurring** on a Transaction or Shared expense, including when editing. **Change rate** affects only planned occurrences from the selected date; confirmed records remain in history.
 7. Review values and returns on the cards. Overall result differs from period return; a missing valuation remains a gap, and Corrections do not become return.
 
 ### Print or save a report

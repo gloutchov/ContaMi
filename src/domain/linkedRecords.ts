@@ -99,7 +99,7 @@ function transactionForVehicle(entry: VehicleEntry, existing?: Transaction): Tra
   };
 }
 
-export function upsertTransactionWithLinks(data: FinanceData, value: Transaction): void {
+export function upsertTransactionWithLinks(data: FinanceData, value: Transaction, sharedOwnerRatio?: number, replacedOccurrence?: Transaction): void {
   const previous = data.transactions.find((item) => item.id === value.id);
   const vehicleInstallment = value.recurringId
     ? data.recurringItems.find((item) => item.id === value.recurringId && item.kind === "installment" && item.vehicleId)
@@ -168,20 +168,21 @@ export function upsertTransactionWithLinks(data: FinanceData, value: Transaction
   }
 
   const previousSharedId = previous?.sharedExpenseId;
-  if (previousSharedId && !transaction.shared) {
+  if (previousSharedId && (!transaction.shared || transaction.kind !== "expense")) {
     data.sharedExpenses = data.sharedExpenses.filter((item) => item.id !== previousSharedId);
     transaction.sharedExpenseId = undefined;
   }
   if (transaction.shared && transaction.kind === "expense") {
     const existing = data.sharedExpenses.find((item) => item.id === transaction.sharedExpenseId || item.transactionId === transaction.id);
-    const ownerRatio = existing && existing.amount > 0 ? existing.ownerShare / existing.amount : 0.5;
-    const ownerShare = existing && Math.abs(existing.amount - transaction.amount) <= 0.01
+    const ownerRatio = sharedOwnerRatio ?? (existing && existing.amount > 0 ? existing.ownerShare / existing.amount : 0.5);
+    const preserveShares = sharedOwnerRatio === undefined && existing && Math.abs(existing.amount - transaction.amount) <= 0.01;
+    const ownerShare = preserveShares
       ? existing.ownerShare
       : Math.round(transaction.amount * ownerRatio * 100) / 100;
     const entry: SharedExpense = {
       id: existing?.id ?? randomUUID(), date: transaction.date, description: transaction.description,
       categoryId: transaction.categoryId, paymentMethodId: transaction.paymentMethodId, accountId: transaction.accountId, amount: transaction.amount,
-      ownerShare, partnerShare: existing && Math.abs(existing.amount - transaction.amount) <= 0.01
+      ownerShare, partnerShare: preserveShares
         ? existing.partnerShare
         : Math.round((transaction.amount - ownerShare) * 100) / 100,
       paidBy: transaction.sharedPaidBy ?? "owner", settled: transaction.sharedSettled ?? false, transactionId: transaction.id, notes: transaction.notes,
@@ -190,7 +191,8 @@ export function upsertTransactionWithLinks(data: FinanceData, value: Transaction
     transaction.sharedExpenseId = entry.id;
   }
   replaceOrAdd(data.transactions, transaction);
-  confirmRecurringOccurrence(data, previous, transaction);
+  const alreadyConfirmedInPlan = previous && !previous.planned && previous.recurringId === transaction.recurringId;
+  confirmRecurringOccurrence(data, alreadyConfirmedInPlan ? previous : replacedOccurrence ?? previous, transaction);
   reconcileConfirmedRecurringEdit(data, previous, transaction);
 }
 
@@ -436,7 +438,7 @@ function plannedRecurringTransactionMatches(
   existing: Transaction,
   expected: Pick<Transaction,
     "date" | "dueDate" | "description" | "categoryId" | "paymentMethodId" | "accountId" | "kind"
-    | "cashFlowDirection" | "amount" | "recurringId" | "propertyId" | "investmentId" | "vehicleId" | "notes">,
+    | "cashFlowDirection" | "amount" | "recurringId" | "propertyId" | "investmentId" | "vehicleId" | "notes" | "shared" | "sharedPaidBy">,
 ): boolean {
   return existing.date === expected.date
     && existing.dueDate === expected.dueDate
@@ -451,6 +453,8 @@ function plannedRecurringTransactionMatches(
     && existing.propertyId === expected.propertyId
     && existing.investmentId === expected.investmentId
     && existing.vehicleId === expected.vehicleId
+    && existing.shared === expected.shared
+    && existing.sharedPaidBy === expected.sharedPaidBy
     && existing.notes === expected.notes;
 }
 
@@ -479,8 +483,7 @@ export function syncRecurringTransactions(data: FinanceData, recurring: Recurrin
       const cashFlowDirection = recurring.kind === "investment" ? (direction === "income" ? "inflow" : "outflow") : undefined;
       const matchingPlanned = data.transactions.filter((item) => item.recurringId === recurring.id && recurringOccurrenceDate(item) === date && item.planned);
       const existing = data.transactions.find((item) => item.recurringId === recurring.id && recurringOccurrenceDate(item) === date && !item.planned)
-        ?? matchingPlanned[0]
-        ?? data.transactions.find((item) => !item.recurringId && item.date === date && item.kind === transactionKind && item.cashFlowDirection === cashFlowDirection && Math.abs(item.amount - occurrenceAmount) < 0.01 && item.description.toLocaleLowerCase().includes(recurring.name.toLocaleLowerCase()));
+        ?? matchingPlanned[0];
       if (existing && !existing.planned) {
         existing.recurringId = recurring.id;
         existing.dueDate ??= date;
@@ -507,10 +510,15 @@ export function syncRecurringTransactions(data: FinanceData, recurring: Recurrin
           propertyId: recurring.propertyId,
           investmentId: recurring.investmentId,
           vehicleId: recurring.vehicleId,
+          shared: recurring.shared ?? existing.shared,
+          sharedPaidBy: recurring.shared === undefined ? existing.sharedPaidBy : recurring.sharedPaidBy ?? "owner",
           notes: recurring.notes,
         };
-        if (!plannedRecurringTransactionMatches(existing, expected)) {
-          upsertTransactionWithLinks(data, { ...expected, updatedAt: nowIso() });
+        const sharedEntry = data.sharedExpenses.find((item) => item.transactionId === existing.id);
+        const sharesMatch = !expected.shared || recurring.shared === undefined || Boolean(sharedEntry
+          && sharedEntry.ownerShare === Math.round(occurrenceAmount * (recurring.sharedOwnerRatio ?? 0.5) * 100) / 100);
+        if (!plannedRecurringTransactionMatches(existing, expected) || !sharesMatch) {
+          upsertTransactionWithLinks(data, { ...expected, updatedAt: nowIso() }, recurring.shared === undefined ? undefined : recurring.sharedOwnerRatio ?? 0.5);
         } else if (recurring.kind === "installment" && recurring.vehicleId) {
           const vehicleEntry = data.vehicleEntries.find((item) => item.id === existing.vehicleEntryId || item.transactionId === existing.id);
           if (vehicleEntry && vehicleEntry.kind !== "installment") vehicleEntry.kind = "installment";
@@ -523,11 +531,12 @@ export function syncRecurringTransactions(data: FinanceData, recurring: Recurrin
         upsertTransactionWithLinks(data, {
           id: randomUUID(), date, dueDate: date, description: recurring.name, categoryId: recurring.categoryId,
           paymentMethodId: recurring.paymentMethodId, accountId: recurring.accountId,
-          kind: transactionKind, cashFlowDirection, amount: occurrenceAmount, currency: "EUR",
+          kind: transactionKind, cashFlowDirection, amount: occurrenceAmount,
+          currency: data.accounts.find((item) => item.id === recurring.accountId)?.currency ?? "EUR",
           recurringId: recurring.id, propertyId: recurring.propertyId, investmentId: recurring.investmentId, vehicleId: recurring.vehicleId,
-          planned: true, shared: false, sharedPaidBy: "owner", sharedSettled: false,
+          planned: true, shared: recurring.shared ?? false, sharedPaidBy: recurring.sharedPaidBy ?? "owner", sharedSettled: false,
           notes: recurring.notes, createdAt: timestamp, updatedAt: timestamp,
-        });
+        }, recurring.sharedOwnerRatio ?? 0.5);
         unpaidOccurrences += 1;
       }
     }

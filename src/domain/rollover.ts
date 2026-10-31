@@ -11,6 +11,7 @@ import { investmentReturnSeries } from "./assetReturns";
 import { investmentUnitBalance, isInvestmentCorrectionKind, ROLLOVER_OPENING_VALUATION_DESCRIPTION } from "./investments";
 import { recurrenceAnchorDay, syncRecurringLink, syncRecurringTransactions, upsertTransactionWithLinks } from "./linkedRecords";
 import type { FinanceData, InvestmentEntry, PropertyEntry, RecurringItem } from "./models";
+import { confirmedSharedExpenses } from "./recurringExpenses";
 
 function latestEntry<T extends PropertyEntry | InvestmentEntry>(entries: T[], id: string, foreignKey: "propertyId" | "investmentId"): T | undefined {
   return entries
@@ -92,7 +93,10 @@ export function createRolloverFinanceData(current: FinanceData, nextYear = curre
     syncRecurringTransactions(next, item, recurrenceAnchors.get(item.id));
     syncRecurringLink(next, item);
   });
-  next.sharedExpenses = structuredClone(current.sharedExpenses.filter((item) => !item.settled));
+  // Keep generated next-year shares and carry only actual outstanding debts.
+  next.sharedExpenses.push(...structuredClone(confirmedSharedExpenses(current)
+    .filter((item) => !item.settled)
+    .map((item) => ({ ...item, transactionId: undefined }))));
   next.annualSummaries = [...structuredClone(current.annualSummaries), createAnnualSummary(current)];
   next.propertyAnnualSummaries = [...propertyAnnualSummariesWithLateIncome(current), ...createPropertyAnnualSummaries(current)];
   const currentInvestmentSummaries = createInvestmentAnnualSummaries(current).map((summary) => {

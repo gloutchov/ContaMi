@@ -138,6 +138,25 @@ async function changeTemplateVersion(filePath: string, type: ImportTemplateType,
 }
 
 describe("ExcelImportTemplateParser", () => {
+  it("preserves recurring sharing when an older template updates a plan", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "contami-import-recurring-sharing-")); directories.push(directory);
+    const data = createEmptyFinanceData(2026);
+    data.recurringItems.push({
+      id: crypto.randomUUID(), name: "Synthetic subscription", kind: "subscription", direction: "expense", amount: 15,
+      frequency: "monthly", nextDueDate: "2026-06-01", categoryId: data.categories.find((item) => item.kind === "expense")!.id,
+      paymentMethodId: data.paymentMethods[0].id, accountId: data.accounts[0].id, active: true, notes: "",
+      shared: true, sharedPaidBy: "partner", sharedOwnerRatio: 0.3,
+    });
+    const filePath = await completedTemplate(directory, "recurring_items", data);
+    const prepared = await new ExcelImportTemplateParser().parse(filePath, data, "update");
+    expect(prepared.preview.rejectedRows).toBe(0);
+    expect(prepared.commands).toHaveLength(1);
+    const next = applyFinanceCommands(data, prepared.commands);
+    expect(next.recurringItems[0]).toMatchObject({ shared: true, sharedPaidBy: "partner", sharedOwnerRatio: 0.3 });
+    expect(next.sharedExpenses).toHaveLength(next.transactions.length);
+    expect(next.sharedExpenses.every((item) => item.ownerShare === 4.5 && item.partnerShare === 10.5)).toBe(true);
+  });
+
   it("preserves vehicle acquisition metadata when updating through a v3 template", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "contami-import-vehicle-acquisition-")); directories.push(directory);
     const data = createEmptyFinanceData(2026);

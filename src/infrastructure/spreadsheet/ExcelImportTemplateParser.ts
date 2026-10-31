@@ -784,6 +784,8 @@ function parseRecurring(parsed: ParsedWorkbook, data: FinanceData, builder: Impo
       id: choice.current?.id ?? crypto.randomUUID(), name, kind, direction, amount, frequency, categoryId, paymentMethodId, accountId,
       nextDueDate, endDate, remainingInstallments, active, closedAt: active ? undefined : (choice.current?.closedAt ?? nextDueDate),
       propertyId, investmentId, vehicleId, notes: rowNotes,
+      // v1/v2/v3 templates do not expose series sharing; preserve it on updates.
+      shared: choice.current?.shared, sharedPaidBy: choice.current?.sharedPaidBy, sharedOwnerRatio: choice.current?.sharedOwnerRatio,
     };
     if (reader.errors.length) { builder.reject(reader); continue; }
     builder.add(rowNumber, "record_type", choice.action, {

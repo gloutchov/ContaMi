@@ -255,9 +255,16 @@ export const recurringItemSchema = z.object({
   nextDueDate: isoDate,
   endDate: isoDate.optional(),
   remainingInstallments: z.number().int().nonnegative().max(10_000).optional(),
+  shared: z.boolean().optional(),
+  sharedPaidBy: z.enum(["owner", "partner"]).optional(),
+  sharedOwnerRatio: z.number().finite().min(0).max(1).optional(),
   active: z.boolean(),
   closedAt: isoDate.optional(),
   notes,
+}).superRefine((value, context) => {
+  if (value.shared && (value.direction === "income" || value.kind === "investment" || value.investmentId)) {
+    context.addIssue({ code: "custom", message: "Only recurring expenses can be shared", path: ["shared"] });
+  }
 });
 
 export const recurringRateChangeSchema = z.object({
@@ -418,7 +425,7 @@ export const vehicleAnnualSummarySchema = z.object({
 
 export const financeDataSchema = z.object({
   meta: z.object({
-    schemaVersion: z.literal(15),
+    schemaVersion: z.literal(16),
     activeYear: z.number().int().min(1900).max(9999),
     createdAt: isoTimestamp,
     updatedAt: isoTimestamp,

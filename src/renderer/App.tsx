@@ -52,6 +52,7 @@ function errorKey(error: unknown): TranslationKey {
     || text.includes("INVALID_CASH_REGISTER_FUNDING_ACCOUNT")) return "invalidAccountSelection";
   if (text.includes("DUPLICATE_TAX_NAME")) return "duplicateTaxName";
   if (text.includes("VEHICLE_INSTALLMENT")) return "invalidVehicleInstallment";
+  if (text.includes("INVALID_EXPENSE_RECURRENCE") || text.includes("DUPLICATE_RECURRING_OCCURRENCE")) return "invalidExpenseRecurrence";
   if (text.includes("RECURRING_BASE_AMOUNT_LOCKED")) return "recurringBaseLocked";
   if (text.includes("RATE_CHANGE_") || text.includes("DUPLICATE_RATE_CHANGE_MONTH") || text.includes("INVALID_RATE_CHANGE")) return "invalidRateChange";
   if (text.includes("IMPORT_PREVIEW_EXPIRED")) return "importPreviewExpired";

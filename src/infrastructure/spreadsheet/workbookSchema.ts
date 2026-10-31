@@ -195,8 +195,12 @@ export const WORKBOOK_TABLES_V1: WorkbookTableDefinition[] = [
   { key: "annualSummaries", sheet: "Annual Summaries", columns: ["year", "income", "expenses", "netCashFlow", "closingNetWorth"] },
 ];
 
-export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_V14.map((definition) => definition.key === "vehicles"
+export const WORKBOOK_TABLES_V15: WorkbookTableDefinition[] = WORKBOOK_TABLES_V14.map((definition) => definition.key === "vehicles"
   ? { ...definition, columns: [...definition.columns, "purchasePaymentMode", "purchaseDownPayment", "purchaseCostRecorded"] }
   : definition);
 
-export const WORKBOOK_SCHEMA_VERSION = 15;
+export const WORKBOOK_TABLES: WorkbookTableDefinition[] = WORKBOOK_TABLES_V15.map((definition) => definition.key === "recurringItems"
+  ? { ...definition, columns: [...definition.columns, "shared", "sharedPaidBy", "sharedOwnerRatio"] }
+  : definition);
+
+export const WORKBOOK_SCHEMA_VERSION = 16;

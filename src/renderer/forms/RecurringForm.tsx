@@ -16,21 +16,28 @@ export function RecurringForm({ data, value, onClose, onSave }: { data: FinanceD
   const [categoryId, setCategoryId] = useState(value?.categoryId ?? data.categories.find((item) => item.active && item.kind !== "income")?.id ?? ""); const [paymentMethodId, setPaymentMethodId] = useState(value?.paymentMethodId ?? data.paymentMethods.find((item) => item.active)?.id ?? "");
   const [accountId, setAccountId] = useState(value?.accountId ?? data.accounts.find((item) => item.active)?.id ?? "");
   const [investmentId, setInvestmentId] = useState(value?.investmentId ?? ""); const [propertyId, setPropertyId] = useState(value?.propertyId ?? "");
-  const managedVehicle = value?.vehicleId ? data.vehicles.find((item) => item.id === value.vehicleId) : undefined;
+  const [shared, setShared] = useState(value?.shared ?? false);
+  const [sharedPaidBy, setSharedPaidBy] = useState<"owner" | "partner">(value?.sharedPaidBy ?? "owner");
+  const [ownerPercent, setOwnerPercent] = useState(String((value?.sharedOwnerRatio ?? 0.5) * 100));
+  const canShare = direction === "expense" && kind !== "investment";
+  const managedVehicle = value?.vehicleId && value.kind === "installment" ? data.vehicles.find((item) => item.id === value.vehicleId) : undefined;
   const categories = useMemo(() => data.categories.filter((item) => item.active && (item.kind === direction || item.kind === "both")), [data.categories, direction]);
   const pensionIds = pensionInvestmentIds(data);
   const positions = selectableFinancialPositions(data);
   const selectedLegacyPosition = value?.investmentId && !positions.some((item) => item.id === value.investmentId) ? data.investments.find((item) => item.id === value.investmentId) : undefined;
   const regularPositions = [...positions.filter((item) => !pensionIds.has(item.id)), ...(selectedLegacyPosition && !pensionIds.has(selectedLegacyPosition.id) ? [selectedLegacyPosition] : [])];
   const pensionPositions = [...positions.filter((item) => pensionIds.has(item.id)), ...(selectedLegacyPosition && pensionIds.has(selectedLegacyPosition.id) ? [selectedLegacyPosition] : [])];
-  const valid = Boolean(name.trim() && Number(amount) > 0 && categoryId && paymentMethodId && accountId && (kind !== "investment" || investmentId) && (kind !== "rent" || propertyId));
+  const valid = Boolean(name.trim() && Number(amount) > 0 && categoryId && paymentMethodId && accountId && (kind !== "investment" || investmentId) && (kind !== "rent" || propertyId)
+    && (!endDate || endDate >= nextDueDate || value?.active === false) && (!canShare || !shared || (ownerPercent !== "" && Number(ownerPercent) >= 0 && Number(ownerPercent) <= 100)));
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); if (!valid) return;
     const item: RecurringItem = {
       ...value, id: value?.id ?? crypto.randomUUID(), name: managedVehicle?.name ?? name, kind: managedVehicle ? "installment" : kind, direction: managedVehicle ? "expense" : direction, amount: Number(amount), frequency,
       categoryId, paymentMethodId, accountId, investmentId: kind === "investment" ? investmentId : undefined,
-      propertyId: kind === "rent" ? propertyId : undefined, nextDueDate, endDate: endDate || undefined,
-      vehicleId: managedVehicle?.id,
+      propertyId: kind === "rent" ? propertyId : value?.kind !== "rent" ? value?.propertyId : undefined, nextDueDate, endDate: endDate || undefined,
+      vehicleId: value?.vehicleId,
+      shared: canShare && shared, sharedPaidBy: canShare && shared ? sharedPaidBy : undefined,
+      sharedOwnerRatio: canShare && shared ? Number(ownerPercent) / 100 : undefined,
       remainingInstallments: remaining ? Number(remaining) : undefined, active: value?.active ?? true, closedAt: value?.closedAt, notes,
     };
     await saveAndClose(onSave, { type: value ? "updateRecurringItem" : "addRecurringItem", value: item }, onClose);
@@ -50,6 +57,15 @@ export function RecurringForm({ data, value, onClose, onSave }: { data: FinanceD
     {managedVehicle && <Field label={t("vehicle")} hint={t("vehicleInstallmentManagedHelp")}><output>{managedVehicle.name}</output></Field>}
     <Field label={t("endDate")}><input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} /></Field>
     {kind === "installment" && <Field label={t("installmentsLeft")}><input type="number" min="0" step="1" value={remaining} onChange={(event) => setRemaining(event.target.value)} /></Field>}
+    {canShare && <>
+      <Field label={t("sharedExpense")} wide hint={value ? t("recurringSharingHelp") : undefined}><span className="check-field">
+        <input type="checkbox" checked={shared} onChange={(event) => setShared(event.target.checked)} />{t("shareRecurringExpense")}
+      </span></Field>
+      {shared && <>
+        <Field label={t("paidBy")}><select value={sharedPaidBy} onChange={(event) => setSharedPaidBy(event.target.value as "owner" | "partner")}><option value="owner">{t("you")}</option><option value="partner">{t("partner")}</option></select></Field>
+        <Field label={t("yourSharePercent")}><input required type="number" min="0" max="100" step="any" value={ownerPercent} onChange={(event) => setOwnerPercent(event.target.value)} /></Field>
+      </>}
+    </>}
     {value && <RecurringRateChangesEditor data={data} recurring={value} onSave={onSave} />}
     <Field label={t("notes")} wide><textarea value={notes} maxLength={2000} onChange={(event) => setNotes(event.target.value)} /></Field>
   </Modal>;

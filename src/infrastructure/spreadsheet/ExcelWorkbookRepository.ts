@@ -16,7 +16,7 @@ import {
   type WorkbookRevisionState,
 } from "./WorkbookRevisionGuard";
 import { preflightXlsxWorkbook } from "./XlsxWorkbookPreflight";
-import { WORKBOOK_SCHEMA_VERSION, WORKBOOK_TABLES, WORKBOOK_TABLES_V1, WORKBOOK_TABLES_V10, WORKBOOK_TABLES_V11, WORKBOOK_TABLES_V12, WORKBOOK_TABLES_V13, WORKBOOK_TABLES_V14, WORKBOOK_TABLES_V2, WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V5, WORKBOOK_TABLES_V6, WORKBOOK_TABLES_V7, WORKBOOK_TABLES_V8, WORKBOOK_TABLES_V9, type WorkbookTableDefinition } from "./workbookSchema";
+import { WORKBOOK_SCHEMA_VERSION, WORKBOOK_TABLES, WORKBOOK_TABLES_V1, WORKBOOK_TABLES_V10, WORKBOOK_TABLES_V11, WORKBOOK_TABLES_V12, WORKBOOK_TABLES_V13, WORKBOOK_TABLES_V14, WORKBOOK_TABLES_V15, WORKBOOK_TABLES_V2, WORKBOOK_TABLES_V3, WORKBOOK_TABLES_V4, WORKBOOK_TABLES_V5, WORKBOOK_TABLES_V6, WORKBOOK_TABLES_V7, WORKBOOK_TABLES_V8, WORKBOOK_TABLES_V9, type WorkbookTableDefinition } from "./workbookSchema";
 
 const HEADER_FILL = "FF073B4C";
 const ACCENT_FILL = "FF74D6B1";
@@ -93,6 +93,7 @@ function configureDataSheet(sheet: ExcelJS.Worksheet, definition: WorkbookTableD
   for (const column of ["amount", "openingBalance", "purchasePrice", "salePrice", "purchaseDownPayment", "purchaseCostRecorded", "fuelUnitPrice", "cadastralValue", "expectedMonthlyRent", "periodicAmount", "ownerShare", "partnerShare", "income", "expenses", "netCashFlow", "closingNetWorth", "liquidBalance", "propertyValue", "investmentValue", "pensionValue", "monthlyRecurring", "vehicleCosts", "closingValue", "contributions", "withdrawals", "totalCosts", "fuelCosts", "installments", "taxes", "insurance", "tires", "maintenance", "repairs", "electricityCost", "gasCost", "waterCost", "phoneInternetCost", "condominiumCost", "valuePerSqm", "totalCost", "coldCost", "hotCost", "condominiumWaterCost", "condominiumColdWaterCost", "condominiumHotWaterCost"]) {
     if (definition.columns.includes(column)) sheet.getColumn(column).numFmt = '#,##0.00 [$€-it-IT]';
   }
+  if (definition.columns.includes("sharedOwnerRatio")) sheet.getColumn("sharedOwnerRatio").numFmt = "0.00%";
   if (definition.columns.includes("ownershipShare")) sheet.getColumn("ownershipShare").numFmt = "0%";
   if (definition.columns.includes("returnRate")) sheet.getColumn("returnRate").numFmt = "0.00%";
 }
@@ -248,6 +249,8 @@ export class ExcelWorkbookRepository {
                             ? WORKBOOK_TABLES_V13
                             : schemaVersion === 14
                               ? WORKBOOK_TABLES_V14
+                            : schemaVersion === 15
+                              ? WORKBOOK_TABLES_V15
                             : schemaVersion === WORKBOOK_SCHEMA_VERSION
                               ? WORKBOOK_TABLES
                               : undefined;
