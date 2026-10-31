@@ -5,12 +5,14 @@
 Verifica del 31 ottobre 2026 su Node.js 24.18.1 / npm 11.16.0. Base applicativa C43
 `1890b7ef5b1477798cd3ebe7de8d9feb4b56d0ef`; versione 1.27.0 e schema workbook v16
 invariati. M44 non modifica codice applicativo, IPC, rete o dati finanziari e non
-pubblica una release. Le verifiche remote dei pacchetti precedono la chiusura C44.
+pubblica una release. C44 è chiusa sul commit `914d8fd` con CI e pacchetti verificati;
+il riepilogo definitivo è in PLAN.md.
 
 Checked on 31 October 2026 with Node.js 24.18.1 / npm 11.16.0 against application
 baseline C43 above. Application version 1.27.0 and workbook schema v16 are unchanged.
 M44 changes no application code, IPC, network access or financial data, and produces
-no release. Remote package validation remains required before closing C44.
+no release. C44 is closed at commit `914d8fd` after CI and package validation; see
+PLAN.md for the final record.
 
 Fonti ufficiali / Official sources:
 
@@ -126,10 +128,10 @@ exercises builder, ASAR, ESLint and the typescript-eslint project service. Advis
 probes run in separate processes with a 10-second timeout, 128-MiB heap and bounded
 output; both also reject the vulnerable C43 baseline using small synthetic fixtures.
 
-Esiti e gate ancora pendenti sono registrati nella voce M44 di [PLAN.md](../PLAN.md).
+Esiti locali e chiusura remota sono registrati nella voce C44 di [PLAN.md](../PLAN.md).
 Nessun workbook privato è usato; gli smoke nativi che possono leggere le impostazioni
 reali sono riservati ai runner CI effimeri.
 
-Results and remaining gates are recorded under M44 in [PLAN.md](../PLAN.md). No private
+Local results and remote closure are recorded under C44 in [PLAN.md](../PLAN.md). No private
 workbook is used; native smoke tests that may read real settings are reserved for
 ephemeral CI runners.

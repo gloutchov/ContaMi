@@ -485,3 +485,28 @@ Legacy dependencies remain a known risk, including in ExcelJS runtime transitive
 No release/signing is planned for M44. Cross-platform CI and package/native smoke
 checks remain closure gates after commit review; native smoke tests use ephemeral
 runners with synthetic data instead of the user's local settings.
+
+### Chiusura C44 / C44 closure — 2026-10-31
+
+Il commit approvato `914d8fd178af4bd5c1f25daa7ac58f429bb3b90a` è integrato e pubblicato
+su `main` con checkpoint annotato `milestone/C44`, senza modifiche dopo il controllo.
+CI branch/main e packaging senza pubblicazione sono verdi su macOS/Windows; sei
+pacchetti scaricati, digest GitHub, tre ASAR, due DMG, architetture e checksum locali
+verificati. Smoke unpacked/installato su runner macOS ARM64 e Windows x64; pacchetti
+Mac Intel ispezionati staticamente, senza avvio nativo Intel. Branch e worktree M44
+rimossi dopo la conservazione verificata delle evidenze sintetiche. Il precedente
+stato locale sopra è storico. Versione 1.27.0, schema v16 e release C43 invariati;
+nessuna nuova release. Restano 20 moderati da minimatch legacy, zero alti/critici e
+la sola eccezione minimatch fino al 14 novembre incluso UTC. M45 non è avviata.
+Nessun workbook privato aperto o modificato; nessuna firma configurata.
+
+The approved commit above is merged and published on main with annotated checkpoint
+`milestone/C44`, unchanged after review. Branch/main CI and tagless packaging passed
+on macOS/Windows. Six downloaded packages, GitHub digests, three ASAR archives, both
+DMGs, architectures and local checksums were verified. Unpacked/installed smoke ran
+on macOS ARM64 and Windows x64; Intel Mac packages received static inspection without
+native Intel execution. M44 branches/worktree were removed after checksum-verified
+preservation of synthetic evidence. The earlier local state is historical. Version
+1.27.0, schema v16 and the C43 release are unchanged; no new release/signing. The
+20 moderate legacy minimatch findings and sole exception through 14 November inclusive
+UTC remain; zero high/critical, M45 not started, no private workbook opened or changed.

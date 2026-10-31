@@ -23,7 +23,7 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** C43 è completata e pubblicata come `v1.27.0`, schema workbook v16: `main` e i tag annotati `milestone/C43` / `v1.27.0` puntano a `1890b7ef5b1477798cd3ebe7de8d9feb4b56d0ef`. Il nuovo piano esecutivo comprende M44 e M45, in questo ordine, per eliminare le vulnerabilità residue e rimuovere le eccezioni audit entro il 14 novembre 2026 incluso (UTC). M44 è implementata e verificata localmente sul branch dedicato, in attesa del controllo del commit e dei gate remoti; M45 non è avviata. Le sezioni delle milestone chiuse conservano risultati e limiti storici.
+**Stato corrente:** C44 è completata: `main` e il tag annotato `milestone/C44` puntano al commit approvato `914d8fd178af4bd5c1f25daa7ac58f429bb3b90a`, versione sorgente `1.27.0` e schema workbook v16 invariati. CI e packaging/smoke macOS/Windows, artifact, checksum e pulizia sono verificati; nessuna nuova release o tag versione. C43 / `v1.27.0` restano sul commit `1890b7e`. M45 è programmata e non avviata: rimangono 20 segnalazioni moderate da minimatch legacy, con la sola eccezione fino al 14 novembre 2026 incluso UTC. Le sezioni delle milestone chiuse conservano risultati e limiti storici.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -81,7 +81,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | C41 — Report pensione integrativa | `milestone/41-pension-reports` | `milestone/C41`, `v1.26.0` | Pubblicata; checkpoint remoto verificato |
 | C42 — Manutenzione Dependabot #131–#135 | `milestone/42-dependabot-maintenance` | `milestone/C42`, release correttiva `1.26.1` | Sorgente completata; versione e chiusura in revisione prima della pubblicazione |
 | C43 — Spese ricorrenti e condivise da ogni modulo | `milestone/43-shared-recurring-expenses` | `milestone/C43`, `v1.27.0` | Pubblicata; CI, pacchetti, checksum e pulizia verificati |
-| M44 — Glob corretto e consumatori moderni di minimatch | `milestone/44-glob-modern-minimatch` | `milestone/C44`; versione invariata `1.27.0` | Implementata localmente; revisione e gate remoti pendenti |
+| C44 — Glob corretto e consumatori moderni di minimatch | `milestone/44-glob-modern-minimatch` | `milestone/C44`; versione invariata `1.27.0` | Completata; CI/pacchetti/checksum e pulizia verificati; nessuna release |
 | M45 — Minimatch legacy e audit senza eccezioni | `milestone/45-legacy-minimatch-audit` | `milestone/C45`; patch prevista `1.27.1` | Programmata dopo C44; obiettivo 12/11/2026 |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1` → manutenzione dipendenze e catena di rilascio `v1.21.0` → letture acqua delle residenze `v1.22.0` → compatibilità configurazione Vite `v1.22.1` → trasparenza costo/km Automobile `v1.22.2` → release Electron 44 `v1.23.0` → costo d’uso e costo complessivo/km `v1.24.0`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
@@ -1716,11 +1716,11 @@ Le correzioni sono accoppiate: aggiornare soltanto il pacchetto radice non rimuo
 
 **Vincoli comuni:** usare un worktree dedicato e dati sintetici; conservare comportamento, formule, collegamenti, workbook v16, backup/rollback, IPC, sandbox, CSP e blocco rete dell'app. Preferire aggiornamenti upstream compatibili; eventuali adattamenti o sostituzioni di un consumatore devono essere minimi, motivati e verificati. Nessun `npm audit fix --force`, downgrade verso pacchetti obsoleti, override major globale non verificato, modifica manuale di `node_modules` o falsificazione delle versioni. Le eccezioni attuali non vengono ampliate o prorogate automaticamente. Ogni chiusura richiede commit locale congelato, hash/diff/test/limiti e controllo personale del proprietario prima di pubblicazione, merge, tag o pulizia.
 
-## M44 — Glob corretto e consumatori moderni di minimatch
+## C44 — Glob corretto e consumatori moderni di minimatch
 
 **Obiettivo:** eliminare l'advisory di glob e le istanze vulnerabili dei matcher nelle catene moderne, costruendo la base compatibile necessaria per M45 e mantenendo l'app installabile. Il risultato verificabile è un grafo più sicuro con packaging e flussi applicativi equivalenti; non è ancora la chiusura dell'intero audit.
 
-**Branch previsto:** `milestone/44-glob-modern-minimatch`, da `main` dopo verifica del checkpoint remoto C43. **Tag di checkpoint previsto:** `milestone/C44`. **Versione:** nessun incremento applicativo; `1.27.0` e workbook v16 invariati. **GitHub Release:** non prevista in questa fase intermedia; la patch distribuibile è pianificata in M45. **Priorità:** alta; obiettivo di chiusura 06/11/2026. **Stato:** implementata localmente il 31/10/2026; controllo del commit, CI/packaging remoto e chiusura C44 pendenti.
+**Branch:** `milestone/44-glob-modern-minimatch`, da `main` dopo verifica del checkpoint remoto C43. **Tag di checkpoint previsto:** `milestone/C44`. **Versione:** nessun incremento applicativo; `1.27.0` e workbook v16 invariati. **GitHub Release:** non prevista in questa fase intermedia; la patch distribuibile è pianificata in M45. **Priorità:** alta; obiettivo di chiusura 06/11/2026. **Stato:** completata il 31/10/2026 sul commit approvato `914d8fd178af4bd5c1f25daa7ac58f429bb3b90a`, checkpoint `milestone/C44`; il riepilogo locale precedente resta storico.
 
 **Attività principali:**
 
@@ -1779,16 +1779,46 @@ artifact scaricati**, oltre a controllo/approvazione del commit, merge e checkpo
 Nessun workbook privato aperto o modificato; build non firmate. M44 non è chiusa,
 non produce tag versione/release e M45 non è avviata.
 
+**Chiusura definitiva C44 — 2026-10-31:** il proprietario ha controllato e approvato
+`914d8fd178af4bd5c1f25daa7ac58f429bb3b90a` per merge, tag, push e pulizia. Il commit
+è stato pubblicato senza modifiche; `main` aggiornato con fast-forward e tag annotato
+`milestone/C44` (oggetto `c11971f2d6e9aecd75de86468d21423d08a05819`) verificati sul remoto.
+[CI branch](https://github.com/gloutchov/ContaMi/actions/runs/41225894016),
+[CI main](https://github.com/gloutchov/ContaMi/actions/runs/41226620990) e
+[packaging senza pubblicazione](https://github.com/gloutchov/ContaMi/actions/runs/41225896922)
+sono verdi su macOS/Windows: 433 test in 65 file, 11 browser app e 7 landing,
+installazioni, audit ristretto, build/CSP, pacchetti e smoke unpacked/installato.
+La CI automatica duplicata del solo tag è stata annullata dopo il verde sul medesimo
+commit di branch e main, senza ripetere verifiche già equivalenti.
+
+Scaricati e verificati i sei pacchetti: due archivi artifact con SHA-256 e dimensioni
+corrispondenti ai metadati GitHub, tre ASAR con versione/risorse/CSP e assenza di
+file privati, architetture macOS ARM64/x64 e Windows x64. I due DMG sono validi e
+contengono ASAR uguali ai rispettivi ZIP; manifesto locale `SHA256SUMS.txt` verificato,
+SHA-256 `327c69127cc29a18c4c71e6434fb7bc9fb2c515c94b674ebf449c55707f7b6ec`.
+Gli smoke nativi girano sui runner macOS ARM64 e Windows x64; macOS Intel è verificato
+staticamente, senza prova nativa Intel. Le evidenze sintetiche del worktree sono
+conservate localmente con manifesto checksum, prima della sua rimozione. Branch M44
+remoto/locale e vecchio branch locale del piano rimossi dopo le verifiche; sul remoto
+resta solo `main`. Installazione del checkout principale riallineata al lockfile.
+
+Versione 1.27.0, schema v16, tag C43/versione e release precedente invariati; nessuna
+nuova release C44. Restano build non firmate e 20 finding moderati, tutti dalla sola
+advisory minimatch legacy inventariata per M45; nessuna proroga al 14 novembre incluso
+UTC. Nessun dato finanziario privato aperto o modificato. M45 non avviata. Questo
+successivo commit di sola rendicontazione non sposta il checkpoint già pubblicato;
+richiede controllo e approvazione del nuovo hash prima della propria pubblicazione.
+
 **Checklist di chiusura:**
 
 - [x] Branch dedicato creato; implementazione e inventario prima/dopo completati.
 - [x] Test locali, smoke browser, audit completo/gate e pacchetto macOS ARM64 statico verificati; residui M45 espliciti.
-- [ ] CI e packaging/smoke macOS/Windows verificati con artifact scaricati.
+- [x] CI e packaging/smoke macOS/Windows verificati con artifact scaricati.
 - [x] Documentazione pertinente aggiornata; versione/schema invariati verificati.
-- [ ] Commit locale congelato, hash/diff/test/limiti presentati e controllo/approvazione esplicita ottenuti.
-- [ ] Merge e CI necessaria verificati; M44 rinominata C44 con riepilogo e tag di checkpoint.
-- [ ] Tag annotato `milestone/C44` su `main`, push e presenza remota verificati; niente tag versione/release.
-- [ ] Branch rimosso soltanto dopo i gate; M45 avviabile solo dal checkpoint C44 pubblicato.
+- [x] Commit locale congelato, hash/diff/test/limiti presentati e controllo/approvazione esplicita ottenuti.
+- [x] Merge e CI necessaria verificati; M44 rinominata C44 con riepilogo e tag di checkpoint.
+- [x] Tag annotato `milestone/C44` su `main`, push e presenza remota verificati; niente tag versione/release.
+- [x] Branch rimosso soltanto dopo i gate; M45 avviabile dal checkpoint C44 pubblicato, non ancora avviata.
 
 ## M45 — Minimatch legacy e audit completo senza eccezioni
 
