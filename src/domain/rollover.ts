@@ -11,7 +11,7 @@ import { investmentReturnSeries } from "./assetReturns";
 import { investmentUnitBalance, isInvestmentCorrectionKind, ROLLOVER_OPENING_VALUATION_DESCRIPTION } from "./investments";
 import { recurrenceAnchorDay, syncRecurringLink, syncRecurringTransactions, upsertTransactionWithLinks } from "./linkedRecords";
 import type { FinanceData, InvestmentEntry, PropertyEntry, RecurringItem } from "./models";
-import { confirmedSharedExpenses } from "./recurringExpenses";
+import { confirmedSharedExpenses } from "./sharedExpenses";
 
 function latestEntry<T extends PropertyEntry | InvestmentEntry>(entries: T[], id: string, foreignKey: "propertyId" | "investmentId"): T | undefined {
   return entries

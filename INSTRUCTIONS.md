@@ -213,7 +213,7 @@ In the workbook, pensions and compartments remain in the `Investments` table, id
 
 **New recurring item** covers subscriptions, services, standalone installments, rental income, and periodic investments. Enter direction, amount, frequency (including monthly or yearly one-off), category, payment method, matching account or cash register, next due date, and optional end date/installments left. A periodic investment can link to an existing investment or pension compartment, and rental income can link to its property. Vehicle financing is created from the **New/Edit vehicle** form instead.
 
-The view shows monthly equivalent, active item count, and known installments left. Hover or keyboard-focus the **Installments left** card to see each plan name, remaining count, and next due date. Filters by name, type, and month update both totals and card details. Editing, deletion, close, and reopen are available; for a vehicle-managed plan, status and deletion remain controlled by its Vehicle card, while schedule editing and **Change rate** remain available.
+The view shows monthly equivalent, active item count, and known installments left. Hover or keyboard-focus the **Installments left** card to see each plan name, remaining count, and next due date. Filters by name, type, and month update both totals and card details. **Reset filters** clears search, restores all types and all months, and updates the summaries. Editing, deletion, close, and reopen are available; for a vehicle-managed plan, status and deletion remain controlled by its Vehicle card, while schedule editing and **Change rate** remain available.
 
 To change an amount without rewriting history, open **Edit recurring item** and choose **Change rate**. Enter the new amount and effective month: ContaMì normalizes it to the first day of that month and previews how many planned occurrences will change before confirmation. You can add multiple changes and edit or cancel them until they are part of confirmed operations. For example, a synthetic base rate of €50 with a €65 change effective in October remains €50 through September and becomes €65 only for unconfirmed occurrences from October onward. The base amount, confirmed operations, UUIDs, and links remain unchanged; installment plans also retain their remaining count, next due date, and end date. The history is applied deterministically after close/reopen, schedule regeneration, and year rollover.
 
@@ -227,13 +227,23 @@ In expense **New/Edit recurring item** forms, select **Share every occurrence**,
 
 In expense **New/Edit transaction** and **New/Edit shared expense** forms, enable **Make this expense recurring**. Choose **Create a new recurring plan**, frequency, **First due date**, and an optional end date, or link the record to an existing plan and enter its **Due date**. The record's date remains the actual payment date and may differ from its due date. An already linked record can change plans or be detached; save the detachment first before creating a separate plan. Another confirmed record for the same occurrence blocks linking.
 
-The entered expense becomes the first occurrence without creating another payment for that due date. The plan takes its description, amount, category, payment method, and account from the expense, preserving the payer and custom share ratio when shared. Later occurrences are generated as **planned** until the end date or year-end. Confirm them under **Transactions** when paid; only then do they enter the **Shared expenses** list and balance. Use **Recurring** to edit or close the plan and retain it across year rollover.
+The entered expense becomes the first occurrence without creating another payment for that due date. The plan takes its description, amount, category, payment method, and account from the expense, preserving the payer and custom share ratio when shared. Later occurrences are generated as **planned** until the end date or year-end. Shared occurrences also appear immediately under **Shared expenses**, marked **Planned**. When paid, choose **Confirm** there or under **Transactions** and check the actual payment date; only then do they affect the balance to settle. Confirming payment does not mean the partner has reimbursed their share; **Mark settled** remains a separate step. Use **Recurring** to edit or close the plan and retain it across year rollover.
 
 Disabling recurrence on a Transaction or Shared expense detaches that record only; it does not close the plan. Changing one record's sharing or shares does not change the series; edit the plan for future occurrences. Links use explicit identifiers: similar descriptions never automatically reattach a detached expense. For example, a synthetic €100.01 expense with a €30 personal share retains the initial €30/€70.01 ratio in its plan.
 
 Source version **1.27.0** upgrades the workbook to **schema v16** with a backup. Migration leaves existing schedules without series sharing and preserves individually shared expenses. This schema requires this app version or later; keep the backup if returning to an older app.
 
 ## 11. Shared expenses
+
+The view opens on **All months**, making future occurrences visible. Filter by month or description, or use **Reset filters** to restore the complete list. **Planned** rows display the plan's payer and shares and offer **Confirm**; their future shares are not yet actual debts.
+
+All three summaries use the current filters:
+
+- **Shared balance:** shares of confirmed, unsettled expenses only. Planned occurrences are excluded.
+- **Filtered total:** full amount of all visible rows, including settled, pending, and planned expenses; **Including planned** identifies the forecast portion separately.
+- **Settled expenses:** number of confirmed, settled expenses, not their monetary amount. Planned rows are excluded.
+
+**Confirm** records payment using the actual payment date without duplicating the occurrence. **Mark settled** records the separate reimbursement of a confirmed expense. Whole-month settlement includes the selected month's confirmed expenses even when search hides some; printing pending items includes only visible, confirmed, unsettled expenses. Planned rows are excluded from both actions.
 
 Create a shared expense in its dedicated view, select **Shared expense** on a Transaction, or choose **Split automatically in half** while entering a Property or Vehicle expense. Every route keeps exactly one record in each linked view. The default split is 50/50; the dedicated form can adjust the two shares.
 

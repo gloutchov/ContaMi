@@ -21,7 +21,8 @@ import { financeDataSchema } from "./models";
 import { repairOperationalData } from "./operationalDataRepair";
 import { waterReadingOverlaps } from "./propertyWater";
 import { confirmedVehicleEntries } from "./vehicleEntries";
-import { confirmedSharedExpenses, createExpenseSchedule, prepareExpenseOccurrence, syncExplicitExpenseLink } from "./recurringExpenses";
+import { createExpenseSchedule, prepareExpenseOccurrence, syncExplicitExpenseLink } from "./recurringExpenses";
+import { confirmedSharedExpenses, summarizeSharedExpenses } from "./sharedExpenses";
 import {
   assertConfirmedRatesUnchanged,
   recurringRateChangesFor,
@@ -950,7 +951,7 @@ export function computeDashboard(data: FinanceData): DashboardMetrics {
     .reduce((sum, item) => sum + ((latestPropertyValues.get(item.id)?.amount ?? 0) || item.purchasePrice) * item.ownershipShare, 0);
   const { investments: investmentValue, pensions: pensionValue, combined: combinedInvestmentValue } = portfolioValues(data);
   const monthlyRecurring = data.recurringItems.filter((item) => item.active && item.direction !== "income").reduce((sum, item) => sum + monthlyAmount(item.amount, item.frequency), 0);
-  const sharedBalance = confirmedSharedExpenses(data).filter((item) => !item.settled).reduce((sum, item) => item.paidBy === "owner" ? sum + item.partnerShare : sum - item.ownerShare, 0);
+  const sharedBalance = summarizeSharedExpenses(data).balance;
   const categories = data.categories.map((category) => ({
     id: category.id, nameIt: category.nameIt, nameEn: category.nameEn,
     amount: categoryExpenses.get(category.id) ?? 0,

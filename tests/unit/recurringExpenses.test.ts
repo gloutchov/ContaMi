@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { applyFinanceCommand, computeDashboard, createEmptyFinanceData } from "../../src/domain/finance";
 import { migrateFinanceData } from "../../src/domain/migrations";
 import { financeDataSchema, type FinanceData, type RecurringItem, type SharedExpense, type Transaction } from "../../src/domain/models";
-import { confirmedSharedExpenses } from "../../src/domain/recurringExpenses";
+import { confirmedSharedExpenses } from "../../src/domain/sharedExpenses";
 import { createRolloverFinanceData } from "../../src/domain/rollover";
 
 function base() {

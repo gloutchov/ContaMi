@@ -84,7 +84,7 @@ ContaMì needs no account, cloud, telemetry, or network during normal use. Workb
 
 Richiede Node.js 24 LTS **>=24.15.0**, npm e Git. Requires Node.js 24 LTS **>=24.15.0**, npm, and Git.
 
-La sorgente `1.27.0` aggiunge ricorrenze condivise e creazione di un piano dai moduli Transazione e Spesa condivisa, anche in modifica. La prima spesa viene riutilizzata, le scadenze future restano pianificate e i saldi condivisi includono soltanto spese confermate. Schema v16 con migrazione conservativa e backup. / Source `1.27.0` adds shared recurring plans and plan creation from Transaction and Shared expense forms, including edits. The first expense is reused, future occurrences remain planned, and shared balances include confirmed expenses only. Schema v16 uses conservative migration and backups.
+La sorgente `1.27.0` aggiunge ricorrenze condivise e creazione di un piano dai moduli Transazione e Spesa condivisa, anche in modifica. La prima spesa viene riutilizzata, le scadenze future restano pianificate e i saldi condivisi includono soltanto spese confermate. Le scadenze condivise future compaiono nella lista come Previste, il Totale filtrato ne indica la parte pianificata e Ricorrenze offre Azzera filtri. Schema v16 con migrazione conservativa e backup. / Source `1.27.0` adds shared recurring plans and plan creation from Transaction and Shared expense forms, including edits. The first expense is reused, future occurrences remain planned, and shared balances include confirmed expenses only. Future shared occurrences appear as Planned, Filtered total identifies their planned portion, and Recurring offers Reset filters. Schema v16 uses conservative migration and backups.
 
 ```bash
 npm ci

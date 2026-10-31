@@ -46,8 +46,3 @@ export function createExpenseSchedule(data: FinanceData, transaction: Transactio
   if (propertyEntry) propertyEntry.dueDate = transaction.dueDate;
   syncRecurringTransactions(data, recurring, Number(schedule.nextDueDate.slice(8, 10)));
 }
-
-export function confirmedSharedExpenses(data: FinanceData): FinanceData["sharedExpenses"] {
-  const planned = new Set(data.transactions.filter((item) => item.planned).map((item) => item.id));
-  return data.sharedExpenses.filter((item) => !item.transactionId || !planned.has(item.transactionId));
-}

@@ -226,7 +226,7 @@ Nel workbook pensioni e comparti restano nella tabella `Investments`, identifica
 
 **Nuova ricorrenza** gestisce abbonamenti, servizi, pagamenti rateali autonomi, affitti in entrata e versamenti periodici. Specifica direzione, importo, frequenza (inclusa mensile o una tantum annuale), categoria, metodo, conto o Cassa coerenti, prossima scadenza, eventuale data di fine e rate residue. Per un investimento periodico puoi collegare la ricorrenza a un investimento o comparto pensione esistente; un affitto può essere collegato all’immobile. I finanziamenti delle automobili si creano invece dal modulo **Nuova/Modifica automobile**.
 
-La dashboard mostra equivalente mensile, numero di elementi attivi e rate residue note. Passa il mouse sul riquadro **Rate residue**, oppure portagli il focus con la tastiera, per vedere nome del piano, numero di rate ancora dovute e prossima scadenza. Puoi filtrare per nome, tipo e mese: i totali e il dettaglio del riquadro seguono i filtri. Sono disponibili modifica, cancellazione, chiusura e riapertura; per un piano gestito da Automobile, stato e cancellazione restano controllati dalla relativa scheda del mezzo, mentre modifica delle scadenze e **Cambia tariffa** restano disponibili.
+La dashboard mostra equivalente mensile, numero di elementi attivi e rate residue note. Passa il mouse sul riquadro **Rate residue**, oppure portagli il focus con la tastiera, per vedere nome del piano, numero di rate ancora dovute e prossima scadenza. Puoi filtrare per nome, tipo e mese: i totali e il dettaglio del riquadro seguono i filtri. **Azzera filtri** svuota la ricerca e ripristina tutti i tipi e tutti i mesi, aggiornando anche i riepiloghi. Sono disponibili modifica, cancellazione, chiusura e riapertura; per un piano gestito da Automobile, stato e cancellazione restano controllati dalla relativa scheda del mezzo, mentre modifica delle scadenze e **Cambia tariffa** restano disponibili.
 
 Per cambiare un importo senza riscrivere lo storico, apri **Modifica ricorrenza** e scegli **Cambia tariffa**. Indica il nuovo importo e il mese di decorrenza: ContaMì normalizza la data al primo giorno del mese e mostra quante scadenze pianificate verranno aggiornate prima della conferma. Puoi inserire più variazioni, modificarle o annullarle finché non fanno parte di operazioni confermate. Per esempio, una tariffa base sintetica di 50 € con variazione a 65 € da ottobre conserva 50 € fino a settembre e porta a 65 € soltanto le scadenze non confermate da ottobre in avanti. L’importo base, le operazioni confermate, gli UUID e i collegamenti restano invariati; per i piani rateali non cambiano rate residue, prossima scadenza o data di fine. La cronologia viene riapplicata in modo deterministico dopo chiusura/riapertura, rigenerazione e passaggio d’anno.
 
@@ -240,7 +240,7 @@ Nei moduli **Nuova/Modifica ricorrenza** delle spese, seleziona **Condividi ogni
 
 Nei moduli **Nuova/Modifica transazione** di una spesa e **Nuova/Modifica spesa condivisa**, attiva **Rendi ricorrente la spesa**. Scegli **Crea una nuova ricorrenza**, frequenza, **Prima scadenza** e data di fine facoltativa, oppure collega la registrazione a un piano esistente indicando la sua **Scadenza**. La data della registrazione resta la data effettiva del pagamento e può differire dalla scadenza. Una registrazione già collegata può cambiare piano o essere scollegata; per creare un piano distinto, prima salva lo scollegamento. Un'altra registrazione confermata per la stessa scadenza impedisce il collegamento.
 
-La spesa inserita diventa la prima occorrenza: non viene aggiunto un secondo pagamento per quella scadenza. Il piano riprende descrizione, importo, categoria, metodo e conto della spesa; se condivisa, conserva pagante e proporzione delle quote personalizzate. Le occorrenze successive vengono generate come **pianificate** fino al termine o alla fine dell'anno. Confermale da **Transazioni** quando vengono pagate; solo allora entrano nella lista e nel saldo delle **Spese condivise**. I piani restano disponibili in **Ricorrenze** per modifica, chiusura e passaggio d'anno.
+La spesa inserita diventa la prima occorrenza: non viene aggiunto un secondo pagamento per quella scadenza. Il piano riprende descrizione, importo, categoria, metodo e conto della spesa; se condivisa, conserva pagante e proporzione delle quote personalizzate. Le occorrenze successive vengono generate come **pianificate** fino al termine o alla fine dell'anno. Le scadenze condivise compaiono subito anche in **Spese condivise**, con stato **Prevista**. Quando vengono pagate usa **Conferma** da questa vista o da **Transazioni** e controlla la data effettiva: solo allora contribuiscono al saldo da regolare. Confermare il pagamento non significa che il partner abbia già rimborsato la sua quota; **Segna saldata** resta un passaggio separato. I piani restano disponibili in **Ricorrenze** per modifica, chiusura e passaggio d'anno.
 
 Togliere la ricorrenza in una Transazione o Spesa condivisa scollega soltanto quella registrazione: non chiude il piano. Cambiare condivisione o quote sulla singola registrazione non cambia la serie; per le scadenze future modifica il piano. I collegamenti usano gli identificativi espliciti: una descrizione simile non ricollega automaticamente una spesa scollegata. Per esempio, una spesa sintetica di 100,01 € con quota personale 30 € mantiene 30 €/70,01 € come proporzione iniziale del piano.
 
@@ -250,10 +250,18 @@ La versione sorgente **1.27.0** aggiorna il workbook a **schema v16** con backup
 
 Puoi creare la spesa dalla vista dedicata, selezionare **Spesa condivisa** in una Transazione oppure scegliere **Dividi automaticamente a metà** quando inserisci una spesa da Immobili o Automobile. Tutti i percorsi mantengono un’unica registrazione per ogni vista collegata. Per impostazione iniziale il totale viene diviso a metà; dal modulo dedicato puoi modificare le quote.
 
+La vista si apre su **Tutti i mesi**, così sono visibili anche le scadenze future; scegli un mese o una descrizione per restringerla, oppure **Azzera filtri** per tornare all'elenco completo. Le righe **Previste** mostrano quote e pagante del piano e offrono **Conferma**; le quote future non diventano ancora debiti effettivi.
+
+I tre riepiloghi seguono gli stessi filtri:
+
+- **Saldo condiviso:** sole quote di spese confermate e non saldate. Le scadenze previste sono escluse.
+- **Totale filtrato:** importo completo di tutte le righe visibili, incluse saldate, da saldare e previste; **Di cui pianificate** indica separatamente la parte futura.
+- **Spese saldate:** numero di spese confermate e saldate, non il loro importo. Le righe previste non vengono contate.
+
 - Se hai pagato tu, il saldo positivo rappresenta quanto il partner deve restituire.
 - Se ha pagato il partner, il saldo negativo rappresenta quanto devi restituire tu.
-- **Segna saldata** chiude la singola posizione; **Riapri saldo** la rimette tra le pendenze.
-- I filtri combinabili per descrizione e mese mostrano i parziali delle sole righe visibili; quando è selezionato un mese puoi saldarlo con un solo comando.
+- **Segna saldata** chiude la singola posizione confermata; **Riapri saldo** la rimette tra le pendenze. Le righe previste vanno prima confermate con la data effettiva del pagamento.
+- I filtri combinabili per descrizione e mese mostrano i parziali delle sole righe visibili; quando è selezionato un mese puoi saldare tutte le sue spese confermate con un solo comando, anche se la ricerca ne nasconde alcune. Le scadenze previste restano escluse.
 - **Stampa non saldate** prepara una lista stampabile delle sole pendenze del mese selezionato.
 - Modifica e cancellazione aggiornano automaticamente anche la Transazione collegata.
 

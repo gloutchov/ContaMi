@@ -68,7 +68,8 @@ ContaMì/
 │   │   ├── propertyReport.ts           # aggregazioni mensili/annuali, previsioni e quote dei report immobili
 │   │   ├── propertyWater.ts            # consumi progressivi, copertura e statistiche acqua condominiale
 │   │   ├── rent.ts                     # stato rate affitto da competenza e incasso effettivo
-│   │   ├── recurringExpenses.ts        # creazione atomica dei piani da spese, collegamenti espliciti e saldi confermati
+│   │   ├── recurringExpenses.ts        # creazione atomica dei piani da spese e collegamenti espliciti
+│   │   ├── sharedExpenses.ts           # classificazione previsto/confermato e riepiloghi condivisi al centesimo
 │   │   ├── recurringRates.ts           # tariffa per decorrenza, anteprima e protezione dello storico
 │   │   ├── vehicleCosts.ts             # costo d’uso/complessivo puro, acquisto pagato e copertura
 │   │   ├── vehicleEntries.ts           # conferma delle registrazioni, lettura precedente, percorrenza e litri suggeriti
@@ -227,6 +228,7 @@ ContaMì/
 │       ├── migrations.test.ts            # compatibilità schema v1–v13 → v14 e idempotenza
 │       ├── investmentUnitChart.test.tsx   # grafico quote e messaggio saldo sconosciuto IT/EN
 │       ├── investmentUnits.test.ts       # quote datate, movimenti, rollover e confini monetari
+│       ├── sharedExpenseViews.test.tsx   # visibilità delle scadenze future, KPI, conferma e reset Ricorrenze IT/EN
 │       ├── recurringExpenses.test.ts     # quote, creazione/collegamento, scadenze, tariffa e rollover
 │       ├── expenseRecurrenceForms.test.tsx # sei moduli di creazione/modifica ricorrenza e condivisione IT/EN
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
