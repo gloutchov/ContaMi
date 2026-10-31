@@ -284,7 +284,7 @@ manifest, GitHub digests, three ASAR archives, two DMGs and all 322 files in eac
 source archive. C45 in PLAN.md records workflow links and residual limits.
 
 
-## M46 — PR Dependabot #136–#140 / Grouped Dependabot update
+## C46 — PR Dependabot #136–#140 / Grouped Dependabot update
 
 Base: main bb731ae, checkpoint C45 18584fd verificati. Sorgente candidata 1.27.2;
 schema v16 e Node di sviluppo 24 invariati. / Verified base: main bb731ae,
@@ -331,3 +331,24 @@ regression provides none of the removed shims and checks the bridge; the native
 local harness uses only synthetic data/profile and loads no app main, finance
 services, workbook or real preferences. Combined macOS/Windows CI/packaging require
 prior approval of the frozen local commit; bot PRs close after verified integration.
+
+
+### C46 rilasciata / C46 released — v1.27.2
+
+Commit a1f13ba approvato e rilasciato. CI e packaging preliminare/finale macOS/Windows
+verdi; audit completo zero, 439 test macOS e 438 Windows più un test esclusivo macOS,
+11 test browser app e 7 landing per piattaforma. Ispezione e smoke reali dell'app
+unpacked/installata passano su macOS ARM64 e Windows x64, Intel Mac statico. Sei pacchetti,
+manifesto SHA-256, digest GitHub, ASAR/DMG e 323 file per archivio sorgente verificati
+dopo download. Le cinque PR si sono chiuse dopo integrazione; i loro aggiornamenti
+sono riconciliati nel main e i commit originali sono recuperabili dal bundle verificato.
+Nessuna PR o branch bot residuo. [C46 e run](../PLAN.md#c46--manutenzione-dependabot-136140).
+
+Approved commit a1f13ba is released. macOS/Windows CI and preliminary/final packaging
+passed: full audit zero, 439 macOS tests and 438 Windows tests plus one macOS-only test,
+11 app and 7 landing browser checks per platform. Real unpacked/installed app inspection
+and smoke passed on macOS ARM64/Windows x64; Intel Mac was statically checked. Six
+packages, SHA-256 manifest, GitHub digests, ASAR/DMG and 323 source files per archive
+were verified after download. Five PRs closed after integration; their changes are
+reconciled on main and original commits remain recoverable from the verified bundle.
+No bot PR or branch remains. PLAN.md C46 records workflow links and residual limits.

@@ -622,7 +622,7 @@ and the documented optional ExcelJS upstream limit remain; no private data was o
 or modified. App permissions, networking, IPC, storage and workbook v16 are unchanged.
 
 
-### M46 — Electron 45 e manutenzione Dependabot / Electron 45 and Dependabot maintenance
+### C46 — Electron 45 e manutenzione Dependabot / Electron 45 and Dependabot maintenance
 
 La sorgente candidata 1.27.2 integra #136–#140, mantenendo tutti gli override C45,
 la copia auditabile temp, audit completo senza eccezioni, Node di sviluppo 24 e
@@ -664,3 +664,28 @@ ephemeral macOS/Windows runners. Electron 45.1.0 includes Node 24.22.1/Chromium 
 the development binary uses the official installer/upstream checksums. On-demand
 download is existing upstream behavior, not new packaged-app networking. Signing
 and notarization remain unconfigured; M46 records results and pending remote gates.
+
+
+### Chiusura C46 verificata / Verified C46 closure — 2026-10-31
+
+Il commit applicativo approvato a1f13ba è su main e sui tag annotati milestone/C46 e
+v1.27.2. CI branch/main/versione e packaging preliminare/finale passano su macOS e
+Windows, con audit completo zero. Ispezione e smoke dell'app reale unpacked/installata
+passano su macOS ARM64 e Windows x64; Intel Mac resta statico. Sei pacchetti pubblicati,
+manifesto SHA-256 e digest GitHub sono riconciliati dopo download; tre ASAR, due DMG
+con framework Electron 45.1.0 e tutti i 323 file di ciascun archivio sorgente sono
+verificati. Le cinque PR e i branch bot sono chiusi/rimossi; bundle recuperabile dei
+commit originali ed evidenze sintetiche conservati con checksum. Branch/worktree M46
+rimossi dopo i gate. Restano firma assente e limite opzionale ExcelJS preesistente;
+nessun dato privato aperto o modificato. Dettagli e run sono nella C46 di PLAN.md.
+
+Approved application commit a1f13ba is on main and annotated milestone/C46/v1.27.2
+tags. Branch/main/version CI and preliminary/final packaging pass on macOS and Windows,
+with a fully clean audit. Real unpacked/installed app inspection and smoke pass on
+macOS ARM64 and Windows x64; Intel Mac remains statically checked. Six published
+packages, SHA-256 manifest and GitHub digests match after download. Three ASAR archives,
+two DMGs with Electron framework 45.1.0 and all 323 files in each source archive were
+verified. Five bot PRs/branches are closed/removed; a recoverable original-commit bundle
+and synthetic evidence have verified checksums. M46 branch/worktree were removed after
+gates. Unsigned packages and the existing optional ExcelJS limit remain; no private
+data was opened or changed. PLAN.md C46 records the details and workflow runs.

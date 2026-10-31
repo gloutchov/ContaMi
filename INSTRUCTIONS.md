@@ -367,4 +367,4 @@ Source version 1.25.0 adds printable investment reports; 1.26.0 adds private pen
 
 C42 maintenance prepares patch release `1.26.1`, updating React and the tools used for testing, static checks, and packaging. It requires no workbook migration or changes and keeps application workflows unchanged. Before updating, retain a copy of your data and verify the checksum of the package published on the Releases page. macOS 13+ and Windows x64 requirements and unsigned-build warnings still apply.
 
-Candidate source **1.27.2** updates the runtime to Electron 45.1.0 and integrates the five Dependabot proposals #136–#140. Vitest and coverage are aligned at 5.0.5. Workflows, files and schema v16 are unchanged; the full audit retains C45’s unconditional checks. Releases lists the distributed version.
+Version **1.27.2** updates the runtime to Electron 45.1.0 and integrates the five Dependabot proposals #136–#140. Vitest and coverage are aligned at 5.0.5. Workflows, files and schema v16 are unchanged; the full audit retains C45’s unconditional checks. Releases lists the distributed version.

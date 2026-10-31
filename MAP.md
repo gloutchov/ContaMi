@@ -22,7 +22,7 @@ ContaMì/
 │   ├── styles.css                     # layout editoriale e Novità responsive, chiaro/scuro e reduced motion
 │   └── .nojekyll                      # pubblicazione statica GitHub Pages da main + /docs
 ├── documents/
-│   ├── dependency-maintenance.md     # inventari C44/M45, compatibilità e audit completo senza eccezioni IT/EN
+│   ├── dependency-maintenance.md     # inventari C44–C46, compatibilità e audit completo senza eccezioni IT/EN
 │   ├── import-template-spec.md        # contratti versionati degli otto template Excel
 │   ├── import-guide.md                # compilazione, anteprima, errori e recupero IT/EN
 │   ├── return-formulas.md             # formule, copertura e limiti dei rendimenti IT/EN

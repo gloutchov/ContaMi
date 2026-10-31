@@ -115,7 +115,7 @@ Il collaudo browser richiede prima `npm run test:e2e:install`; le istruzioni per
 
 Browser checks first need `npm run test:e2e:install`. Packaging, smoke, and landing instructions are in the [English manual](INSTRUCTIONS.md), [plan](PLAN.md), and [repository map](MAP.md). Generated local output and data, including `sources/`, workbooks, and backups, must stay out of commits and artifacts.
 
-La sorgente candidata **1.27.2** integra le PR Dependabot #136–#140: Electron 45.1.0, strumenti di sviluppo aggiornati e Vitest/coverage allineati a 5.0.5. Conserva le correzioni audit di C45 e lo schema v16; i pacchetti distribuiti restano indicati in Releases. / Candidate source **1.27.2** integrates Dependabot PRs #136–#140: Electron 45.1.0, updated development tools and Vitest/coverage aligned at 5.0.5. C45 audit fixes and schema v16 are preserved; Releases lists the distributed packages.
+La versione **1.27.2** integra le PR Dependabot #136–#140: Electron 45.1.0, strumenti di sviluppo aggiornati e Vitest/coverage allineati a 5.0.5. Conserva le correzioni audit di C45 e lo schema v16; i pacchetti distribuiti restano indicati in Releases. / Version **1.27.2** integrates Dependabot PRs #136–#140: Electron 45.1.0, updated development tools and Vitest/coverage aligned at 5.0.5. C45 audit fixes and schema v16 are preserved; Releases lists the distributed packages.
 
 ## Documentazione / Documentation
 

@@ -48,4 +48,4 @@ At year-end, use **Close year** and select a new file: the old one remains intac
 
 Source patch **1.27.1** updates dependencies to obtain a fully clean audit without exceptions; format v16 and workflows are unchanged. Releases lists the distributed version.
 
-Sorgente candidata / Candidate source **1.27.2**: Electron 45.1.0 e manutenzione Dependabot #136–#140; dati e schema v16 invariati. / Electron 45.1.0 and Dependabot maintenance #136–#140; data and schema v16 unchanged.
+Versione / Version **1.27.2**: Electron 45.1.0 e manutenzione Dependabot #136–#140; dati e schema v16 invariati. / Electron 45.1.0 and Dependabot maintenance #136–#140; data and schema v16 unchanged.
