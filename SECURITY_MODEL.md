@@ -513,6 +513,20 @@ UTC remain; zero high/critical, M45 not started, no private workbook opened or c
 
 ### Stato locale M45 / Local M45 status — 2026-10-31
 
+Il primo gate remoto su `072a77f` ha bloccato la pubblicazione per un test del merge
+Universal macOS eseguito su Windows, dove la libreria usa prefissi ASAR incompatibili.
+Il test completo è limitato a macOS; creazione/lettura ASAR, import del builder e
+installer Windows, matcher e audit restano verificati su entrambe le piattaforme.
+Non è una soppressione dell'audit. Il nuovo commit richiede controllo personale e
+nuova approvazione; packaging/smoke Windows rimangono obbligatori prima del merge.
+
+The first remote gate on `072a77f` blocked publication because a macOS Universal
+merge test ran on Windows, where the library uses incompatible ASAR prefixes.
+The complete test is limited to macOS; ASAR creation/reading, builder and Windows
+installer imports, matchers and audit remain checked on both platforms. This does
+not suppress any audit finding. The new commit requires personal review and renewed
+approval; Windows packaging/smoke remain mandatory before merge.
+
 La sorgente candidata 1.27.1 elimina tutte le copie vulnerabili di minimatch e glob:
 `npm audit` e `npm audit --include=dev --json` riportano zero vulnerabilità note.
 Sono rimosse l'ultima eccezione, la sua scadenza, configurazione e helper di C43/C44.

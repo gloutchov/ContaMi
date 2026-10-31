@@ -117,7 +117,10 @@ describe("legacy consumer migrations", () => {
     expect(differences.some(item => item.state === "equal")).toBe(true);
   });
 
-  it("merges Universal ASAR inputs with basename allowlists and rejects uncovered files", async () => {
+  // Universal merges macOS bundles using POSIX archive paths (and lipo for binaries).
+  // Run this macOS-only operation on its host; ASAR creation/extraction and the
+  // builder/Windows installer imports above still run on both CI platforms.
+  it.runIf(process.platform === "darwin")("merges Universal ASAR inputs with basename allowlists and rejects uncovered files", async () => {
     const directory = path.dirname(require.resolve("@electron/universal"));
     const { mergeASARs } = await import(pathToFileURL(path.join(directory, "asar-utils.js")));
     const root = await fixture();

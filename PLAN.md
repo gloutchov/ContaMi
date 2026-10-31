@@ -1894,7 +1894,22 @@ nell'ASAR; temp build-only non è distribuito. Nessun avvio nativo locale con se
 utente. Verifica visuale Playwright IT/EN e chiaro/scuro a 1080 px registrata nelle
 evidenze locali. Prima di C45 restano CI e packaging/smoke macOS/Windows, Mac Intel
 statico, artifact scaricati/checksum, controllo del commit e decisione sulla release.
-Nessun push, merge, tag o release M45 avviato. Le build restano non firmate.
+Al momento di quel riepilogo non erano avviati push, merge, tag o release M45.
+Le build restano non firmate.
+
+**Primo controllo remoto dopo l'approvazione di `072a77f`:** branch pubblicato,
+CI `41234940600` e packaging senza pubblicazione `41234954407` avviati. Windows
+blocca entrambi nel solo test del merge ASAR Universal: l'operazione macOS usa
+prefissi Unix e il test era stato erroneamente abilitato anche su Windows
+(435 test superati, uno fallito). Correzione limitata al test: il merge Universal
+completo gira soltanto su macOS; test ASAR del builder/installer, matcher, workbook
+e audit restano multipiattaforma. Non cambiano codice applicativo o dipendenze.
+Il nuovo commit va congelato e nuovamente approvato prima di push/merge/tag/release
+o pulizia. Nessun merge, tag o release eseguito; i gate Windows restano obbligatori.
+La CI macOS di `072a77f` è passata. Dopo la correzione passano nuovamente in locale
+preflight (436 test in 66 file, lint, typecheck, build/CSP), controllo dei 15 documenti,
+diff --check e audit completo incluse dev con zero vulnerabilità. La correzione
+modifica soltanto il test e la documentazione; versione e grafo restano 1.27.1 invariati.
 
 **Checklist di chiusura:**
 

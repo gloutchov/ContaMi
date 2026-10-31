@@ -242,3 +242,22 @@ cover streaming writer output with/without shared strings through the standard r
 and the streaming reader with inline strings; they do not claim to fix the upstream
 ordering issue. Finance/import/rollover/v16 round-trips exercise the app's actual APIs
 with synthetic data. Results and remaining remote gates are recorded under M45 in PLAN.md.
+
+### Correzione del test multipiattaforma / Cross-platform test correction
+
+Il primo controllo remoto del commit `072a77f` ha rilevato un errore del test che
+eseguiva il merge Universal su Windows: `mergeASARs` rimuove soltanto il prefisso
+`/` dai nomi ASAR, mentre Windows restituisce `\\`. Universal costruisce bundle
+macOS; questo test completo viene quindi eseguito soltanto su macOS. I test ASAR
+del builder, dell'import CJS di electron-winstaller, dei matcher e dei consumatori
+distribuiti restano attivi su entrambe le piattaforme. Non viene modificata o
+aggirata la libreria upstream. Windows packaging/smoke rimangono gate obbligatori
+prima di merge e release del nuovo commit.
+
+The first remote check of commit `072a77f` caught a test running Universal merge
+on Windows: `mergeASARs` strips only the `/` prefix from ASAR names, whereas Windows
+returns `\\`. Universal builds macOS bundles, so this complete test now runs only
+on macOS. Builder ASAR, electron-winstaller CJS imports, matchers and shipped
+consumer tests remain enabled on both platforms. The upstream library is not
+modified or bypassed. Windows packaging/smoke remain mandatory gates before merging
+and releasing the new commit.
