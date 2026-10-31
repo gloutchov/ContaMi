@@ -345,7 +345,7 @@ Check the workbook's active year, the selected position, and compartment status:
 - Do not place sensitive workbooks in cloud-synced folders unless you accept that provider’s terms.
 - The renderer uses a strict CSP: production accepts only local scripts and stylesheets, rejects style attributes and connections, and keeps network access blocked.
 - Unsigned builds can trigger operating-system warnings.
-- Dependencies retain two moderate advisories with 31 propagated findings. The release gate has a bounded exception through 14 November 2026; new findings and higher severities still block distribution. These residual vulnerabilities are not declared fixed: see the security model.
+- M44 source maintenance reduces the audit from 31 to 20 moderate findings: glob is patched and modern consumers use minimatch 11. Legacy minimatch chains remain scheduled for M45. The sole remaining exception expires on 14 November 2026 inclusive UTC; new findings and different severities still block the gate. Version 1.27.0 and format v16 are unchanged, with no new release. See the [security model](SECURITY_MODEL.md) and [inventory](documents/dependency-maintenance.md).
 - Native Numbers mirroring depends on Apple automation and may require macOS consent.
 
 See [SECURITY_MODEL.md](SECURITY_MODEL.md) for technical controls and residual risks.

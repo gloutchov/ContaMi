@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { assessDependencyAudit } from "../../scripts/lib/dependency-audit.mjs";
 
 const policy = { version: 1, timeoutMs: 120_000, maxOutputBytes: 4_194_304, maxFindings: 1_000, expiresOn: "2026-11-14", exceptions: [
@@ -14,6 +15,16 @@ function report(entries = { glob: { severity: "moderate", via: [source()] }, "sy
 }
 
 describe("bounded dependency audit exceptions", () => {
+  it("the release policy accepts residual minimatch but blocks a returning glob advisory", () => {
+    const releasePolicy = JSON.parse(readFileSync(new URL("../../config/dependency-audit.json", import.meta.url), "utf8"));
+    const legacy = report({ minimatch: { severity: "moderate", via: [{
+      name: "minimatch", severity: "moderate", url: "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+    }] } });
+    expect(assessDependencyAudit(legacy, releasePolicy, now).totals.total).toBe(1);
+    expect(() => assessDependencyAudit(report(), releasePolicy, now)).toThrow("AUDIT_ADVISORY_BLOCKED");
+    expect(() => assessDependencyAudit(legacy, releasePolicy, new Date("2026-11-15T00:00:00Z")))
+      .toThrow("AUDIT_POLICY_EXPIRED");
+  });
   it("accepts reviewed moderate roots and their transitive consumers without hiding totals", () => {
     expect(assessDependencyAudit(report(), policy, now)).toMatchObject({
       totals: { moderate: 2, total: 2 }, acceptedAdvisories: [policy.exceptions[0].advisory],

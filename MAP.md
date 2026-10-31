@@ -10,7 +10,7 @@ ContaMì/
 │       ├── ci.yml                     # qualità macOS + Windows e gate audit con eccezioni limitate
 │       └── release.yml                # audit, pacchetti, smoke, checksum e release
 ├── config/
-│   └── dependency-audit.json           # due eccezioni moderate con motivazione e scadenza UTC
+│   └── dependency-audit.json           # eccezione minimatch legacy moderata con motivazione e scadenza UTC
 ├── assets/
 │   ├── icon.ico                       # icona Windows / Windows icon
 │   ├── icon.png                       # icona RGBA canonica per macOS, UI e landing
@@ -23,6 +23,7 @@ ContaMì/
 │   ├── styles.css                     # layout editoriale e Novità responsive, chiaro/scuro e reduced motion
 │   └── .nojekyll                      # pubblicazione statica GitHub Pages da main + /docs
 ├── documents/
+│   ├── dependency-maintenance.md     # inventario M44, override mirati, audit e residui M45 IT/EN
 │   ├── import-template-spec.md        # contratti versionati degli otto template Excel
 │   ├── import-guide.md                # compilazione, anteprima, errori e recupero IT/EN
 │   ├── return-formulas.md             # formule, copertura e limiti dei rendimenti IT/EN
@@ -180,6 +181,7 @@ ContaMì/
 │   └── test/setup.ts                   # ambiente comune Vitest
 ├── tests/
 │   ├── helpers/
+│   │   ├── modernDependencyProbe.mjs   # regressioni advisory in processo con tempo/memoria limitati
 │   │   └── syntheticZip.ts             # corpus ZIP sintetico, mai workbook privati
 │   ├── e2e/
 │   │   ├── accessibility.spec.ts       # IT/EN, chiaro/scuro, focus e layout a 1080 px
@@ -190,6 +192,7 @@ ContaMì/
 │   ├── landing/
 │   │   └── landing.spec.ts             # IT/EN, temi, demo video, focus e mobile della landing
 │   ├── integration/
+│   │   ├── modernDependencyCompatibility.test.mjs # filtri moderni, ASAR, ESLint, project service e advisory
 │   │   ├── finance-file-service.test.ts # recupero avvio e copia report con revisione verificata
 │   │   ├── import-template-generator.test.ts # struttura, liste e limite dei template
 │   │   ├── import-template-parser.test.ts # otto import v3, compatibilità v1/v2, ISIN, sicurezza e duplicati

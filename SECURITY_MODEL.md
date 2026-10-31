@@ -408,6 +408,11 @@ The npm audit of application commit M43 `e8c544a`, before the release correction
 
 ### Eccezioni temporanee audit / Temporary audit exceptions
 
+**Storico C43:** i paragrafi seguenti descrivono la policy approvata e pubblicata in
+`v1.27.0`; lo stato del ramo M44 è descritto più sotto. / **C43 history:** the following
+paragraphs describe the policy approved and published in `v1.27.0`; see below for the
+M44 branch status.
+
 La proposta locale di preparazione `1.27.0` aggiorna soltanto due record del lockfile: `follow-redirects` 1.16.1→1.16.2 e `joi` 18.2.9→18.3.1. L'audit completo scende a 31 segnalazioni moderate e zero alte/critiche. Le radici residue sono [GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4) (`glob`, cancellazione del traversal) e [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) (`minimatch`, amplificazione dei pattern), propagate ai consumatori. Le correzioni ufficiali richiedono `glob` ≥14.0.2 e `minimatch` ≥11.0.1; i consumatori legacy attuali includono chiamate del modulo come funzione e accesso alle rappresentazioni interne delle espressioni. Non vengono forzati override major, downgrade o patch dei pacchetti installati.
 
 `npm run audit:release` esegue ancora `npm audit --json` sull'intero grafo, comprese le dipendenze dev, con timeout di 120 secondi e limite output di 4 MiB. Conserva il report completo nell'output locale/CI. Il validatore controlla versione/formato del report, conteggi, gravità e tutte le catene `via`, inclusi i cicli che raggiungono radici note. Sono accettate soltanto le due coppie pacchetto/advisory configurate in `config/dependency-audit.json`, con gravità moderata, fino al **14 novembre 2026 incluso, UTC**. Qualsiasi altra advisory, gravità diversa, catena senza radice, incoerenza, errore del comando o report invalido causa fallimento. Una policy scaduta rifiuta le eccezioni ancora presenti; un audit già pulito continua a passare. Non viene abbassata globalmente la soglia a `high` e non vengono nascosti nuovi avvisi moderati.
@@ -423,6 +428,60 @@ This exception is a **proposal for temporary risk acceptance**, not a fix for mo
 
 ### Piano di rimozione delle vulnerabilità residue / Residual vulnerability remediation plan
 
-Il piano esecutivo aggiornato in [PLAN.md](PLAN.md#piano-esecutivo-vulnerabilità--decisione-2026-10-31) comprende **M44** (glob corretto e consumatori moderni di minimatch) e, dopo il checkpoint C44, **M45** (consumatori legacy, audit completo zero e rimozione delle eccezioni). M44 deve eliminare l'advisory glob dall'intero grafo e confinare i residui alle catene legacy inventariate; M45 deve ottenere zero vulnerabilità note nell'audit completo, incluse le dipendenze di sviluppo, e ripristinare il controllo senza allowlist nei workflow. I test coprono API di matching, annullamento del traversal, archivi, round-trip dei workbook e pacchetti macOS/Windows con soli dati sintetici. Obiettivi indicativi: 6 e 12 novembre 2026, prima della scadenza del 14 novembre incluso UTC. Le milestone sono programmate, non avviate; questo aggiornamento documentale non risolve ancora gli avvisi, non cambia il lockfile e non amplia né proroga la policy attuale.
+Il piano esecutivo aggiornato in [PLAN.md](PLAN.md#piano-esecutivo-vulnerabilità--decisione-2026-10-31) comprende **M44** (glob corretto e consumatori moderni di minimatch) e, dopo il checkpoint C44, **M45** (consumatori legacy, audit completo zero e rimozione delle eccezioni). M44 deve eliminare l'advisory glob dall'intero grafo e confinare i residui alle catene legacy inventariate; M45 deve ottenere zero vulnerabilità note nell'audit completo, incluse le dipendenze di sviluppo, e ripristinare il controllo senza allowlist nei workflow. I test coprono API di matching, annullamento del traversal, archivi, round-trip dei workbook e pacchetti macOS/Windows con soli dati sintetici. Obiettivi indicativi: 6 e 12 novembre 2026, prima della scadenza del 14 novembre incluso UTC. Alla preparazione del piano le milestone non erano ancora avviate; il successivo stato M44 è riportato nella sezione seguente.
 
-The updated execution plan in [PLAN.md](PLAN.md#piano-esecutivo-vulnerabilità--decisione-2026-10-31) schedules **M44** (patched glob and modern minimatch consumers), followed after checkpoint C44 by **M45** (legacy consumers, a fully clean audit, and removal of exceptions). M44 must eliminate the glob advisory from the entire graph and limit residual findings to inventoried legacy chains; M45 must obtain zero known vulnerabilities across the full audit, including dev dependencies, and restore workflow gates without an allowlist. Tests cover matching APIs, traversal cancellation, archives, workbook round-trips, and macOS/Windows packages using only synthetic data. Indicative targets are 6 and 12 November 2026, before the 14 November inclusive UTC expiry. These milestones are planned, not started; this documentation change does not fix findings, change the lockfile, or widen/extend the current policy.
+The updated execution plan in [PLAN.md](PLAN.md#piano-esecutivo-vulnerabilità--decisione-2026-10-31) schedules **M44** (patched glob and modern minimatch consumers), followed after checkpoint C44 by **M45** (legacy consumers, a fully clean audit, and removal of exceptions). M44 must eliminate the glob advisory from the entire graph and limit residual findings to inventoried legacy chains; M45 must obtain zero known vulnerabilities across the full audit, including dev dependencies, and restore workflow gates without an allowlist. Tests cover matching APIs, traversal cancellation, archives, workbook round-trips, and macOS/Windows packages using only synthetic data. Indicative targets are 6 and 12 November 2026, before the 14 November inclusive UTC expiry. At planning time the milestones had not started; the following section records the subsequent M44 state.
+
+### Stato locale M44 / Local M44 status — 2026-10-31
+
+M44 è avviata sul branch `milestone/44-glob-modern-minimatch`. Gli override sono
+circoscritti ai consumatori moderni e alle major figlie usate: ASAR (solo glob 13 e
+minimatch 10), Universal 2.0.3 (solo minimatch 9), app-builder-lib 26.18.0,
+ESLint 10.x, config-array 0.23.5 e typescript-estree 8.72.x (solo minimatch 10).
+Le versioni risolte sono glob 14.0.3, minimatch 11.0.3 e path-scurry 3.0.0;
+il motore ufficiale transitivo nonrecursive-glob-match 1.0.3 sostituisce i matcher
+regex delle versioni precedenti. Non cambia la allowlist degli script npm.
+
+L'audit completo scende **31→20 moderati**, zero alti/critici. L'advisory di glob
+è assente dall'intero report; restano soltanto 11 copie di minimatch 3.1.5/5.1.9
+nelle catene legacy M45. Il gruppo npm `glob` ancora segnalato deriva da minimatch
+dei glob 7; il raggruppamento per nome può includere anche ASAR 4, sebbene la sua
+risoluzione effettiva sia corretta. [Inventario e riconciliazione per percorso](documents/dependency-maintenance.md).
+
+La policy rimuove la coppia glob/advisory. Resta soltanto l'eccezione moderata
+minimatch fino al **14 novembre 2026 incluso UTC**, senza proroga né nuovi finding
+ammessi. `npm audit` continua a fallire per i residui dichiarati; `audit:release`
+passa entro questi limiti. Il test della policy reale blocca un ritorno di glob.
+Probe separati con timeout/heap/output limitati verificano il budget dei pattern
+e l'arresto delle letture dopo abort, anche sullo stream; entrambi rifiutano la
+baseline vulnerabile C43. Test sulle API reali preservano filtri di archiviazione,
+dotfile, Unicode/spazi, Windows/UNC, ESLint e allowlist typescript-eslint.
+
+Versione 1.27.0, schema v16, rete, IPC, storage finanziario e permessi applicativi
+invariati; nessuna nuova release o firma. Le dipendenze legacy restano un rischio
+noto anche nelle transitive distribuite con ExcelJS. CI e packaging/smoke su
+macOS/Windows restano gate prima della chiusura C44, dopo il controllo del commit.
+Gli smoke nativi locali non vengono avviati con le impostazioni dell'utente;
+i runner effimeri useranno solo dati sintetici.
+
+M44 is implemented locally on the dedicated branch. Overrides target only the
+modern consumers and child majors above, resolving glob 14.0.3, minimatch 11.0.3,
+path-scurry 3.0.0 and the official nonrecursive-glob-match 1.0.3 engine. The npm
+install-script allowlist is unchanged. The full audit falls **31→20 moderate**, with
+zero high/critical findings. The glob advisory is absent; all 11 remaining vulnerable
+minimatch 3.1.5/5.1.9 copies belong to M45's legacy chains. npm's package-name grouping
+can still flag glob 7 through minimatch or include ASAR 4 among grouped ASAR nodes;
+the inventory reconciles actual dependency paths.
+
+The glob exception is removed. Only the moderate minimatch advisory remains allowed
+through **14 November 2026 inclusive UTC**, without extension or new accepted findings.
+The full audit still fails for declared residuals; the bounded gate passes. Tests
+of the real policy reject a returning glob advisory. Separate probes with bounded
+time, heap and output check pattern budgets and stopped reads after cancellation,
+including streams; both reject the vulnerable C43 baseline. Real consumer API tests
+cover archive filters, dotfiles, Unicode/spaces, Windows/UNC, ESLint and typescript-eslint.
+Version, schema, app networking, IPC, financial storage and permissions are unchanged.
+Legacy dependencies remain a known risk, including in ExcelJS runtime transitives.
+No release/signing is planned for M44. Cross-platform CI and package/native smoke
+checks remain closure gates after commit review; native smoke tests use ephemeral
+runners with synthetic data instead of the user's local settings.
