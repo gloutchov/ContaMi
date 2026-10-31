@@ -7,8 +7,10 @@ ContaMì/
 ├── .github/
 │   ├── dependabot.yml                 # aggiornamenti dipendenze / dependency updates
 │   └── workflows/
-│       ├── ci.yml                     # qualità e audit completo macOS + Windows
+│       ├── ci.yml                     # qualità macOS + Windows e gate audit con eccezioni limitate
 │       └── release.yml                # audit, pacchetti, smoke, checksum e release
+├── config/
+│   └── dependency-audit.json           # due eccezioni moderate con motivazione e scadenza UTC
 ├── assets/
 │   ├── icon.ico                       # icona Windows / Windows icon
 │   ├── icon.png                       # icona RGBA canonica per macOS, UI e landing
@@ -27,6 +29,9 @@ ContaMì/
 │   ├── reference-analysis.md          # analisi priva di PII del Numbers sorgente
 │   └── landing-maintenance.md         # manutenzione e rigenerazione sicura dei media
 ├── scripts/
+│   ├── audit-dependencies.mjs          # esegue npm audit completo e applica la policy di distribuzione
+│   ├── lib/
+│   │   └── dependency-audit.mjs         # validazione report, radici transitive, cicli e scadenza
 │   ├── build-electron.mjs             # build separata main + preload
 │   ├── check-node-baseline.mjs         # coerenza baseline Node, dipendenze, CI e documentazione
 │   ├── validate-renderer-csp.mjs       # CSP prod, assenza style inline e verifica app.asar
@@ -232,6 +237,7 @@ ContaMì/
 │       ├── sharedExpenseViews.test.tsx   # visibilità delle scadenze future, KPI, conferma e reset Ricorrenze IT/EN
 │       ├── recurringExpenses.test.ts     # quote, creazione/collegamento, scadenze, tariffa e rollover
 │       ├── expenseRecurrenceForms.test.tsx # sei moduli di creazione/modifica ricorrenza e condivisione IT/EN
+│       ├── dependencyAudit.test.mjs     # eccezioni limitate, avvisi nuovi/alti, errori, cicli e scadenza
 │       ├── recurringInstallments.test.tsx # rate oltre anno, fine mese/bisestili, limiti, conferme e UI IT/EN
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
 │       ├── vehicleEntries.test.ts         # contachilometri precedente, distanza e litri calcolati

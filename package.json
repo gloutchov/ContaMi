@@ -36,6 +36,7 @@
     "pack": "npm run build && electron-builder --dir",
     "dist:mac": "npm run build && electron-builder --mac --publish never",
     "dist:win": "npm run build && electron-builder --win --publish never",
+    "audit:release": "node scripts/audit-dependencies.mjs",
     "preflight": "npm run check:node-baseline && npm run test:landing && npm run lint && npm run typecheck && npm test && npm run build && npm run test:csp"
   },
   "build": {

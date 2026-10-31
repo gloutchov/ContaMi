@@ -376,6 +376,7 @@ Controlla l'anno attivo del workbook, la posizione selezionata e lo stato dei co
 - Non sincronizzare cartelle sensibili con servizi cloud se non accetti le loro condizioni.
 - Il renderer usa una CSP rigorosa: in produzione accetta soltanto script e fogli di stile locali, rifiuta attributi di stile e connessioni e mantiene bloccata la rete.
 - Le build non firmate possono produrre avvisi del sistema.
+- Le dipendenze conservano due advisory moderate con 31 segnalazioni propagate. Il controllo di distribuzione prevede un’eccezione limitata al 14 novembre 2026; nuovi avvisi e gravità maggiori restano bloccanti. Le vulnerabilità residue non sono dichiarate risolte: vedi il modello di sicurezza.
 - La copia Numbers dipende dall’automazione di Apple Numbers e può richiedere un consenso macOS.
 
 Vedi [SECURITY_MODEL.md](SECURITY_MODEL.md) per dettagli tecnici e rischi residui.

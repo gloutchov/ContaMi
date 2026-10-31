@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "timeoutMs": 120000,
+  "maxOutputBytes": 4194304,
+  "maxFindings": 1000,
+  "expiresOn": "2026-11-14",
+  "exceptions": [
+    {
+      "package": "glob",
+      "advisory": "GHSA-3g3m-2fjr-6pw4",
+      "reason": "Temporary release exception pending compatible upstream updates; major overrides change APIs used by legacy build dependencies."
+    },
+    {
+      "package": "minimatch",
+      "advisory": "GHSA-g3hv-75wg-m249",
+      "reason": "Temporary release exception pending compatible upstream updates; minimatch 11 is incompatible with callable imports in current consumers."
+    }
+  ]
+}

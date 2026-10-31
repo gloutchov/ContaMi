@@ -345,6 +345,7 @@ Check the workbook's active year, the selected position, and compartment status:
 - Do not place sensitive workbooks in cloud-synced folders unless you accept that provider’s terms.
 - The renderer uses a strict CSP: production accepts only local scripts and stylesheets, rejects style attributes and connections, and keeps network access blocked.
 - Unsigned builds can trigger operating-system warnings.
+- Dependencies retain two moderate advisories with 31 propagated findings. The release gate has a bounded exception through 14 November 2026; new findings and higher severities still block distribution. These residual vulnerabilities are not declared fixed: see the security model.
 - Native Numbers mirroring depends on Apple automation and may require macOS consent.
 
 See [SECURITY_MODEL.md](SECURITY_MODEL.md) for technical controls and residual risks.

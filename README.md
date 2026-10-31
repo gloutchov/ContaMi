@@ -99,7 +99,10 @@ Verifiche locali / Local checks:
 npm run preflight
 npm run test:e2e
 npm audit
+npm run audit:release
 ```
+
+L’audit completo segnala ancora 31 avvisi moderati riconducibili a due advisory di `glob` e `minimatch`. Il gate di distribuzione legge [la policy temporanea](config/dependency-audit.json): consente solo queste due advisory fino al 14 novembre 2026 incluso (UTC), mantenendo visibile il report e bloccando qualsiasi finding diverso, gravità maggiore, errore o eccezione scaduta. I due avvisi alti di `follow-redirects` e `joi` sono corretti nel lockfile; dettagli e limiti nel [modello di sicurezza](SECURITY_MODEL.md#eccezioni-temporanee-audit--temporary-audit-exceptions). / The full audit still reports 31 moderate findings arising from two `glob` and `minimatch` advisories. The release gate reads [the temporary policy](config/dependency-audit.json): only these two advisories are allowed through 14 November 2026 (UTC), with the full report retained and every other finding, higher severity, error, or expired exception blocking the gate. The two high findings in `follow-redirects` and `joi` are fixed in the lockfile; see the [security model](SECURITY_MODEL.md#eccezioni-temporanee-audit--temporary-audit-exceptions) for details and residual risks.
 
 Build e pacchetti / Build and packages:
 

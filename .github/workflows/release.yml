@@ -32,7 +32,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npm audit
+      - run: npm run audit:release
       - run: npm run preflight
       - run: ${{ matrix.command }}
       - run: npm run test:package:inspect
