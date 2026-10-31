@@ -31,6 +31,7 @@ export function summarizeSharedExpenses(data: FinanceData, rows: readonly Shared
     confirmedTotal: confirmedTotalCents / 100,
     plannedTotal: (totalCents - confirmedTotalCents) / 100,
     balance: pending.reduce((sum, item) => sum + (item.paidBy === "owner" ? cents(item.partnerShare) : -cents(item.ownerShare)), 0) / 100,
+    settledTotal: confirmed.filter((item) => item.settled).reduce((sum, item) => sum + cents(item.amount), 0) / 100,
     settledCount: confirmed.length - pending.length,
   };
 }

@@ -39,11 +39,11 @@ describe("shared expense totals", () => {
   it("separates forecasts from real debts, totals and settled counts", () => {
     const data = fixture();
     const summary = summarizeSharedExpenses(data);
-    expect(summary).toMatchObject({ total: 230.99, confirmedTotal: 215, plannedTotal: 15.99, balance: 20, settledCount: 2 });
+    expect(summary).toMatchObject({ total: 230.99, confirmedTotal: 215, plannedTotal: 15.99, balance: 20, settledCount: 2, settledTotal: 65 });
     expect(summary.pending).toHaveLength(2);
     expect(summary.plannedIds.size).toBe(1);
     expect(computeDashboard(data).sharedBalance).toBe(summary.balance);
-    expect(summarizeSharedExpenses(data, [])).toMatchObject({ total: 0, confirmedTotal: 0, plannedTotal: 0, balance: 0, settledCount: 0 });
+    expect(summarizeSharedExpenses(data, [])).toMatchObject({ total: 0, confirmedTotal: 0, plannedTotal: 0, balance: 0, settledCount: 0, settledTotal: 0 });
   });
 
   it("classifies planned sharing from either UUID link and never counts it as settled", () => {
@@ -53,14 +53,14 @@ describe("shared expense totals", () => {
     share.transactionId = undefined;
     share.settled = true;
     expect(confirmedSharedExpenses(data)).toHaveLength(4);
-    expect(summarizeSharedExpenses(data)).toMatchObject({ plannedTotal: 15.99, balance: 20, settledCount: 2 });
+    expect(summarizeSharedExpenses(data)).toMatchObject({ plannedTotal: 15.99, balance: 20, settledCount: 2, settledTotal: 65 });
   });
 
   it("rounds monetary sums to cents and preserves the direction of partner debts", () => {
     const data = fixture();
     const rows = data.sharedExpenses.filter((item) => !summarizeSharedExpenses(data).plannedIds.has(item.id)).slice(0, 3);
     rows.forEach((item) => { item.amount = 0.3; item.ownerShare = 0.1; item.partnerShare = 0.2; item.paidBy = "partner"; item.settled = false; });
-    expect(summarizeSharedExpenses(data, rows)).toMatchObject({ total: 0.9, confirmedTotal: 0.9, balance: -0.3, settledCount: 0 });
+    expect(summarizeSharedExpenses(data, rows)).toMatchObject({ total: 0.9, confirmedTotal: 0.9, balance: -0.3, settledCount: 0, settledTotal: 0 });
   });
 });
 
@@ -76,14 +76,15 @@ describe("shared expense view", () => {
     expect(within(plannedRow).queryByRole("button", { name: it ? "Segna saldata" : "Mark settled" })).toBeNull();
     expect(card(it ? "Saldo condiviso" : "Shared balance").querySelector("strong")).toHaveTextContent(/20[,.]00/);
     expect(card(it ? "Totale filtrato" : "Filtered total").querySelector("strong")).toHaveTextContent(/230[,.]99/);
-    expect(card(it ? "Spese saldate" : "Settled expenses").querySelector("strong")).toHaveTextContent("2");
+    expect(card(it ? "Spese saldate" : "Settled expenses").querySelector("strong")).toHaveTextContent(/65[,.]00/);
+    expect(card(it ? "Spese saldate" : "Settled expenses").querySelector("small")).toHaveTextContent(it ? "Numero di spese: 2" : "Number of expenses: 2");
     change("combobox", it ? "Mese" : "Month", "2026-12");
     expect(card(it ? "Totale filtrato" : "Filtered total").querySelector("strong")).toHaveTextContent(/205[,.]99/);
-    expect(card(it ? "Spese saldate" : "Settled expenses").querySelector("strong")).toHaveTextContent("1");
+    expect(card(it ? "Spese saldate" : "Settled expenses").querySelector("strong")).toHaveTextContent(/40[,.]00/);
     change("textbox", it ? "Cerca per descrizione…" : "Search by description…", "monthly music");
     expect(card(it ? "Totale filtrato" : "Filtered total").querySelector("strong")).toHaveTextContent(/15[,.]99/);
     expect(card(it ? "Saldo condiviso" : "Shared balance").querySelector("strong")).toHaveTextContent(/0[,.]00/);
-    expect(card(it ? "Spese saldate" : "Settled expenses").querySelector("strong")).toHaveTextContent("0");
+    expect(card(it ? "Spese saldate" : "Settled expenses").querySelector("strong")).toHaveTextContent(/0[,.]00/);
     expect(screen.getByRole("button", { name: it ? "Stampa non saldate" : "Print pending", exact: true })).toBeDisabled();
     expect(container.querySelector(".print-report")).not.toHaveTextContent("Synthetic monthly music");
     fireEvent.click(screen.getByRole("button", { name: it ? "Azzera filtri" : "Reset filters" }));
@@ -109,9 +110,10 @@ describe("shared expense view", () => {
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(current.transactions).toHaveLength(original.transactions.length);
     expect(current.sharedExpenses).toHaveLength(original.sharedExpenses.length);
-    expect(summarizeSharedExpenses(current)).toMatchObject({ total: 230.99, plannedTotal: 0, balance: 27.99, settledCount: 2 });
+    expect(summarizeSharedExpenses(current)).toMatchObject({ total: 230.99, plannedTotal: 0, balance: 27.99, settledCount: 2, settledTotal: 65 });
     fireEvent.click(within(expenseRow("Synthetic monthly music")).getByRole("button", { name: "Mark settled", exact: true }));
-    await waitFor(() => expect(card("Settled expenses").querySelector("strong")).toHaveTextContent("3"));
+    await waitFor(() => expect(card("Settled expenses").querySelector("strong")).toHaveTextContent(/80[,.]99/));
+    expect(card("Settled expenses").querySelector("small")).toHaveTextContent("Number of expenses: 3");
     expect(summarizeSharedExpenses(current).balance).toBe(20);
   });
 });

@@ -70,6 +70,7 @@ ContaMì/
 │   │   ├── rent.ts                     # stato rate affitto da competenza e incasso effettivo
 │   │   ├── recurringExpenses.ts        # creazione atomica dei piani da spese e collegamenti espliciti
 │   │   ├── sharedExpenses.ts           # classificazione previsto/confermato e riepiloghi condivisi al centesimo
+│   │   ├── recurringInstallments.ts    # conteggio rate sull’intero piano, termine e conferme, senza generare movimenti
 │   │   ├── recurringRates.ts           # tariffa per decorrenza, anteprima e protezione dello storico
 │   │   ├── vehicleCosts.ts             # costo d’uso/complessivo puro, acquisto pagato e copertura
 │   │   ├── vehicleEntries.ts           # conferma delle registrazioni, lettura precedente, percorrenza e litri suggeriti
@@ -231,6 +232,7 @@ ContaMì/
 │       ├── sharedExpenseViews.test.tsx   # visibilità delle scadenze future, KPI, conferma e reset Ricorrenze IT/EN
 │       ├── recurringExpenses.test.ts     # quote, creazione/collegamento, scadenze, tariffa e rollover
 │       ├── expenseRecurrenceForms.test.tsx # sei moduli di creazione/modifica ricorrenza e condivisione IT/EN
+│       ├── recurringInstallments.test.tsx # rate oltre anno, fine mese/bisestili, limiti, conferme e UI IT/EN
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
 │       ├── vehicleEntries.test.ts         # contachilometri precedente, distanza e litri calcolati
 │       ├── vehicleInstallments.test.ts   # comando atomico, unicità, classificazione e ciclo di vita rate auto

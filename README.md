@@ -32,6 +32,8 @@ The app grew from a practical need: avoid entering one transaction in several sh
 | **Pensione integrativa / Private pension** | Fondi raccoglitori e comparti, con capitale, controvalore e rendimenti aggregati senza doppio conteggio. / Pension collectors and compartments, with capital, value, and returns aggregated without double counting. |
 | **Ricorrenze e spese condivise / Recurring and shared expenses** | Ricorrenza e condivisione nei moduli Transazioni, Spese condivise e Ricorrenze; quote e cambi tariffa che preservano lo storico. / Recurrence and sharing in Transactions, Shared expenses, and Recurring forms; shares and rate changes that preserve history. |
 
+I riepiloghi delle Spese condivise seguono i filtri: **Spese saldate** mostra euro e numero di spese, escludendo le previsioni. **Rate residue** conta le scadenze dell’intero piano, anche negli anni successivi; i finanziamenti Automobile mantengono il proprio stato nella scheda del mezzo. / Shared expense summaries follow the filters: **Settled expenses** shows euros and expense count, excluding forecasts. **Installments left** counts the full schedule, including later years; Vehicle financing status remains controlled by the vehicle card.
+
 ### Report stampabili / Printable reports
 
 Dalle rispettive viste puoi scegliere **Anno corrente** o **Intera storia** e usare **Stampa** oppure **Salva PDF**. I documenti sono prodotti localmente in sola lettura, con grafici e tabelle:
