@@ -1,0 +1,15 @@
+{
+  "package": "temp",
+  "version": "0.9.4",
+  "source": "https://registry.npmjs.org/temp/-/temp-0.9.4.tgz",
+  "integrity": "sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==",
+  "sha256": "dfd49c1eb73bbff8264e1e4934054444ab050d9067b5ca24245dcda40381fc22",
+  "license": "MIT",
+  "changes": [
+    "Replace rimraf with literal Node fs.rm/fs.rmSync for tracked paths",
+    "Remove rimraf runtime dependency",
+    "Omit upstream dev-only test metadata; regression tests live in the parent repository",
+    "Require the parent project Node.js 24 baseline for the local adaptation"
+  ],
+  "upstreamVersionPreserved": true
+}

@@ -1,6 +1,6 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-10-31 · Applicazione / Application: 1.27.0
+Versione del documento / Document version: 2026-10-31 · Applicazione / Application: 1.27.1
 
 ## Italiano
 
@@ -510,3 +510,63 @@ preservation of synthetic evidence. The earlier local state is historical. Versi
 1.27.0, schema v16 and the C43 release are unchanged; no new release/signing. The
 20 moderate legacy minimatch findings and sole exception through 14 November inclusive
 UTC remain; zero high/critical, M45 not started, no private workbook opened or changed.
+
+### Stato locale M45 / Local M45 status — 2026-10-31
+
+La sorgente candidata 1.27.1 elimina tutte le copie vulnerabili di minimatch e glob:
+`npm audit` e `npm audit --include=dev --json` riportano zero vulnerabilità note.
+Sono rimosse l'ultima eccezione, la sua scadenza, configurazione e helper di C43/C44.
+I paragrafi precedenti descrivono checkpoint storici. CI/Release usano npm audit
+completo, incluse le dev, con soglia `info`, timeout fetch 120 secondi, zero retry
+e limite step 3 minuti: ogni finding o errore resta bloccante. Test del comando
+reale su un registry sintetico locale coprono pulito, info, moderato e servizio
+non disponibile, senza credenziali o rete esterna.
+
+Le migrazioni ASAR/Universal/FileList/readdir-glob/unzipper e i matcher corretti sono
+inventariati in [dependency-maintenance.md](documents/dependency-maintenance.md).
+Archiver 5 resta compatibile con gli stream ExcelJS; i traversal/matcher sono aggiornati.
+Il solo adattamento locale è `vendor/temp`, MIT, build-only: fonte npm e integrità
+verificate, nome/versione upstream conservati. Usa fs.rm/fs.rmSync su percorsi già
+tracciati e letterali, senza glob, preservando callback/sync/exit e retry. I test
+verificano anche nome scomparso con vicino non tracciato, symlink/junction verso
+una directory non tracciata, cleanup all'uscita e integrazione con winstaller.
+Il cleanup non viene eseguito su dati utente nei test.
+
+`.npmrc` richiede install-links per impacchettare temp locale: niente symlink che
+npm audit escluderebbe. Nome/versione originali rimangono visibili all'audit; nuove
+advisory continuano a bloccare. Un test verifica che la copia installata sia quella
+adattata, regolare e senza rimraf. Il componente va rivalutato quando upstream
+modernizza il cleanup; licenza, provenienza e stile originario sono conservati,
+con sola esclusione vendor dal lint e regressioni nel repository principale.
+
+Rete dell'app, IPC, sandbox/CSP, permessi, salvataggi/backup e schema v16 non cambiano.
+Nessuna nuova firma, notarizzazione, telemetria o credenziale. Il limite preesistente
+nel reader streaming opzionale ExcelJS con shared strings è riprodotto su C44 e M45;
+l'app usa il reader ordinario, verificato senza perdita di valori. La rimozione degli
+avvisi noti non costituisce garanzia di assenza di ogni difetto futuro. Restano i gate
+remoti di installazione, packaging, ispezione e smoke macOS/Windows prima della chiusura.
+
+Candidate source 1.27.1 removes vulnerable matcher copies: ordinary full npm audit
+reports zero known vulnerabilities, including dev dependencies. Exceptions, expiry,
+policy and helper are removed; preceding paragraphs are historical. CI/Release use
+the ordinary full command with info threshold, 120-second fetch timeout, no retries
+and 3-minute step limit. Any finding/error blocks; local synthetic-registry tests
+cover clean, info, moderate and unavailable service without credentials/external traffic.
+
+The inventory records ASAR/Universal/FileList/readdir-glob/unzipper migrations and
+fixed matchers. Archiver 5 retains ExcelJS stream compatibility with upgraded traversal.
+The only local adaptation is build-only MIT temp: verified upstream source/integrity,
+original name/version, literal fs.rm/fs.rmSync cleanup of tracked paths, callback,
+synchronous/exit APIs and retries. Tests protect untracked neighbours and symlink
+or junction targets and exercise winstaller and child-process exit cleanup using
+synthetic files only. install-links packs the local copy so audit still sees its
+original name/version. Tests verify the installed regular copy, patched source and
+absence of rimraf. Revisit this copy when upstream modernizes cleanup; preserve its
+license/provenance and upstream style, with vendor excluded only from lint.
+
+App networking, IPC, sandbox/CSP, permissions, persistence/backup and schema v16 are
+unchanged. No signing, notarization, telemetry or credentials are introduced. The
+optional ExcelJS shared-string stream-reader ordering issue exists on C44 and M45;
+the app's standard reader is verified without value loss. Zero known advisories do
+not guarantee absence of future defects. Cross-platform install/package/inspection
+and native smoke gates remain required before closure.

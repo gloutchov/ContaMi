@@ -7,10 +7,9 @@ ContaMì/
 ├── .github/
 │   ├── dependabot.yml                 # aggiornamenti dipendenze / dependency updates
 │   └── workflows/
-│       ├── ci.yml                     # qualità macOS + Windows e gate audit con eccezioni limitate
+│       ├── ci.yml                     # qualità macOS + Windows e audit completo senza eccezioni
 │       └── release.yml                # audit, pacchetti, smoke, checksum e release
-├── config/
-│   └── dependency-audit.json           # eccezione minimatch legacy moderata con motivazione e scadenza UTC
+├── .npmrc                              # impacchetta i file: locali per includerli nell’audit npm
 ├── assets/
 │   ├── icon.ico                       # icona Windows / Windows icon
 │   ├── icon.png                       # icona RGBA canonica per macOS, UI e landing
@@ -23,16 +22,13 @@ ContaMì/
 │   ├── styles.css                     # layout editoriale e Novità responsive, chiaro/scuro e reduced motion
 │   └── .nojekyll                      # pubblicazione statica GitHub Pages da main + /docs
 ├── documents/
-│   ├── dependency-maintenance.md     # inventario C44, override mirati, audit e residui M45 IT/EN
+│   ├── dependency-maintenance.md     # inventari C44/M45, compatibilità e audit completo senza eccezioni IT/EN
 │   ├── import-template-spec.md        # contratti versionati degli otto template Excel
 │   ├── import-guide.md                # compilazione, anteprima, errori e recupero IT/EN
 │   ├── return-formulas.md             # formule, copertura e limiti dei rendimenti IT/EN
 │   ├── reference-analysis.md          # analisi priva di PII del Numbers sorgente
 │   └── landing-maintenance.md         # manutenzione e rigenerazione sicura dei media
 ├── scripts/
-│   ├── audit-dependencies.mjs          # esegue npm audit completo e applica la policy di distribuzione
-│   ├── lib/
-│   │   └── dependency-audit.mjs         # validazione report, radici transitive, cicli e scadenza
 │   ├── build-electron.mjs             # build separata main + preload
 │   ├── check-node-baseline.mjs         # coerenza baseline Node, dipendenze, CI e documentazione
 │   ├── validate-renderer-csp.mjs       # CSP prod, assenza style inline e verifica app.asar
@@ -179,6 +175,13 @@ ContaMì/
 │   │   ├── pensionReportContracts.ts # richiesta stretta e testi pensione IT/EN
 │   │   └── propertyReportContracts.ts  # richiesta/report result validati e testi documento IT/EN
 │   └── test/setup.ts                   # ambiente comune Vitest
+├── vendor/
+│   └── temp/                           # adattamento locale build-only, nome/versione upstream conservati
+│       ├── lib/temp.js                 # cleanup letterale fs.rm/fs.rmSync sui percorsi tracciati
+│       ├── package.json                # dipendenza locale impacchettata da npm, baseline Node 24
+│       ├── UPSTREAM.json               # provenienza npm, integrità, licenza e modifiche dichiarate
+│       ├── LICENSE                     # licenza MIT upstream
+│       └── README.md                   # motivazione, limiti e manutenzione IT/EN
 ├── tests/
 │   ├── helpers/
 │   │   ├── modernDependencyProbe.mjs   # regressioni advisory in processo con tempo/memoria limitati
@@ -192,6 +195,8 @@ ContaMì/
 │   ├── landing/
 │   │   └── landing.spec.ts             # IT/EN, temi, demo video, focus e mobile della landing
 │   ├── integration/
+│   │   ├── dependencyAuditGate.test.mjs # gate npm reale: audit pulito, moderato e errore su registry sintetico
+│   │   ├── legacyDependencyCompatibility.test.mjs # API archive, ExcelJS streaming, Universal e cleanup temp
 │   │   ├── modernDependencyCompatibility.test.mjs # filtri moderni, ASAR, ESLint, project service e advisory
 │   │   ├── finance-file-service.test.ts # recupero avvio e copia report con revisione verificata
 │   │   ├── import-template-generator.test.ts # struttura, liste e limite dei template
@@ -240,7 +245,6 @@ ContaMì/
 │       ├── sharedExpenseViews.test.tsx   # visibilità delle scadenze future, KPI, conferma e reset Ricorrenze IT/EN
 │       ├── recurringExpenses.test.ts     # quote, creazione/collegamento, scadenze, tariffa e rollover
 │       ├── expenseRecurrenceForms.test.tsx # sei moduli di creazione/modifica ricorrenza e condivisione IT/EN
-│       ├── dependencyAudit.test.mjs     # eccezioni limitate, avvisi nuovi/alti, errori, cicli e scadenza
 │       ├── recurringInstallments.test.tsx # rate oltre anno, fine mese/bisestili, limiti, conferme e UI IT/EN
 │       ├── recurringRates.test.ts        # decorrenze, storico, collegamenti e rollover tariffario
 │       ├── vehicleEntries.test.ts         # contachilometri precedente, distanza e litri calcolati

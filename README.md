@@ -8,7 +8,7 @@
 
 [**Sito / Website**](https://contami.glaucosilvestri.it/) · [**Release e checksum / Releases and checksums**](https://github.com/gloutchov/Contami/releases) · [**Avvio rapido / Quick start**](QUICK-START_Desktop.md) · [**Manuale IT**](ISTRUZIONI.md) · [**User manual EN**](INSTRUCTIONS.md)
 
-> **Stato / Status:** alpha funzionante / functional alpha · **1.27.0 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v16 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
+> **Stato / Status:** alpha funzionante / functional alpha · **1.27.1 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v16 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
 
 ![Panoramica di ContaMì con dati dimostrativi](docs/assets/panoramica_whi.png)
 
@@ -86,7 +86,7 @@ ContaMì needs no account, cloud, telemetry, or network during normal use. Workb
 
 Richiede Node.js 24 LTS **>=24.15.0**, npm e Git. Requires Node.js 24 LTS **>=24.15.0**, npm, and Git.
 
-La sorgente `1.27.0` aggiunge ricorrenze condivise e creazione di un piano dai moduli Transazione e Spesa condivisa, anche in modifica. La prima spesa viene riutilizzata, le scadenze future restano pianificate e i saldi condivisi includono soltanto spese confermate. Le scadenze condivise future compaiono nella lista come Previste, il Totale filtrato ne indica la parte pianificata e Ricorrenze offre Azzera filtri. Schema v16 con migrazione conservativa e backup. / Source `1.27.0` adds shared recurring plans and plan creation from Transaction and Shared expense forms, including edits. The first expense is reused, future occurrences remain planned, and shared balances include confirmed expenses only. Future shared occurrences appear as Planned, Filtered total identifies their planned portion, and Recurring offers Reset filters. Schema v16 uses conservative migration and backups.
+La sorgente `1.27.1` corregge le vulnerabilità delle dipendenze e conserva le funzioni introdotte in `1.27.0`: ricorrenze condivise e creazione di un piano dai moduli Transazione e Spesa condivisa, anche in modifica. La prima spesa viene riutilizzata, le scadenze future restano pianificate e i saldi condivisi includono soltanto spese confermate. Le scadenze condivise future compaiono nella lista come Previste, il Totale filtrato ne indica la parte pianificata e Ricorrenze offre Azzera filtri. Schema v16 con migrazione conservativa e backup. / Source `1.27.1` fixes dependency vulnerabilities and retains the features introduced in `1.27.0`: shared recurring plans and plan creation from Transaction and Shared expense forms, including edits. The first expense is reused, future occurrences remain planned, and shared balances include confirmed expenses only. Future shared occurrences appear as Planned, Filtered total identifies their planned portion, and Recurring offers Reset filters. Schema v16 uses conservative migration and backups.
 
 ```bash
 npm ci
@@ -99,10 +99,9 @@ Verifiche locali / Local checks:
 npm run preflight
 npm run test:e2e
 npm audit
-npm run audit:release
 ```
 
-Con il checkpoint C44 l’audit completo scende da 31 a **20 segnalazioni moderate**, tutte propagate dalle catene legacy di `minimatch` previste per M45. L’advisory di `glob` è eliminata; i consumatori moderni usano glob 14.0.3 e minimatch 11.0.3. La [policy temporanea](config/dependency-audit.json) ammette soltanto l’advisory minimatch fino al 14 novembre 2026 incluso UTC; nuovi avvisi, gravità diverse, errori e scadenza bloccano il gate. Versione 1.27.0 e schema v16 invariati; nessuna release M44. [Inventario e verifiche](documents/dependency-maintenance.md). / At checkpoint C44, the full audit falls from 31 to **20 moderate findings**, all propagated from legacy `minimatch` chains scheduled for M45. The glob advisory is removed; modern consumers use glob 14.0.3 and minimatch 11.0.3. The [temporary policy](config/dependency-audit.json) allows only the minimatch advisory through 14 November 2026 inclusive UTC; new findings, different severities, errors and expiry block the gate. Version 1.27.0 and schema v16 are unchanged; M44 produces no release. See the [inventory and validation](documents/dependency-maintenance.md).
+Nel sorgente `1.27.1`, M45 porta **l’audit completo a zero vulnerabilità note**, comprese le dipendenze di sviluppo, e rimuove eccezioni e scadenza temporanea. CI e packaging eseguono `npm audit --include=dev` senza soglie ridotte. Lo schema workbook resta v16; la pubblicazione della patch richiede il controllo del commit e i gate dei pacchetti. [Inventario e verifiche](documents/dependency-maintenance.md). / In source `1.27.1`, M45 brings the **full audit to zero known vulnerabilities**, including development dependencies, and removes exceptions and their expiry. CI and packaging run `npm audit --include=dev` without a raised threshold. Workbook schema remains v16; patch publication requires commit review and package gates. See the [inventory and validation](documents/dependency-maintenance.md).
 
 Build e pacchetti / Build and packages:
 
@@ -132,3 +131,5 @@ Se apri una issue, usa dati sintetici e non allegare workbook, PDF o backup pers
 ## Licenza / License
 
 Copyright 2026 ContaMì contributors. Distribuito secondo / Distributed under the [Apache License 2.0](LICENSE).
+
+La configurazione npm del repository impacchetta la sola dipendenza locale di build `vendor/temp` per mantenerla inclusa nell’audit con nome e versione originali. Provenienza, licenza e adattamento minimo sono documentati nel [modello di sicurezza](SECURITY_MODEL.md) e nel [README del componente](vendor/temp/README.md). / Repository npm configuration packs the local build-only `vendor/temp` dependency so audit still sees its original name/version. Provenance, license and the minimal adaptation are documented in the [security model](SECURITY_MODEL.md) and [component README](vendor/temp/README.md).

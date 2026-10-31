@@ -231,7 +231,7 @@ The entered expense becomes the first occurrence without creating another paymen
 
 Disabling recurrence on a Transaction or Shared expense detaches that record only; it does not close the plan. Changing one record's sharing or shares does not change the series; edit the plan for future occurrences. Links use explicit identifiers: similar descriptions never automatically reattach a detached expense. For example, a synthetic €100.01 expense with a €30 personal share retains the initial €30/€70.01 ratio in its plan.
 
-Source version **1.27.0** upgrades the workbook to **schema v16** with a backup. Migration leaves existing schedules without series sharing and preserves individually shared expenses. This schema requires this app version or later; keep the backup if returning to an older app.
+**Schema v16**, introduced in 1.27.0 with a backup, is unchanged in source patch **1.27.1**. Migration leaves existing schedules without series sharing and preserves individually shared expenses. Schema v16 requires 1.27.0 or later; keep the backup if returning to an older app.
 
 ## 11. Shared expenses
 
@@ -345,7 +345,7 @@ Check the workbook's active year, the selected position, and compartment status:
 - Do not place sensitive workbooks in cloud-synced folders unless you accept that provider’s terms.
 - The renderer uses a strict CSP: production accepts only local scripts and stylesheets, rejects style attributes and connections, and keeps network access blocked.
 - Unsigned builds can trigger operating-system warnings.
-- M44 source maintenance reduces the audit from 31 to 20 moderate findings: glob is patched and modern consumers use minimatch 11. Legacy minimatch chains remain scheduled for M45. The sole remaining exception expires on 14 November 2026 inclusive UTC; new findings and different severities still block the gate. Version 1.27.0 and format v16 are unchanged, with no new release. See the [security model](SECURITY_MODEL.md) and [inventory](documents/dependency-maintenance.md).
+- Source patch 1.27.1 removes the remaining dependency findings: the full audit reports zero known vulnerabilities, without exceptions or temporary expiry. Distribution checks again block any advisory or audit error. Data, formulas and schema v16 are unchanged; see Releases for packages actually published. See the [security model](SECURITY_MODEL.md) and [inventory](documents/dependency-maintenance.md).
 - Native Numbers mirroring depends on Apple automation and may require macOS consent.
 
 See [SECURITY_MODEL.md](SECURITY_MODEL.md) for technical controls and residual risks.

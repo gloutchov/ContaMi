@@ -23,7 +23,7 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** C44 è completata: `main` e il tag annotato `milestone/C44` puntano al commit approvato `914d8fd178af4bd5c1f25daa7ac58f429bb3b90a`, versione sorgente `1.27.0` e schema workbook v16 invariati. CI e packaging/smoke macOS/Windows, artifact, checksum e pulizia sono verificati; nessuna nuova release o tag versione. C43 / `v1.27.0` restano sul commit `1890b7e`. M45 è programmata e non avviata: rimangono 20 segnalazioni moderate da minimatch legacy, con la sola eccezione fino al 14 novembre 2026 incluso UTC. Le sezioni delle milestone chiuse conservano risultati e limiti storici.
+**Stato corrente:** C44 è chiusa con checkpoint `milestone/C44` su `914d8fd` e rendicontazione pubblicata su main `c665e2c`. M45 è implementata e verificata localmente sul branch dedicato: sorgente candidata `1.27.1`, schema workbook v16 invariato, audit completo a zero senza eccezioni. Restano controllo del commit, decisione sulla release e gate remoti macOS/Windows prima della chiusura C45. Le sezioni chiuse conservano risultati e limiti storici.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -82,7 +82,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | C42 — Manutenzione Dependabot #131–#135 | `milestone/42-dependabot-maintenance` | `milestone/C42`, release correttiva `1.26.1` | Sorgente completata; versione e chiusura in revisione prima della pubblicazione |
 | C43 — Spese ricorrenti e condivise da ogni modulo | `milestone/43-shared-recurring-expenses` | `milestone/C43`, `v1.27.0` | Pubblicata; CI, pacchetti, checksum e pulizia verificati |
 | C44 — Glob corretto e consumatori moderni di minimatch | `milestone/44-glob-modern-minimatch` | `milestone/C44`; versione invariata `1.27.0` | Completata; CI/pacchetti/checksum e pulizia verificati; nessuna release |
-| M45 — Minimatch legacy e audit senza eccezioni | `milestone/45-legacy-minimatch-audit` | `milestone/C45`; patch prevista `1.27.1` | Programmata dopo C44; obiettivo 12/11/2026 |
+| M45 — Minimatch legacy e audit senza eccezioni | `milestone/45-legacy-minimatch-audit` | `milestone/C45`; patch prevista `1.27.1` | Implementata localmente; audit zero, revisione/gate remoti pendenti |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1` → manutenzione dipendenze e catena di rilascio `v1.21.0` → letture acqua delle residenze `v1.22.0` → compatibilità configurazione Vite `v1.22.1` → trasparenza costo/km Automobile `v1.22.2` → release Electron 44 `v1.23.0` → costo d’uso e costo complessivo/km `v1.24.0`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
@@ -1824,7 +1824,7 @@ richiede controllo e approvazione del nuovo hash prima della propria pubblicazio
 
 **Obiettivo:** eliminare le copie legacy vulnerabili rimaste dopo C44 e consegnare un'app con **`npm audit` completo a zero vulnerabilità note**, senza l'accettazione temporanea del rischio introdotta in C43.
 
-**Prerequisito:** C44 integrata e tag remoto verificato; nuovo inventario e audit sulla sua `main`. **Branch previsto:** `milestone/45-legacy-minimatch-audit`. **Tag di checkpoint previsto:** `milestone/C45`. **Tipo incremento:** patch `+0.0.1`, prevista `1.27.0`→`1.27.1` (usare la successiva patch libera se la versione cambia prima dell'avvio); schema workbook v16 invariato. **GitHub Release:** patch di manutenzione candidata alla distribuzione; la decisione del proprietario sulla pubblicazione va raccolta alla revisione del commit finale, come richiesto per le patch ordinarie. **Priorità:** alta; obiettivo pronta per revisione/rilascio entro 12/11/2026. **Stato:** programmata dopo C44, non avviata.
+**Prerequisito:** C44 integrata e tag remoto verificato; nuovo inventario e audit sulla sua `main`. **Branch previsto:** `milestone/45-legacy-minimatch-audit`. **Tag di checkpoint previsto:** `milestone/C45`. **Tipo incremento:** patch `+0.0.1`, prevista `1.27.0`→`1.27.1` (usare la successiva patch libera se la versione cambia prima dell'avvio); schema workbook v16 invariato. **GitHub Release:** patch di manutenzione candidata alla distribuzione; la decisione del proprietario sulla pubblicazione va raccolta alla revisione del commit finale, come richiesto per le patch ordinarie. **Priorità:** alta; obiettivo pronta per revisione/rilascio entro 12/11/2026. **Stato:** implementata localmente il 31/10/2026; audit completo zero, revisione/decisione release e gate remoti pendenti.
 
 **Attività principali:**
 
@@ -1846,11 +1846,61 @@ richiede controllo e approvazione del nuovo hash prima della propria pubblicazio
 
 **Documentazione da aggiornare:** PLAN con passaggio M45→C45, esiti e versione/checkpoint; SECURITY_MODEL con risoluzione effettiva degli advisory e rimozione delle eccezioni; README, ISTRUZIONI, INSTRUCTIONS e quick start per la patch e i limiti; MAP, AGENTS e note release per comandi/workflow/configurazione rimossi o cambiati. Conservare come storico gli esiti di audit delle release precedenti.
 
+**Esito locale — 2026-10-31:** account privato `gloutchov` e autore
+`gloutchov@gmail.com` verificati; main remoto `c665e2c` e checkpoint C44 `914d8fd`
+confermati prima di creare `milestone/45-legacy-minimatch-audit` nel worktree isolato
+`/private/tmp/contami-m45`. Versione candidata 1.27.1, nessuna modifica al formato v16
+o al codice finanziario/UI/IPC. [Inventario e motivazioni](documents/dependency-maintenance.md).
+
+ASAR è unificato a 4.3.1, Universal a 3.0.6 elimina dir-compare, FileList passa a
+2.0.2 e readdir-glob a 3.0.0, unzipper di ExcelJS a 0.12.5 elimina fstream/rimraf.
+Gli override di glob sono limitati alle major 7–13, quelli minimatch a 9/10; i soli
+consumatori glob 7 rimasti dopo le altre migrazioni erano archiver-utils 2/3, che
+usano `glob.sync`, API conservata e verificata. Non si forza minimatch 11 nelle API
+callable 3/5. Archiver resta a 5.3.2: le candidate 6/7 rompono StreamBuf di ExcelJS
+usando il valore di ritorno di pipe. Le utility/traversal sono aggiornate senza
+cambiare la factory, senza secondo fork e senza downgrade rispetto a C44.
+
+La sola copia locale, build-only, è temp 0.9.4, fonte MIT npm con SRI/SHA-256
+verificati e registrati: rimuove rimraf usando fs.rm/fs.rmSync su percorsi letterali
+tracciati, con retry e callback/sync/exit preservati. Nome/versione originali restano
+visibili all'audit perché install-links impacchetta la dipendenza locale, invece del
+symlink che npm audit escluderebbe. Test sull'installazione reale confrontano il
+codice, vietano rimraf e verificano cleanup, vicini non tracciati e symlink/junction.
+Il confronto sintetico C44/M45 dà inclusioni/esclusioni identiche per readdir-glob,
+FileList e glob.sync; il vecchio cleanup cancella un vicino corrispondente al glob
+quando il nome tracciato scompare, quello letterale M45 lo preserva.
+
+Audit completo **20→0**, zero di ogni gravità, incluse dev e opzionali del lockfile;
+restano solo glob 14.0.3 e minimatch 11.0.3. `npm ci` riproducibile, `npm ls --all`
+valido, `npm audit` e `npm audit --include=dev --json` con exit 0. Rimossi policy,
+scadenza, comando audit:release, helper/validatore e test delle esenzioni. CI/Release
+usano npm audit ordinario con soglia info, timeout fetch 120 secondi, zero retry e
+step 3 minuti. Il comando effettivo dei workflow passa su report pulito e blocca
+info/moderato/errore 503 su registry sintetico locale senza credenziali o rete esterna.
+
+Passano preflight con 436 test in 66 file, baseline Node 24, lint/typecheck, build,
+CSP e controllo dei 15 documenti, 11 test browser app e 7 landing in sequenza. Le nuove
+regressioni verificano writer ExcelJS con/senza shared strings letto dal reader
+ordinario, reader streaming inline, matcher/ZIP, ASAR del builder e import CJS
+winstaller, merge ASAR/allowlist e comparazione directory Universal. È riprodotto su
+C44 e M45 il limite upstream del reader streaming opzionale ExcelJS con shared
+strings dipendenti dall'ordine ZIP; l'app usa il reader ordinario e non perde valori.
+Il difetto preesistente non è dichiarato risolto. Tutti i dati di prova sono sintetici.
+
+Pacchetto locale macOS ARM64 1.27.1 costruito senza accesso alla firma e ispezionato:
+versione, risorse, CSP, assenza di file privati, glob 14/minimatch 11 realmente
+nell'ASAR; temp build-only non è distribuito. Nessun avvio nativo locale con settings
+utente. Verifica visuale Playwright IT/EN e chiaro/scuro a 1080 px registrata nelle
+evidenze locali. Prima di C45 restano CI e packaging/smoke macOS/Windows, Mac Intel
+statico, artifact scaricati/checksum, controllo del commit e decisione sulla release.
+Nessun push, merge, tag o release M45 avviato. Le build restano non firmate.
+
 **Checklist di chiusura:**
 
-- [ ] Branch dedicato da C44, migrazione dei consumatori e pulizia della policy completati.
+- [x] Branch dedicato da C44, migrazione dei consumatori e pulizia della policy completati.
 - [ ] Audit completo zero e regressioni automatiche/manuali/cross-platform superati; nessuna eccezione rimasta.
-- [ ] Versione patch sincronizzata; documentazione e note aggiornate; workbook v16 verificato.
+- [x] Versione patch sincronizzata; documentazione e note aggiornate; workbook v16 verificato.
 - [ ] Commit locale finale congelato e presentato con hash/diff/test/limiti; controllo e approvazione esplicita, inclusa la decisione sulla release.
 - [ ] Merge e CI necessaria verificati; M45 rinominata C45 con riepilogo, limiti e checkpoint.
 - [ ] Tag annotato `milestone/C45` su main, push e presenza remota verificati; tag versione/release solo secondo la decisione approvata.

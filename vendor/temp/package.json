@@ -1,0 +1,44 @@
+{
+  "name": "temp",
+  "description": "Temporary files and directories",
+  "tags": [
+    "temporary",
+    "temp",
+    "tempfile",
+    "tempdir",
+    "tmpfile",
+    "tmpdir",
+    "security"
+  ],
+  "version": "0.9.4",
+  "author": "Bruce Williams <brwcodes@gmail.com>",
+  "license": "MIT",
+  "directories": {
+    "lib": "lib"
+  },
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "main": "./lib/temp",
+  "dependencies": {
+    "mkdirp": "^0.5.1"
+  },
+  "keywords": [
+    "temporary",
+    "tmp",
+    "temp",
+    "tempdir",
+    "tempfile",
+    "tmpdir",
+    "tmpfile"
+  ],
+  "files": [
+    "lib",
+    "UPSTREAM.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bruce/node-temp.git"
+  }
+}

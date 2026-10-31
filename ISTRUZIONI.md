@@ -244,7 +244,7 @@ La spesa inserita diventa la prima occorrenza: non viene aggiunto un secondo pag
 
 Togliere la ricorrenza in una Transazione o Spesa condivisa scollega soltanto quella registrazione: non chiude il piano. Cambiare condivisione o quote sulla singola registrazione non cambia la serie; per le scadenze future modifica il piano. I collegamenti usano gli identificativi espliciti: una descrizione simile non ricollega automaticamente una spesa scollegata. Per esempio, una spesa sintetica di 100,01 € con quota personale 30 € mantiene 30 €/70,01 € come proporzione iniziale del piano.
 
-La versione sorgente **1.27.0** aggiorna il workbook a **schema v16** con backup. La migrazione lascia le ricorrenze esistenti senza condivisione di serie e conserva le eventuali singole spese già condivise. Il nuovo schema richiede questa versione o una successiva: conserva il backup se devi tornare a un'app precedente.
+Lo **schema v16**, introdotto in 1.27.0 con backup, resta invariato nella patch sorgente **1.27.1**. La migrazione lascia le ricorrenze esistenti senza condivisione di serie e conserva le eventuali singole spese già condivise. Lo schema v16 richiede 1.27.0 o una versione successiva: conserva il backup se devi tornare a un'app precedente.
 
 ## 11. Spese condivise
 
@@ -376,7 +376,7 @@ Controlla l'anno attivo del workbook, la posizione selezionata e lo stato dei co
 - Non sincronizzare cartelle sensibili con servizi cloud se non accetti le loro condizioni.
 - Il renderer usa una CSP rigorosa: in produzione accetta soltanto script e fogli di stile locali, rifiuta attributi di stile e connessioni e mantiene bloccata la rete.
 - Le build non firmate possono produrre avvisi del sistema.
-- La manutenzione M44 nel sorgente riduce l’audit da 31 a 20 segnalazioni moderate: glob è corretto e i consumatori moderni usano minimatch 11. Restano le catene legacy minimatch previste per M45. La sola eccezione residua scade il 14 novembre 2026 incluso UTC; nuovi avvisi e gravità diverse restano bloccanti. Versione 1.27.0 e formato v16 invariati, senza nuova release. Vedi il [modello di sicurezza](SECURITY_MODEL.md) e l’[inventario](documents/dependency-maintenance.md).
+- La patch sorgente 1.27.1 elimina gli avvisi residui delle dipendenze: audit completo a zero vulnerabilità note, senza eccezioni né scadenze temporanee. I controlli di distribuzione tornano a bloccare qualsiasi advisory o errore dell’audit. Dati, formule e schema v16 restano invariati; per i pacchetti effettivamente pubblicati consulta Releases. Vedi il [modello di sicurezza](SECURITY_MODEL.md) e l’[inventario](documents/dependency-maintenance.md).
 - La copia Numbers dipende dall’automazione di Apple Numbers e può richiedere un consenso macOS.
 
 Vedi [SECURITY_MODEL.md](SECURITY_MODEL.md) per dettagli tecnici e rischi residui.

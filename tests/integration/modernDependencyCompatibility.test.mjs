@@ -10,7 +10,7 @@ import * as asar from "@electron/asar";
 import { ESLint } from "eslint";
 
 const require = createRequire(import.meta.url);
-const consumers = ["@electron/asar", "@electron/universal", "app-builder-lib", "eslint",
+const consumers = ["@electron/asar", "app-builder-lib", "eslint",
   "@eslint/config-array", "@typescript-eslint/typescript-estree"];
 const probe = fileURLToPath(new URL("../helpers/modernDependencyProbe.mjs", import.meta.url));
 const roots = [];

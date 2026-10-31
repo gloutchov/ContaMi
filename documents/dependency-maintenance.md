@@ -1,6 +1,8 @@
-# M44 — manutenzione dipendenze / dependency maintenance
+# Manutenzione dipendenze / Dependency maintenance
 
-## Ambito e provenienza / Scope and provenance
+Le sezioni C44 seguenti sono storiche; lo stato locale M45 è riportato in fondo. / The C44 sections below are historical; local M45 status follows at the end.
+
+## Ambito e provenienza C44 / C44 scope and provenance
 
 Verifica del 31 ottobre 2026 su Node.js 24.18.1 / npm 11.16.0. Base applicativa C43
 `1890b7ef5b1477798cd3ebe7de8d9feb4b56d0ef`; versione 1.27.0 e schema workbook v16
@@ -135,3 +137,108 @@ reali sono riservati ai runner CI effimeri.
 Local results and remote closure are recorded under C44 in [PLAN.md](../PLAN.md). No private
 workbook is used; native smoke tests that may read real settings are reserved for
 ephemeral CI runners.
+
+## M45 — audit completo senza eccezioni / full audit without exceptions
+
+Base: main documentale C44 `c665e2c2433326dbde76a3aa2a5d90538706bc60`, checkpoint
+applicativo `milestone/C44` su `914d8fd`. Sorgente candidata 1.27.1, workbook v16
+invariato. Nessuna pubblicazione prima del controllo del commit e dei gate remoti.
+
+Baseline: C44 documentation main above, with application checkpoint `914d8fd`.
+Candidate source 1.27.1 keeps workbook v16. Publication requires commit review and
+remote package gates.
+
+| Catena / Chain | C44 | M45 locale / local |
+|---|---|---|
+| ASAR sotto builder/universal/winstaller | 3.4.1 con glob 7/minimatch 3 | 4.3.1 con glob 14/minimatch 11 |
+| Universal | 2.0.3, dir-compare/minimatch 3 | 3.0.6, confronto filesystem e `path.matchesGlob` nativi |
+| Jake → FileList | 1.0.6, minimatch 5 | 2.0.2, minimatch 11 |
+| ExcelJS → Archiver → readdir-glob | 1.1.3, minimatch 5 | 3.0.0, minimatch 11 |
+| Archiver/zip-stream → archiver-utils | glob 7/minimatch 3 | glob 14.0.3/minimatch 11.0.3 |
+| ExcelJS → unzipper | 0.10.14 → fstream/rimraf/glob 7 | 0.12.5, senza fstream/rimraf |
+| winstaller → temp | 0.9.4 → rimraf/glob 7 | 0.9.4 locale, cleanup letterale Node `fs.rm` |
+
+Gli override limitano le major glob 7–13 e minimatch 9/10 ai rispettivi target
+14.0.3/11.0.3. Dopo le migrazioni, le uniche chiamate legacy a glob erano `glob.sync`
+in archiver-utils 2/3, API conservata e verificata con inclusioni/esclusioni, dotfile,
+Unicode/spazi e confronto del corpus. Non si forza minimatch 11 nei chiamanti
+callable 3/5: tali catene sono eliminate. ASAR/unzipper/FileList/readdir-glob
+mantengono le API realmente usate, esercitate nei test dei consumatori.
+
+Overrides target glob majors 7–13 and minimatch 9/10 at 14.0.3/11.0.3 respectively.
+After migration, the remaining legacy glob calls were `glob.sync` in archiver-utils
+2/3, an API preserved and tested against inclusion/exclusion, dotfiles, Unicode and
+spaces. Minimatch 11 is not forced into callable 3/5 consumers; those chains are
+removed. Tests exercise the APIs actually used by ASAR, unzipper, FileList and readdir-glob.
+
+Archiver resta alla versione C44 5.3.2. Le versioni candidate 6/7 normalizzano gli
+stream tramite il valore restituito da `pipe`, mentre StreamBuf di ExcelJS 4.4.0
+non restituisce la destinazione: il nuovo test streaming rileva l'incompatibilità.
+Conservare la factory compatibile e aggiornare i suoi traversal/matcher elimina
+le vulnerabilità senza introdurre un secondo fork o modificare ExcelJS.
+
+Archiver remains at C44's 5.3.2. Candidate majors 6/7 normalize streams using the
+return value of `pipe`, while ExcelJS 4.4.0 StreamBuf does not return its destination;
+the streaming test detects that incompatibility. Retaining the compatible factory
+and migrating its traversal/matcher dependencies removes findings without a second
+fork or changes to ExcelJS.
+
+La sola copia locale è [vendor/temp](../vendor/temp/README.md), build-only, con
+licenza MIT e integrità npm upstream verificata in `UPSTREAM.json`. Nome/versione
+originali sono conservati; la patch sostituisce rimraf con `fs.rm`/`fs.rmSync` sui
+percorsi tracciati, con retry e API callback/sync/exit. `.npmrc` abilita install-links:
+la copia è impacchettata, non un symlink escluso dall'audit. L'audit continua quindi
+a vedere `temp@0.9.4`, comprese eventuali advisory future su quel nome/versione.
+Un test confronta il sorgente realmente installato con la copia locale e ne verifica
+l'assenza di dipendenze rimraf. Nessuna rinomina o versione inventata per l'audit.
+
+The sole local copy is build-only MIT-licensed temp, with verified upstream npm
+integrity recorded in `UPSTREAM.json`. Original name/version are retained. The patch
+uses literal `fs.rm`/`fs.rmSync` for tracked paths with retry and callback/sync/exit
+cleanup. `install-links` packs the dependency instead of symlinking it out of audit;
+npm still audits `temp@0.9.4`, including future advisories for that name/version.
+Tests compare the installed source with the local copy and reject a remaining rimraf
+dependency. No renamed package or fabricated version is used to obtain a clean audit.
+
+L'audit completo passa **20→0**, incluse le dipendenze dev e opzionali del lockfile.
+Restano soltanto glob 14.0.3 e minimatch 11.0.3. Rimossi comando `audit:release`, policy,
+helper/validatore e relativi test di esenzione. CI/Release usano il comando npm
+ordinario completo, con `--audit-level=info`, timeout fetch di 120 secondi, zero
+retry e timeout step di 3 minuti. Ogni advisory o errore blocca, senza scadenze.
+Un registry locale sintetico verifica il comando reale dei workflow: pulito passa;
+info, moderato ed errore 503 falliscono, senza credenziali o traffico esterno.
+
+The full audit falls **20→0**, including dev and optional lockfile dependencies.
+Only glob 14.0.3/minimatch 11.0.3 remain. The release-audit command, policy, assessor
+and exemption tests are removed. CI/Release use ordinary full npm audit, with
+`--audit-level=info`, a 120-second fetch timeout, no retries and a 3-minute step
+limit. Any advisory/error blocks without expiry. Tests run the actual workflow
+command against a synthetic local registry: clean passes; info, moderate and 503
+errors fail without credentials or external traffic.
+
+Limite upstream rilevato: l'API opzionale WorkbookReader streaming di ExcelJS 4 può
+restituire riferimenti sharedString in modo dipendente dall'ordine degli elementi ZIP;
+il difetto è riprodotto su C44 e sul nuovo grafo. L'app usa il reader ordinario, che
+conserva i valori. I test coprono writer streaming con e senza stringhe condivise
+seguito dal reader ordinario, e reader streaming con stringhe inline; non dichiarano
+corretto il difetto upstream. I test finanziari, import/rollover e round-trip v16
+continuano a verificare le API usate dall'app con soli dati sintetici.
+
+Il confronto C44/M45 sullo stesso corpus sintetico conferma risultati identici per
+readdir-glob, FileList e glob.sync. Nel caso di un nome tracciato già scomparso con
+metacaratteri, la base C44 elimina il vicino non tracciato che corrisponde al pattern;
+M45 lo conserva grazie al percorso letterale. Le prove sono isolate in directory
+temporanee sintetiche e registrate nelle evidenze locali.
+
+The C44/M45 comparison on the same synthetic corpus gives identical results for
+readdir-glob, FileList and glob.sync. For a disappeared tracked name containing
+metacharacters, C44 removes an untracked neighbour matching the pattern; M45 preserves
+it by treating the path literally. Probes use isolated synthetic temporary directories.
+
+A pre-existing upstream limitation was reproduced on C44 and the new graph: ExcelJS
+4's optional streaming WorkbookReader may expose sharedString references depending
+on ZIP entry order. The app uses the standard reader, which preserves values. Tests
+cover streaming writer output with/without shared strings through the standard reader,
+and the streaming reader with inline strings; they do not claim to fix the upstream
+ordering issue. Finance/import/rollover/v16 round-trips exercise the app's actual APIs
+with synthetic data. Results and remaining remote gates are recorded under M45 in PLAN.md.

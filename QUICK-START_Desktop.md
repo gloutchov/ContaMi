@@ -22,6 +22,8 @@ Scegli **Anno corrente** o **Intera storia**, poi **Stampa** o **Salva PDF**. La
 
 A fine anno usa **Chiudi anno** e scegli il nuovo file: il precedente resta intatto. I salvataggi usano backup in `.contami-backups` e bloccano modifiche esterne concorrenti. Per dettagli e recupero consulta [ISTRUZIONI.md](ISTRUZIONI.md).
 
+La patch sorgente **1.27.1** aggiorna le dipendenze per ottenere un audit completo senza eccezioni; formato v16 e flussi restano invariati. La pagina Releases indica la versione distribuita.
+
 ## English
 
 **Requirements:** macOS 13+ (Apple Silicon or Intel) or Windows x64. Excel is not required; Numbers is needed only for the optional `.numbers` copy. The earlier `v1.22.2` release is documented for macOS 12.
@@ -43,3 +45,5 @@ A fine anno usa **Chiudi anno** e scegli il nuovo file: il precedente resta inta
 Choose **Current year** or **Full history**, then **Print** or **Save PDF**. Generation is local and does not change the workbook. Financial reports keep currencies separate; PDFs contain personal data and deserve the same protection as the workbook.
 
 At year-end, use **Close year** and select a new file: the old one remains intact. Saves keep backups in `.contami-backups` and block conflicting external edits. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for details and recovery.
+
+Source patch **1.27.1** updates dependencies to obtain a fully clean audit without exceptions; format v16 and workflows are unchanged. Releases lists the distributed version.

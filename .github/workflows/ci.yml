@@ -28,4 +28,5 @@ jobs:
       - run: npm run test:e2e:install
       - run: npm run test:e2e
       - run: npm run test:landing:e2e
-      - run: npm run audit:release
+      - run: npm audit --include=dev --audit-level=info --fetch-timeout=120000 --fetch-retries=0
+        timeout-minutes: 3
