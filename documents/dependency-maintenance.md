@@ -352,3 +352,30 @@ packages, SHA-256 manifest, GitHub digests, ASAR/DMG and 323 source files per ar
 were verified after download. Five PRs closed after integration; their changes are
 reconciled on main and original commits remain recoverable from the verified bundle.
 No bot PR or branch remains. PLAN.md C46 records workflow links and residual limits.
+
+
+## Patch 1.27.3 — dopo il tag v1.27.2 / After tag v1.27.2
+
+Base verificata: tag `v1.27.2` sul commit `a1f13ba`, main `e53a6dd`. La versione
+sorgente diventa 1.27.3; schema v16 e Node di sviluppo 24 restano invariati.
+Il tag e la release GitHub non fanno parte di questa preparazione.
+
+| PR | Dipendenza / Dependency | Prima / Before | Dopo / After |
+|---|---|---|---|
+| #141 | eslint | 10.13.0 | 10.14.0 |
+| #141 | globals | 17.13.0 | 17.14.0 |
+| #144 | lucide-react | 1.57.0 | 1.68.0 |
+| #145 | vitest, @vitest/mocker, @vitest/spy | 5.0.5 | 5.1.0 |
+| #145 | @vitest/coverage-v8 risolto / resolved | 5.0.5 | 5.1.0 |
+| #145 | @vitest/istanbul-lib-coverage, @vitest/istanbul-lib-report | 1.0.2 | 2.1.0 |
+| #142 | electron | 45.1.0 | 45.2.3 |
+| #146 | range dichiarato di @vitest/coverage-v8 | ^5.0.5 | ^5.1.0 |
+
+#146 non cambia il tarball già risolto `coverage-v8-5.1.0`. Nessuna dipendenza di
+produzione oltre Lucide, nessun override e nessuno schema workbook cambiano.
+
+Verified base: tag `v1.27.2` at `a1f13ba`, main `e53a6dd`. Source version becomes
+1.27.3; schema v16 and development Node 24 stay unchanged. This preparation does
+not create the tag or the GitHub release. #146 leaves the resolved
+`coverage-v8-5.1.0` tarball in place. No production dependency other than Lucide,
+no override, and no workbook schema changes.

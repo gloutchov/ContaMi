@@ -23,7 +23,7 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** C46 è completata e rilasciata come `v1.27.2`: i tag annotati `milestone/C46` e `v1.27.2` puntano al commit applicativo approvato `a1f13ba0cff33281ca70f516dba834a91d8d687d`, integrato e pubblicato su main. Le cinque PR Dependabot #136–#140 sono chiuse, con aggiornamenti riconciliati nel grafo C45. Audit completo zero, CI e packaging/smoke macOS/Windows, pacchetti/checksum e sorgenti sono verificati; branch M46 locale/remoto e worktree rimossi. Electron 45.1.0, versione 1.27.2 e schema v16; le sezioni chiuse conservano risultati e limiti storici.
+**Stato corrente:** la sorgente preparata è **1.27.3** sul branch `patch/1.27.3` e non è ancora rilasciata. Rispetto al tag `v1.27.2` (commit applicativo `a1f13ba0cff33281ca70f516dba834a91d8d687d`), main `e53a6dde9bb4daea51780572e31c132354c54599` contiene #141 (ESLint 10.14.0 e globals 17.14.0), #144 (Lucide 1.68.0), #145 (Vitest 5.1.0 e `@vitest/coverage-v8` risolto 5.1.0), #142 (Electron 45.2.3) e #146 (range `@vitest/coverage-v8` `^5.1.0`). Schema v16 invariato. C46 resta la release pubblicata `v1.27.2`, con tag, pacchetti e checksum già verificati; le sezioni chiuse conservano risultati e limiti storici. Prepared source is **1.27.3** on `patch/1.27.3` and is not released. Against tag `v1.27.2`, main contains PRs #141, #144, #145, #142, and #146. Schema v16 is unchanged. The published release remains C46 `v1.27.2`.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -84,6 +84,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | C44 — Glob corretto e consumatori moderni di minimatch | `milestone/44-glob-modern-minimatch` | `milestone/C44`; versione invariata `1.27.0` | Completata; CI/pacchetti/checksum e pulizia verificati; nessuna release |
 | C45 — Minimatch legacy e audit senza eccezioni | `milestone/45-legacy-minimatch-audit` | `milestone/C45`; `v1.27.1` | Completata e rilasciata; audit zero, pacchetti e checksum verificati |
 | C46 — Manutenzione Dependabot #136–#140 | `milestone/46-dependabot-maintenance` | `milestone/C46`; `v1.27.2` | Completata e rilasciata; cinque PR risolte, pacchetti e checksum verificati |
+| Patch dipendenze dopo v1.27.2 | `patch/1.27.3` | `1.27.3` | Sorgente preparata; tag e release non pubblicati |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1` → manutenzione dipendenze e catena di rilascio `v1.21.0` → letture acqua delle residenze `v1.22.0` → compatibilità configurazione Vite `v1.22.1` → trasparenza costo/km Automobile `v1.22.2` → release Electron 44 `v1.23.0` → costo d’uso e costo complessivo/km `v1.24.0`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
@@ -2084,3 +2085,25 @@ logica finanziaria, IPC e capacità di rete restano invariati. Questa rendiconta
 - [x] CI e packaging/smoke multipiattaforma, artifact e checksum verificati.
 - [x] Merge/main/checkpoint C46 pubblicati e verificati; M46 rinominata C46.
 - [x] Cinque PR bot risolte dopo integrazione; branch eliminati solo dopo i gate.
+
+
+## Patch 1.27.3 — dipendenze dopo v1.27.2
+
+**Obiettivo:** fissare la versione sorgente 1.27.3 per gli aggiornamenti già uniti su main dopo il tag `v1.27.2`, senza nuove funzioni.
+**Branch:** `patch/1.27.3`, da main `e53a6dde9bb4daea51780572e31c132354c54599`.
+**Incremento:** patch `+0.0.1`, `1.27.2`→`1.27.3`.
+**Release:** non pubblicata. Nessun tag in questa preparazione.
+**Stato:** sorgente preparata; in attesa di revisione della PR.
+
+Il diff `v1.27.2..e53a6dd` contiene solo dipendenze e la rendicontazione già pubblicata di C46:
+
+- #141: ESLint 10.13.0→10.14.0 e globals 17.13.0→17.14.0.
+- #144: Lucide 1.57.0→1.68.0.
+- #145: Vitest 5.0.5→5.1.0; nel lockfile anche `@vitest/coverage-v8`, `@vitest/mocker` e `@vitest/spy` 5.1.0, più `@vitest/istanbul-lib-coverage` e `@vitest/istanbul-lib-report` 2.1.0.
+- #142: Electron 45.1.0→45.2.3.
+- #146: il range dichiarato di `@vitest/coverage-v8` passa da `^5.0.5` a `^5.1.0`; il tarball risolto resta `coverage-v8-5.1.0`.
+- `37d87f4` registra la chiusura già verificata di C46/`v1.27.2` e non cambia l'app.
+
+Schema v16, logica finanziaria, IPC e rete restano invariati.
+
+**Patch 1.27.3 — dependencies after v1.27.2.** Prepared source only; no tag or GitHub release. The range `v1.27.2..e53a6dd` is the Dependabot updates #141, #144, #145, and #142, the Vitest coverage range alignment #146, and the existing C46 closure note. Schema v16 and application capabilities are unchanged.

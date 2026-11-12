@@ -8,7 +8,7 @@
 
 [**Sito / Website**](https://contami.glaucosilvestri.it/) · [**Release e checksum / Releases and checksums**](https://github.com/gloutchov/Contami/releases) · [**Avvio rapido / Quick start**](QUICK-START_Desktop.md) · [**Manuale IT**](ISTRUZIONI.md) · [**User manual EN**](INSTRUCTIONS.md)
 
-> **Stato / Status:** alpha funzionante / functional alpha · **1.27.2 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v16 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
+> **Stato / Status:** alpha funzionante / functional alpha · **1.27.3 — versione sorgente / source version** · **Schema workbook / Workbook schema:** v16 · **Piattaforme / Platforms:** macOS 13+ e Windows x64 · **Licenza / License:** Apache-2.0. Per la versione distribuita e i pacchetti disponibili, consulta [Releases](https://github.com/gloutchov/Contami/releases).
 
 ![Panoramica di ContaMì con dati dimostrativi](docs/assets/panoramica_whi.png)
 
@@ -116,6 +116,8 @@ Il collaudo browser richiede prima `npm run test:e2e:install`; le istruzioni per
 Browser checks first need `npm run test:e2e:install`. Packaging, smoke, and landing instructions are in the [English manual](INSTRUCTIONS.md), [plan](PLAN.md), and [repository map](MAP.md). Generated local output and data, including `sources/`, workbooks, and backups, must stay out of commits and artifacts.
 
 La versione **1.27.2** integra le PR Dependabot #136–#140: Electron 45.1.0, strumenti di sviluppo aggiornati e Vitest/coverage allineati a 5.0.5. Conserva le correzioni audit di C45 e lo schema v16; i pacchetti distribuiti restano indicati in Releases. / Version **1.27.2** integrates Dependabot PRs #136–#140: Electron 45.1.0, updated development tools and Vitest/coverage aligned at 5.0.5. C45 audit fixes and schema v16 are preserved; Releases lists the distributed packages.
+
+La versione **1.27.3** raccoglie gli aggiornamenti già presenti su main dopo il tag `v1.27.2`: Electron 45.2.3 (#142), Lucide 1.68.0 (#144), ESLint 10.14.0 e globals 17.14.0 (#141), Vitest 5.1.0 (#145) e il range `@vitest/coverage-v8` `^5.1.0` allineato al pacchetto già risolto (#146). Schema v16, flussi e capacità dell'app restano invariati. La release distribuita resta `v1.27.2` finché `v1.27.3` non è pubblicata. / Version **1.27.3** collects the updates already on main after tag `v1.27.2`: Electron 45.2.3 (#142), Lucide 1.68.0 (#144), ESLint 10.14.0 and globals 17.14.0 (#141), Vitest 5.1.0 (#145), and the `@vitest/coverage-v8` range `^5.1.0` aligned with the package already resolved (#146). Schema v16, workflows, and app capabilities stay unchanged. The distributed release remains `v1.27.2` until `v1.27.3` is published.
 
 ## Documentazione / Documentation
 
