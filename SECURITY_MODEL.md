@@ -1,6 +1,6 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-10-31 · Applicazione / Application: 1.27.2
+Versione del documento / Document version: 2026-11-12 · Applicazione / Application: 1.27.3
 
 ## Italiano
 
@@ -689,3 +689,10 @@ verified. Five bot PRs/branches are closed/removed; a recoverable original-commi
 and synthetic evidence have verified checksums. M46 branch/worktree were removed after
 gates. Unsigned packages and the existing optional ExcelJS limit remain; no private
 data was opened or changed. PLAN.md C46 records the details and workflow runs.
+
+
+### Patch 1.27.3 — runtime e strumenti / Patch 1.27.3 — runtime and tools
+
+La sorgente 1.27.3 non cambia confini di fiducia, IPC, rete, permessi, persistenza o schema v16. Il runtime passa da Electron 45.1.0 a 45.2.3. Gli strumenti di sviluppo passano a Vitest 5.1.0 con `@vitest/coverage-v8` dichiarato `^5.1.0`, Lucide 1.68.0, ESLint 10.14.0 e globals 17.14.0. Non aggiunge capacità all'app pacchettizzata. Il tag e la release GitHub non sono ancora pubblicati.
+
+Source 1.27.3 does not change trust boundaries, IPC, network, permissions, persistence, or schema v16. The runtime moves from Electron 45.1.0 to 45.2.3. Development tools move to Vitest 5.1.0 with `@vitest/coverage-v8` declared `^5.1.0`, Lucide 1.68.0, ESLint 10.14.0, and globals 17.14.0. The packaged app gains no new capability. The Git tag and GitHub release are not published yet.

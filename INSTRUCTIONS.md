@@ -231,7 +231,7 @@ The entered expense becomes the first occurrence without creating another paymen
 
 Disabling recurrence on a Transaction or Shared expense detaches that record only; it does not close the plan. Changing one record's sharing or shares does not change the series; edit the plan for future occurrences. Links use explicit identifiers: similar descriptions never automatically reattach a detached expense. For example, a synthetic €100.01 expense with a €30 personal share retains the initial €30/€70.01 ratio in its plan.
 
-**Schema v16**, introduced in 1.27.0 with a backup, is unchanged in source patch **1.27.2**. Migration leaves existing schedules without series sharing and preserves individually shared expenses. Schema v16 requires 1.27.0 or later; keep the backup if returning to an older app.
+**Schema v16**, introduced in 1.27.0 with a backup, is unchanged in source patch **1.27.3**. Migration leaves existing schedules without series sharing and preserves individually shared expenses. Schema v16 requires 1.27.0 or later; keep the backup if returning to an older app.
 
 ## 11. Shared expenses
 
@@ -368,3 +368,5 @@ Source version 1.25.0 adds printable investment reports; 1.26.0 adds private pen
 C42 maintenance prepares patch release `1.26.1`, updating React and the tools used for testing, static checks, and packaging. It requires no workbook migration or changes and keeps application workflows unchanged. Before updating, retain a copy of your data and verify the checksum of the package published on the Releases page. macOS 13+ and Windows x64 requirements and unsigned-build warnings still apply.
 
 Version **1.27.2** updates the runtime to Electron 45.1.0 and integrates the five Dependabot proposals #136–#140. Vitest and coverage are aligned at 5.0.5. Workflows, files and schema v16 are unchanged; the full audit retains C45’s unconditional checks. Releases lists the distributed version.
+
+Version **1.27.3** updates the source already on main after `v1.27.2`: Electron 45.2.3, Lucide 1.68.0, ESLint 10.14.0, globals 17.14.0, and Vitest 5.1.0, with `@vitest/coverage-v8` declared `^5.1.0`. Workflows, files, and schema v16 are unchanged. Releases lists the distributed version until this patch is published.
