@@ -2138,7 +2138,7 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 
 **Ordine di esecuzione.** Non è più l’ordine numerico. M51 e M52 si decidono insieme e si eseguono prima di M47: la CI sulle sole PR verso `main` bloccherebbe comunque gli agenti per il punto 2 dell’addendum, e M47–M50 la farebbero ancora partire. M53 resta una voce separata e si esegue sullo stesso branch di M52. M55 resta una voce separata e si esegue sullo stesso branch di M47, con lo stesso `+0.0.1` e senza un incremento aggiuntivo. M50 è una decisione di Glauco che può prendere in qualsiasi momento. Poi M48, M49, M54 e M56–M64.
 
-**Decisione di Glauco del 13/11/2026.** Le voci a versione invariata non richiedono una GitHub release (HOME 116).
+**Decisione di Glauco del 13/11/2026.** Le voci a versione invariata non richiedono una GitHub release (HOME 116). È una scelta voluta di Glauco del 13/11/2026, diversa da Plancia-Comandi, dove invece la release è richiesta.
 
 ## M47 — Permessi del workflow di release (CM-01)
 
@@ -2343,7 +2343,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 
 **Execution order.** It is no longer numeric order. M51 and M52 are decided together and run before M47: CI on pull requests to `main` alone would still block agents under addendum point 2, and M47–M50 would still start it. M53 stays a separate entry and runs on M52’s branch. M55 stays a separate entry and runs on M47’s branch, with that same `+0.0.1` and no extra increment. M50 is Glauco’s decision and he can take it at any time. Then M48, M49, M54 and M56–M64.
 
-**Glauco’s decision of 13 November 2026.** Entries that leave the version unchanged do not require a GitHub release (HOME 116).
+**Glauco’s decision of 13 November 2026.** Entries that leave the version unchanged do not require a GitHub release (HOME 116). This is a deliberate choice by Glauco on 13 November 2026, different from Plancia-Comandi, where a release is required.
 
 ## M47 — Release workflow permissions (CM-01)
 
