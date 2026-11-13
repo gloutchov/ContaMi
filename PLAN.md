@@ -23,7 +23,9 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** la sorgente preparata è **1.27.3** sul branch `patch/1.27.3` e non è ancora rilasciata. Rispetto al tag `v1.27.2` (commit applicativo `a1f13ba0cff33281ca70f516dba834a91d8d687d`), main `e53a6dde9bb4daea51780572e31c132354c54599` contiene #141 (ESLint 10.14.0 e globals 17.14.0), #144 (Lucide 1.68.0), #145 (Vitest 5.1.0 e `@vitest/coverage-v8` risolto 5.1.0), #142 (Electron 45.2.3) e #146 (range `@vitest/coverage-v8` `^5.1.0`). Schema v16 invariato. C46 resta la release pubblicata `v1.27.2`, con tag, pacchetti e checksum già verificati; le sezioni chiuse conservano risultati e limiti storici. Prepared source is **1.27.3** on `patch/1.27.3` and is not released. Against tag `v1.27.2`, main contains PRs #141, #144, #145, #142, and #146. Schema v16 is unchanged. The published release remains C46 `v1.27.2`.
+**Stato corrente:** `main` è `892f614841d481f663a49f08de99c61fd04b3a35`, con tag e release `v1.27.3`. C46 resta la milestone chiusa precedente, pubblicata come `v1.27.2`. La baseline di Vesta del 13/11/2026 è pianificata e non avviata: M47–M64 corrispondono a CM-01…CM-18. Nessuna voce M già presente e non avviata copriva questi ID, quindi non c’è stata integrazione. CM-01 è l’unica gravità alta. CM-04 è una decisione di Glauco sulle impostazioni del repository. Schema v16 invariato. Le sezioni chiuse restano storiche.
+
+**Current status:** `main` is `892f614841d481f663a49f08de99c61fd04b3a35`, with tag and release `v1.27.3`. C46 remains the previous closed milestone, published as `v1.27.2`. Vesta’s 13 November 2026 baseline is planned and not started: M47–M64 are CM-01…CM-18. No existing unstarted M entry covered these IDs, so none was extended. CM-01 is the only high severity. CM-04 is Glauco’s decision on repository settings. Schema v16 is unchanged. Closed sections stay historical.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -84,7 +86,25 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | C44 — Glob corretto e consumatori moderni di minimatch | `milestone/44-glob-modern-minimatch` | `milestone/C44`; versione invariata `1.27.0` | Completata; CI/pacchetti/checksum e pulizia verificati; nessuna release |
 | C45 — Minimatch legacy e audit senza eccezioni | `milestone/45-legacy-minimatch-audit` | `milestone/C45`; `v1.27.1` | Completata e rilasciata; audit zero, pacchetti e checksum verificati |
 | C46 — Manutenzione Dependabot #136–#140 | `milestone/46-dependabot-maintenance` | `milestone/C46`; `v1.27.2` | Completata e rilasciata; cinque PR risolte, pacchetti e checksum verificati |
-| Patch dipendenze dopo v1.27.2 | `patch/1.27.3` | `1.27.3` | Sorgente preparata; tag e release non pubblicati |
+| Patch dipendenze dopo v1.27.2 | `patch/1.27.3` | `v1.27.3` | Pubblicata sul merge `892f614` |
+| M47 — Permessi del workflow di release, CM-01 | `milestone/47-release-workflow-permissions` | `milestone/C47`; `+0.0.1` | Pianificata, non avviata; alta, verificata |
+| M48 — URL del dev server nel pacchetto, CM-06 | `milestone/48-packaged-dev-server-guard` | `milestone/C48`; `+0.0.1` | Pianificata, non avviata; bassa, verificata |
+| M49 — Electron 45.3.2, CM-02 | `milestone/49-electron-45-3-2` | `milestone/C49`; `+0.0.1` | Pianificata, non avviata; media; range verificato, lockfile sospetto |
+| M50 — Impostazioni di sicurezza GitHub, CM-04 | `milestone/50-github-security-decision` | nessuno; decisione di Glauco | Pianificata, non avviata; media, verificata |
+| M51 — Trigger della CI, CM-03 | `milestone/51-ci-trigger-scope` | `milestone/C51`; `+0.0.1` | Pianificata, non avviata; media, verificata |
+| M52 — Allineamento di AGENTS e dello standard, CM-05 | `milestone/52-agents-standard` | nessun incremento | Pianificata, non avviata; media, verificata |
+| M53 — README e release 1.27.3, CM-13 | `milestone/53-readme-release-note` | nessun incremento | Pianificata, non avviata; bassa, verificata |
+| M54 — Tag storici fuori formato, CM-15 | `milestone/54-historical-tags` | nessun incremento | Pianificata, non avviata; bassa, verificata |
+| M55 — Nome e retention del job di release, CM-14 | `milestone/55-release-job-retention` | `milestone/C55`; `+0.0.1` | Pianificata, non avviata; bassa, verificata |
+| M56 — Coda delle operazioni sul workbook, CM-08 | `milestone/56-workbook-operation-queue` | `milestone/C56`; `+0.0.1` | Pianificata, non avviata; bassa, sospetta |
+| M57 — Revisione dell’anteprima di importazione, CM-09 | `milestone/57-import-preview-revision` | `milestone/C57`; `+0.0.1` | Pianificata, non avviata; bassa, sospetta |
+| M58 — Impostazioni corrotte, CM-10 | `milestone/58-settings-corrupt-backup` | `milestone/C58`; `+0.0.1` | Pianificata, non avviata; bassa, verificata |
+| M59 — Seconda istanza, CM-07 | `milestone/59-single-instance-exit` | `milestone/C59`; `+0.0.1` | Pianificata, non avviata; bassa, sospetta |
+| M60 — Conferma di sovrascrittura Numbers, CM-11 | `milestone/60-numbers-overwrite-confirm` | `milestone/C60`; `+0.0.1` | Pianificata, non avviata; bassa, verificata |
+| M61 — warningCode del mirror, CM-12 | `milestone/61-mirror-warning-code` | `milestone/C61`; `+0.0.1` | Pianificata, non avviata; bassa, verificata |
+| M62 — Configurazione validata, CM-16 | `milestone/62-validated-app-config` | `milestone/C62`; `+0.0.1` | Pianificata, non avviata; bassa, verificata |
+| M63 — Campo allowScripts, CM-17 | `milestone/63-allow-scripts` | nessuno, oppure `+0.0.1` se il campo si rimuove | Pianificata, non avviata; bassa, sospetta |
+| M64 — Fork temp e documenti monolitici, CM-18 | `milestone/64-temp-fork-docs` | `milestone/C64`; `+0.0.1` | Pianificata, non avviata; bassa, verificata |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1` → manutenzione dipendenze e catena di rilascio `v1.21.0` → letture acqua delle residenze `v1.22.0` → compatibilità configurazione Vite `v1.22.1` → trasparenza costo/km Automobile `v1.22.2` → release Electron 44 `v1.23.0` → costo d’uso e costo complessivo/km `v1.24.0`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
@@ -2107,3 +2127,371 @@ Il diff `v1.27.2..e53a6dd` contiene solo dipendenze e la rendicontazione già pu
 Schema v16, logica finanziaria, IPC e rete restano invariati.
 
 **Patch 1.27.3 — dependencies after v1.27.2.** Prepared source only; no tag or GitHub release. The range `v1.27.2..e53a6dd` is the Dependabot updates #141, #144, #145, and #142, the Vitest coverage range alignment #146, and the existing C46 closure note. Schema v16 and application capabilities are unchanged.
+
+**Chiusura 2026-11-12:** il tag annotato `v1.27.3` e la release sono stati pubblicati sul merge `892f614841d481f663a49f08de99c61fd04b3a35`. I paragrafi di preparazione qui sopra restano la nota storica, non lo stato attuale.
+
+**Closure 2026-11-12:** annotated tag `v1.27.3` and the GitHub release were published on merge `892f614841d481f663a49f08de99c61fd04b3a35`. The preparation paragraphs above stay historical and are not the current status.
+
+## Baseline Vesta 2026-11-13 — M47–M64
+
+Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnalazioni CM-01…CM-18. Le voci sono pianificate e non avviate. L’ordine numerico è l’ordine di esecuzione e coincide con la priorità consigliata nella sezione 3 di quella baseline: prima l’unica gravità alta, poi le correzioni a basso rischio, Electron, la decisione di Glauco, la CI, l’allineamento documentale, la robustezza dei dati e il resto. L’incremento indica il tipo previsto dallo standard, da applicare alla versione pubblicata al momento dell’avvio; non è un numero già riservato. `+0.0.1` è una patch di correzione o di hardening. Le voci solo documentali non cambiano la versione e non richiedono una GitHub release. I numeri di riga sono quelli del commit `892f614`.
+
+Source: 13 November 2026 quality and security baseline, commit `892f614`, findings CM-01…CM-18. The entries are planned and not started. Numeric order is the execution order and matches the priority recommended in section 3 of that baseline: the only high severity first, then low-risk fixes, Electron, Glauco’s decision, CI, documentation, data robustness, and the rest. The increment is the type required by the standard, applied to the published version when work starts; it is not a reserved number. `+0.0.1` is a fix or hardening patch. Documentation-only entries do not change the version and do not require a GitHub release. Line numbers are those of commit `892f614`.
+
+## M47 — Permessi del workflow di release (CM-01)
+
+**ID Vesta:** CM-01. **Gravità:** alta. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** togliere il token di scrittura dai job che costruiscono i pacchetti.
+**Dove:** `.github/workflows/release.yml:9-10` (`permissions: contents: write` sull’intero workflow) e riga 29 (`actions/checkout` senza `persist-credentials: false`).
+**Branch previsto:** `milestone/47-release-workflow-permissions`. **Checkpoint previsto:** `milestone/C47` e, se la patch viene rilasciata, `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** `contents: read` a livello di workflow e `contents: write` solo nel job `publish`; `persist-credentials: false` sul checkout; valutare `npm ci --ignore-scripts` con la ricompilazione esplicita dei soli pacchetti già ammessi; valutare attestazioni o provenance degli artifact. Non avviare `release.yml` a mano durante la pianificazione.
+**Criteri di accettazione:** i job `package` non hanno permesso di scrivere contenuti del repository; il job `publish` resta l’unico che pubblica la release sui tag `v*`; il checkout non conserva le credenziali; i gate già richiesti (audit, preflight, ispezione, smoke) restano.
+**Test richiesti:** controllo statico del workflow e `scripts/check-required-docs.mjs`. Nessun workbook privato.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md`.
+
+**Vesta ID:** CM-01. **Severity:** high. **Finding:** verified. **Status:** planned, not started.
+**Objective:** remove the write token from the jobs that build packages.
+**Where:** `.github/workflows/release.yml:9-10` and line 29.
+**Planned branch:** `milestone/47-release-workflow-permissions`. **Planned checkpoint:** `milestone/C47` and, if released, `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** workflow-level `contents: read`, `contents: write` only on `publish`, `persist-credentials: false`, and an evaluation of ignored install scripts plus artifact provenance. Do not dispatch `release.yml` while this entry is only planned.
+**Acceptance:** package jobs cannot write repository contents; only `publish` publishes a `v*` release; checkout does not keep credentials; existing audit, preflight, inspection and smoke gates remain.
+**Tests:** static workflow check and `scripts/check-required-docs.mjs`. No private workbooks.
+**Documentation:** `PLAN.md`, `SECURITY_MODEL.md`.
+
+## M48 — URL del dev server nel pacchetto (CM-06)
+
+**ID Vesta:** CM-06. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** impedire che l’app impacchettata carichi il renderer da localhost.
+**Dove:** `src/main/index.ts:119-121` e `142-145`. `VITE_DEV_SERVER_URL=http://127.0.0.1:5173` carica il dev server e lascia passare le richieste verso quella origine, con accesso a `window.contami`.
+**Branch previsto:** `milestone/48-packaged-dev-server-guard`. **Checkpoint previsto:** `milestone/C48` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** accettare quell’URL solo se `!app.isPackaged`.
+**Criteri di accettazione:** nel pacchetto l’URL è ignorato; in sviluppo locale il renderer continua a caricarsi da Vite.
+**Test richiesti:** test del main sul ramo impacchettato e sul ramo di sviluppo, con dati sintetici.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md`.
+
+**Vesta ID:** CM-06. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
+**Objective:** stop a packaged app from loading the renderer from localhost.
+**Where:** `src/main/index.ts:119-121` and `142-145`.
+**Planned branch:** `milestone/48-packaged-dev-server-guard`. **Planned checkpoint:** `milestone/C48` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** honor that URL only when `!app.isPackaged`.
+**Acceptance:** the packaged app ignores the URL; local development still loads Vite.
+**Tests:** main-process tests for the packaged and development branches, with synthetic data.
+**Documentation:** `PLAN.md`, `SECURITY_MODEL.md`.
+
+## M49 — Electron 45.3.2 (CM-02)
+
+**ID Vesta:** CM-02. **Gravità:** media. **Stato del rilievo:** range verificato in `package.json:132` (`^45.2.3`); versione risolta nel lockfile sospetta, perché la baseline non ha letto il lockfile. **Stato:** pianificata, non avviata.
+**Obiettivo:** portare Electron alla 45.3.2, che include i backport di sicurezza indicati nella baseline, e rifare i pacchetti solo dopo approvazione esplicita della release.
+**Branch previsto:** `milestone/49-electron-45-3-2`. **Checkpoint previsto:** `milestone/C49` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** leggere il lockfile; aggiornare il range e, se possibile, fissare la versione esatta; verificare le note di rilascio 45.3.0–45.3.2; non avviare il workflow di release prima dell’approvazione.
+**Criteri di accettazione:** lockfile e manifest concordano sulla 45.3.2; audit completo senza nuove eccezioni; schema v16, IPC e rete dell’app invariati.
+**Test richiesti:** `npm ci`, preflight, coverage, ispezione del preload. Packaging e smoke solo sul commit approvato per la release.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md`, README, manuali IT/EN, quick start, inventario dipendenze.
+
+**Vesta ID:** CM-02. **Severity:** medium. **Finding:** range verified at `package.json:132`; resolved lockfile version suspected. **Status:** planned, not started.
+**Objective:** move Electron to 45.3.2 and rebuild packages only after an explicit release approval.
+**Planned branch:** `milestone/49-electron-45-3-2`. **Planned checkpoint:** `milestone/C49` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** read the lockfile, update the range and pin an exact version if possible, and check the 45.3.0–45.3.2 release notes.
+**Acceptance:** manifest and lockfile agree on 45.3.2; full audit stays without new exceptions; schema v16, IPC and app network stay unchanged.
+**Tests:** `npm ci`, preflight, coverage and preload inspection. Packaging and smoke only on the commit approved for release.
+**Documentation:** `PLAN.md`, `SECURITY_MODEL.md`, README, IT/EN manuals, quick start and the dependency inventory.
+
+## M50 — Impostazioni di sicurezza GitHub (CM-04)
+
+**ID Vesta:** CM-04. **Gravità:** media. **Stato del rilievo:** verificato via API. **Stato:** pianificata, non avviata. **Decisione di Glauco.**
+**Obiettivo:** decidere se attivare gli alert Dependabot, il secret scanning, la push protection e una protezione minima di `main`. Gli aggiornamenti Dependabot sono già attivi tramite `.github/dependabot.yml`; gli alert no, quindi le vulnerabilità senza correzione disponibile non vengono notificate. `main` non ha protezione.
+**Dove:** impostazioni del repository, non un file di questa milestone.
+**Branch previsto:** `milestone/50-github-security-decision`, solo se Glauco chiede un commit che registri la decisione. **Checkpoint previsto:** nessuno finché non esiste un commit da etichettare. **Incremento previsto:** nessuno. Non è una release applicativa.
+**Attività:** nessuna modifica alle impostazioni da parte dell’agente. Glauco decide se attivare alert Dependabot, secret scanning, push protection e il blocco di force-push e cancellazione su `main`.
+**Criteri di accettazione:** la decisione è registrata da Glauco; l’agente non cambia le impostazioni di propria iniziativa.
+**Test richiesti:** nessuno sul codice. Verifica API solo se Glauco la chiede dopo la modifica.
+**Documenti:** `PLAN.md` e, se la decisione cambia i controlli, `SECURITY_MODEL.md`.
+
+**Vesta ID:** CM-04. **Severity:** medium. **Finding:** verified through the API. **Status:** planned, not started. **Glauco’s decision.**
+**Objective:** decide whether to enable Dependabot alerts, secret scanning, push protection and minimal protection of `main`.
+**Where:** repository settings, not a file in this milestone.
+**Planned branch:** `milestone/50-github-security-decision`, only if Glauco asks for a commit that records the decision. **Planned checkpoint:** none until a commit exists to tag. **Planned increment:** none.
+**Activities:** the agent does not change settings. Glauco decides on alerts, secret scanning, push protection, and blocking force-push and branch deletion on `main`.
+**Acceptance:** Glauco records the decision; the agent does not change settings on its own.
+**Tests:** no code tests. An API check only if Glauco asks for it after the change.
+**Documentation:** `PLAN.md` and, if the controls change, `SECURITY_MODEL.md`.
+
+## M51 — Trigger della CI (CM-03)
+
+**ID Vesta:** CM-03. **Gravità:** media. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** allineare `ci.yml` allo standard e all’addendum: la CI non deve partire su ogni push di ogni branch.
+**Dove:** `.github/workflows/ci.yml:3-6` e `17-18`. Non ci sono filtri di percorso né `concurrency`. Il job Quality esegue e2e e audit su macOS e Windows.
+**Branch previsto:** `milestone/51-ci-trigger-scope`. **Checkpoint previsto:** `milestone/C51` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** avviare la CI su `pull_request` verso `main`, su `workflow_dispatch` e sui tag; aggiungere `concurrency` con `cancel-in-progress`; aggiungere `paths-ignore` per la documentazione. Non creare un secondo workflow.
+**Criteri di accettazione:** un push di un branch che non è un tag e non è la PR verso `main` non avvia Quality; una PR verso `main` lo avvia ancora; i tag `v*` continuano a poter eseguire la qualità; la documentazione ignorata non consuma la matrice.
+**Test richiesti:** revisione statica del workflow e controllo che i gate di qualità restino nel job. Nessuna riesecuzione manuale.
+**Documenti:** `PLAN.md`, `AGENTS.md` se la regola operativa della CI cambia, `SECURITY_MODEL.md` se cambia la descrizione della pipeline.
+
+**Vesta ID:** CM-03. **Severity:** medium. **Finding:** verified. **Status:** planned, not started.
+**Objective:** stop `ci.yml` from running on every push of every branch.
+**Where:** `.github/workflows/ci.yml:3-6` and `17-18`.
+**Planned branch:** `milestone/51-ci-trigger-scope`. **Planned checkpoint:** `milestone/C51` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** run CI on pull requests to `main`, `workflow_dispatch` and tags; add `concurrency` with `cancel-in-progress`; add `paths-ignore` for documentation.
+**Acceptance:** a non-tag branch push that is not a PR to `main` does not start Quality; a PR to `main` still does; `v*` tags can still run quality; ignored documentation does not use the matrix.
+**Tests:** static workflow review. No manual rerun.
+**Documentation:** `PLAN.md`, `AGENTS.md` if the CI rule changes, and `SECURITY_MODEL.md` if the pipeline description changes.
+
+## M52 — Allineamento di AGENTS e dello standard (CM-05)
+
+**ID Vesta:** CM-05. **Gravità:** media. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** far seguire agli agenti lo standard HOME e l’addendum, non la copia superata nel repository.
+**Dove:** `AGENTS.md:59` (progressione autonoma e una sola approvazione) e `AGENTS.md:61` (CI obbligatoria); `STARTUP_PREFERENCES.md` nel repository, più corta dello standard HOME.
+**Branch previsto:** `milestone/52-agents-standard`. **Checkpoint previsto:** `milestone/C52`, senza tag di versione. **Incremento previsto:** nessuno. Modifica solo documentale.
+**Attività:** sostituire la copia con un riferimento alla versione HOME e allineare `AGENTS.md` a due approvazioni, CI solo quando necessaria e addendum degli agenti cloud.
+**Criteri di accettazione:** il repository non contiene una seconda copia divergente dello standard; `AGENTS.md` non autorizza un’unica approvazione né rende obbligatoria ogni CI.
+**Test richiesti:** `scripts/check-required-docs.mjs`. Nessun test di prodotto.
+**Documenti:** `AGENTS.md`, `PLAN.md`. Non si versiona una nuova copia integrale dello standard dentro il repository.
+
+**Vesta ID:** CM-05. **Severity:** medium. **Finding:** verified. **Status:** planned, not started.
+**Objective:** make agents follow the HOME standard and the addendum instead of the outdated copy in the repository.
+**Where:** `AGENTS.md:59`, `AGENTS.md:61` and in-repo `STARTUP_PREFERENCES.md`.
+**Planned branch:** `milestone/52-agents-standard`. **Planned checkpoint:** `milestone/C52`, no version tag. **Planned increment:** none.
+**Activities:** replace the copy with a reference to the HOME version and align `AGENTS.md` to two approvals, CI only when needed, and the cloud-agent addendum.
+**Acceptance:** the repository does not keep a second divergent copy of the standard; `AGENTS.md` does not allow a single approval or require every CI run.
+**Tests:** `scripts/check-required-docs.mjs`. No product tests.
+**Documentation:** `AGENTS.md`, `PLAN.md`.
+
+## M53 — README e release 1.27.3 (CM-13)
+
+**ID Vesta:** CM-13. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** dire che la release distribuita è `v1.27.3`.
+**Dove:** `README.md:120`, che indica ancora `v1.27.2` come release distribuita.
+**Branch previsto:** `milestone/53-readme-release-note`. **Checkpoint previsto:** `milestone/C53`, senza tag di versione. **Incremento previsto:** nessuno.
+**Attività:** aggiornare la frase in italiano e in inglese. Non cambiare la versione in `package.json`.
+**Criteri di accettazione:** README e, se ripetono la stessa frase, quick start e manuali non dicono più che la release distribuita è rimasta `v1.27.2`.
+**Test richiesti:** `scripts/check-required-docs.mjs`.
+**Documenti:** `README.md` e gli altri punti che ripetono quella frase.
+
+**Vesta ID:** CM-13. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
+**Objective:** state that the distributed release is `v1.27.3`.
+**Where:** `README.md:120`.
+**Planned branch:** `milestone/53-readme-release-note`. **Planned checkpoint:** `milestone/C53`, no version tag. **Planned increment:** none.
+**Activities:** update the Italian and English sentence. Do not change `package.json`.
+**Acceptance:** README and any repeated sentence no longer say the distributed release is still `v1.27.2`.
+**Tests:** `scripts/check-required-docs.mjs`.
+**Documentation:** `README.md` and the other places that repeat the sentence.
+
+## M54 — Tag storici fuori formato (CM-15)
+
+**ID Vesta:** CM-15. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** registrare `roadmap-v1.0.0` e `landing-v1.0.0`…`landing-v1.0.5` come eccezioni storiche e non crearne di nuovi.
+**Dove:** tag remoti, già citati nella sequenza web di questo piano. Lo standard prevede solo `vX.Y.Z` e `milestone/C<n>`.
+**Branch previsto:** `milestone/54-historical-tags`. **Checkpoint previsto:** `milestone/C54`, senza tag di versione. **Incremento previsto:** nessuno.
+**Attività:** scrivere nel piano l’elenco e il commit a cui punta ciascun tag; non spostarli, non riscriverli e non aggiungerne altri fuori formato.
+**Criteri di accettazione:** il piano elenca i tag fuori formato come storia chiusa; il lavoro non pubblica tag nuovi.
+**Test richiesti:** confronto di sola lettura con `git ls-remote --tags`.
+**Documenti:** `PLAN.md`.
+
+**Vesta ID:** CM-15. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
+**Objective:** record `roadmap-v1.0.0` and `landing-v1.0.0`…`landing-v1.0.5` as historical exceptions and create no new ones.
+**Where:** remote tags already mentioned in this plan’s web sequence. The standard allows only `vX.Y.Z` and `milestone/C<n>`.
+**Planned branch:** `milestone/54-historical-tags`. **Planned checkpoint:** `milestone/C54`, no version tag. **Planned increment:** none.
+**Activities:** list each tag and the commit it points at; do not move, rewrite or add out-of-format tags.
+**Acceptance:** the plan lists the out-of-format tags as closed history; the work publishes no new tag.
+**Tests:** read-only comparison with `git ls-remote --tags`.
+**Documentation:** `PLAN.md`.
+
+## M55 — Nome e retention del job di release (CM-14)
+
+**ID Vesta:** CM-14. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** togliere dal job di pubblicazione la parola «private», perché il repository è pubblico, e fissare la retention degli artifact.
+**Dove:** `.github/workflows/release.yml:53` (`Publish private GitHub release`). Gli artifact usano la retention predefinita.
+**Branch previsto:** `milestone/55-release-job-retention`. **Checkpoint previsto:** `milestone/C55` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** rinominare il job e impostare `retention-days` sull’upload. Non cambiare i permessi: quelli restano M47. Non avviare il workflow a mano.
+**Criteri di accettazione:** il nome non dice che la release è privata; la retention è esplicita; il job `publish` continua a partire solo sui tag `v*`.
+**Test richiesti:** controllo statico del workflow e `scripts/check-required-docs.mjs`.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md` se descrive il job.
+
+**Vesta ID:** CM-14. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
+**Objective:** remove “private” from the publish job name and set an explicit artifact retention.
+**Where:** `.github/workflows/release.yml:53`.
+**Planned branch:** `milestone/55-release-job-retention`. **Planned checkpoint:** `milestone/C55` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** rename the job and set `retention-days`. Permissions stay in M47. Do not dispatch the workflow.
+**Acceptance:** the name does not call the release private; retention is explicit; `publish` still runs only on `v*` tags.
+**Tests:** static workflow check and `scripts/check-required-docs.mjs`.
+**Documentation:** `PLAN.md` and `SECURITY_MODEL.md` if it describes the job.
+
+## M56 — Coda delle operazioni sul workbook (CM-08)
+
+**ID Vesta:** CM-08. **Gravità:** bassa. **Stato del rilievo:** sospetto. **Stato:** pianificata, non avviata.
+**Obiettivo:** serializzare le operazioni IPC sulla stessa cartella di lavoro.
+**Dove:** `src/main/services/FinanceFileService.ts:131-158`. Un doppio invio può produrre falsi `WORKBOOK_CHANGED_EXTERNALLY` o `WORKBOOK_LOCKED`. Il lock e il controllo di revisione evitano la perdita di dati.
+**Branch previsto:** `milestone/56-workbook-operation-queue`. **Checkpoint previsto:** `milestone/C56` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** una coda di promesse per cartella di lavoro nel main process. Prima confermare il sospetto con un test.
+**Criteri di accettazione:** due operazioni sovrapposte sulla stessa cartella non producono un falso conflitto; i dati sintetici restano integri.
+**Test richiesti:** test di integrazione del servizio con due chiamate concorrenti e dati sintetici.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md`.
+
+**Vesta ID:** CM-08. **Severity:** low. **Finding:** suspected. **Status:** planned, not started.
+**Objective:** serialize IPC operations on the same workbook.
+**Where:** `src/main/services/FinanceFileService.ts:131-158`.
+**Planned branch:** `milestone/56-workbook-operation-queue`. **Planned checkpoint:** `milestone/C56` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** a per-workbook promise queue in the main process, after a test confirms the suspicion.
+**Acceptance:** two overlapping operations on the same workbook do not raise a false conflict; synthetic data stays intact.
+**Tests:** service integration test with two concurrent calls and synthetic data.
+**Documentation:** `PLAN.md`, `SECURITY_MODEL.md`.
+
+## M57 — Revisione dell’anteprima di importazione (CM-09)
+
+**ID Vesta:** CM-09. **Gravità:** bassa. **Stato del rilievo:** sospetto. **Stato:** pianificata, non avviata.
+**Obiettivo:** rifiutare la conferma di un’anteprima se la cartella di lavoro è cambiata.
+**Dove:** `src/main/services/ImportDataService.ts:24-62`. I comandi sono calcolati sullo snapshot dell’anteprima e possono essere applicati fino a 15 minuti dopo.
+**Branch previsto:** `milestone/57-import-preview-revision`. **Checkpoint previsto:** `milestone/C57` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** salvare la revisione nell’anteprima e rifiutare la conferma se non coincide. Prima confermare il sospetto con un test.
+**Criteri di accettazione:** una modifica fra anteprima e conferma non applica i comandi vecchi; l’utente riceve un errore compreso, non un percorso completo.
+**Test richiesti:** test di integrazione con revisione invariata e revisione cambiata, dati sintetici.
+**Documenti:** `PLAN.md`, manuali IT/EN se compare un messaggio nuovo.
+
+**Vesta ID:** CM-09. **Severity:** low. **Finding:** suspected. **Status:** planned, not started.
+**Objective:** reject an import confirmation when the workbook changed after the preview.
+**Where:** `src/main/services/ImportDataService.ts:24-62`.
+**Planned branch:** `milestone/57-import-preview-revision`. **Planned checkpoint:** `milestone/C57` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** store the revision in the preview and reject a mismatched confirmation, after a test confirms the suspicion.
+**Acceptance:** a change between preview and confirmation does not apply the old commands; the user gets a clear error without a full path.
+**Tests:** integration tests for an unchanged and a changed revision, with synthetic data.
+**Documentation:** `PLAN.md` and the IT/EN manuals if a new message appears.
+
+## M58 — Impostazioni corrotte (CM-10)
+
+**ID Vesta:** CM-10. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** non sostituire in silenzio un file impostazioni corrotto e serializzare `update`.
+**Dove:** `src/main/services/SettingsService.ts`, `get` e `update` (circa righe 19-36). Il percorso della cartella di lavoro si perde senza avviso. `update` è già atomico in scrittura, ma il read-modify-write non è serializzato.
+**Branch previsto:** `milestone/58-settings-corrupt-backup`. **Checkpoint previsto:** `milestone/C58` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** salvare una copia `.bak` del file corrotto, avvisare l’utente e serializzare `update`.
+**Criteri di accettazione:** un file illeggibile non viene sovrascritto dai default senza copia e senza segnale; due update concorrenti non si perdono a vicenda.
+**Test richiesti:** test del servizio con file sintetico corrotto e con due update sovrapposti.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md`, manuali IT/EN se l’avviso è visibile.
+
+**Vesta ID:** CM-10. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
+**Objective:** stop silently replacing a corrupt settings file and serialize `update`.
+**Where:** `src/main/services/SettingsService.ts`, `get` and `update` (about lines 19-36).
+**Planned branch:** `milestone/58-settings-corrupt-backup`. **Planned checkpoint:** `milestone/C58` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** keep a `.bak` of the corrupt file, tell the user and serialize `update`.
+**Acceptance:** an unreadable file is not replaced by defaults without a copy and a signal; two concurrent updates do not drop each other.
+**Tests:** service tests with a synthetic corrupt file and two overlapping updates.
+**Documentation:** `PLAN.md`, `SECURITY_MODEL.md` and the IT/EN manuals if the warning is visible.
+
+## M59 — Seconda istanza (CM-07)
+
+**ID Vesta:** CM-07. **Gravità:** bassa. **Stato del rilievo:** sospetto. **Stato:** pianificata, non avviata.
+**Obiettivo:** fermare subito il processo che non ottiene il lock di istanza singola.
+**Dove:** `src/main/index.ts:21-22`. Dopo `if (!gotLock) app.quit();` il file prosegue e la registrazione di `whenReady` resta attiva.
+**Branch previsto:** `milestone/59-single-instance-exit`. **Checkpoint previsto:** `milestone/C59` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** racchiudere l’avvio in `else`, oppure uscire dal processo. Prima confermare il sospetto.
+**Criteri di accettazione:** la seconda istanza non registra `whenReady` e non apre una finestra.
+**Test richiesti:** test del ramo senza lock, senza aprire workbook reali.
+**Documenti:** `PLAN.md`.
+
+**Vesta ID:** CM-07. **Severity:** low. **Finding:** suspected. **Status:** planned, not started.
+**Objective:** stop the process that does not get the single-instance lock.
+**Where:** `src/main/index.ts:21-22`.
+**Planned branch:** `milestone/59-single-instance-exit`. **Planned checkpoint:** `milestone/C59` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** put startup in `else`, or exit the process, after confirming the suspicion.
+**Acceptance:** the second instance does not register `whenReady` and does not open a window.
+**Tests:** a test of the branch without the lock, without opening a real workbook.
+**Documentation:** `PLAN.md`.
+
+## M60 — Conferma di sovrascrittura Numbers (CM-11)
+
+**ID Vesta:** CM-11. **Gravità:** bassa. **Stato del rilievo:** verificato; mitigato dal backup. **Stato:** pianificata, non avviata.
+**Obiettivo:** chiedere conferma prima che `createWorkbook` nel formato Numbers sovrascriva `X.contami.xlsx`.
+**Dove:** `src/main/services/FinanceFileService.ts:92-115`. Il backup in `.contami-backups` resta.
+**Branch previsto:** `milestone/60-numbers-overwrite-confirm`. **Checkpoint previsto:** `milestone/C60` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** conferma esplicita se il file esiste già. Non rimuovere il backup.
+**Criteri di accettazione:** senza conferma il file esistente resta; con conferma la sovrascrittura mantiene il backup.
+**Test richiesti:** test di integrazione con file sintetici, sia al primo creato sia quando il sidecar esiste.
+**Documenti:** `PLAN.md`, manuali IT/EN.
+
+**Vesta ID:** CM-11. **Severity:** low. **Finding:** verified, mitigated by backup. **Status:** planned, not started.
+**Objective:** ask before `createWorkbook` in Numbers format overwrites `X.contami.xlsx`.
+**Where:** `src/main/services/FinanceFileService.ts:92-115`.
+**Planned branch:** `milestone/60-numbers-overwrite-confirm`. **Planned checkpoint:** `milestone/C60` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** explicit confirmation when the file already exists. Keep the backup.
+**Acceptance:** without confirmation the existing file stays; with confirmation the overwrite still keeps the backup.
+**Tests:** integration tests with synthetic files, for a first create and an existing sidecar.
+**Documentation:** `PLAN.md`, IT/EN manuals.
+
+## M61 — warningCode del mirror (CM-12)
+
+**ID Vesta:** CM-12. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** un mirror riuscito non deve cancellare avvisi che non lo riguardano.
+**Dove:** `src/main/services/FinanceFileService.ts:230-238`. `updateMirror` azzera `warningCode`, compresi avvisi come gli ID riparati.
+**Branch previsto:** `milestone/61-mirror-warning-code`. **Checkpoint previsto:** `milestone/C61` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
+**Attività:** cancellare solo l’avviso del mirror.
+**Criteri di accettazione:** dopo un mirror riuscito un `warningCode` diverso resta; l’avviso del mirror, se presente, viene tolto.
+**Test richiesti:** test del servizio con codici sintetici.
+**Documenti:** `PLAN.md`.
+
+**Vesta ID:** CM-12. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
+**Objective:** a successful mirror must not clear warnings that are not about the mirror.
+**Where:** `src/main/services/FinanceFileService.ts:230-238`.
+**Planned branch:** `milestone/61-mirror-warning-code`. **Planned checkpoint:** `milestone/C61` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** clear only the mirror warning.
+**Acceptance:** after a successful mirror a different `warningCode` remains; a mirror warning is removed.
+**Tests:** service tests with synthetic codes.
+**Documentation:** `PLAN.md`.
+
+## M62 — Configurazione validata (CM-16)
+
+**ID Vesta:** CM-16. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
+**Obiettivo:** sostituire la costante compilata con un file di configurazione centrale validato all’avvio.
+**Dove:** `src/config/appConfig.ts`. `APP_CONFIG` è compilata nel pacchetto.
+**Branch previsto:** `milestone/62-validated-app-config`. **Checkpoint previsto:** `milestone/C62` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`. Non è una funzione nuova per chi usa l’app: è la base tecnica richiesta dallo standard.
+**Attività:** file JSON senza segreti, validazione con limiti e ripiego solo per valori mancanti o non validi, documentato.
+**Criteri di accettazione:** i parametri oggi cablati che lo standard vuole configurabili stanno nel file; un valore fuori limite non avvia l’app con un valore silenzioso non documentato; il renderer non legge il file dal disco.
+**Test richiesti:** test della validazione con valori sintetici validi, mancanti e fuori limite.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md`, `MAP.md`, README.
+
+**Vesta ID:** CM-16. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
+**Objective:** replace the compiled constant with a central configuration file validated at startup.
+**Where:** `src/config/appConfig.ts`.
+**Planned branch:** `milestone/62-validated-app-config`. **Planned checkpoint:** `milestone/C62` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
+**Activities:** a JSON file without secrets, validation with limits, and a documented fallback only for missing or invalid values.
+**Acceptance:** settings the standard wants configurable live in the file; an out-of-range value does not start the app on an undocumented silent value; the renderer does not read the file from disk.
+**Tests:** validation tests with synthetic valid, missing and out-of-range values.
+**Documentation:** `PLAN.md`, `SECURITY_MODEL.md`, `MAP.md`, README.
+
+## M63 — Campo allowScripts (CM-17)
+
+**ID Vesta:** CM-17. **Gravità:** bassa. **Stato del rilievo:** sospetto. **Stato:** pianificata, non avviata.
+**Obiettivo:** stabilire quale strumento legge `allowScripts` in `package.json`.
+**Dove:** `package.json`, voci `esbuild@0.28.2` ed `electron-winstaller@5.4.0`. La baseline non ha identificato il lettore. Le versioni sono esatte: se uno strumento le applica, si rompono a ogni bump; se nessuno le applica, il campo è morto.
+**Branch previsto:** `milestone/63-allow-scripts`. **Checkpoint previsto:** `milestone/C63`. **Incremento previsto:** nessuno se si documenta solo il lettore; `+0.0.1` se il campo viene rimosso da `package.json`.
+**Attività:** cercare il lettore nel repository e nelle dipendenze usate in installazione. Documentarlo in `SECURITY_MODEL.md` oppure rimuovere il campo. Non indovinare lo strumento.
+**Criteri di accettazione:** o il modello di sicurezza nomina il lettore e il comportamento al bump, o il campo non c’è più e l’installazione resta quella già approvata.
+**Test richiesti:** se il campo resta, un test o uno script che fallisce quando il lettore non è più quello documentato. Se si rimuove, `npm ci` e il controllo documenti.
+**Documenti:** `SECURITY_MODEL.md`, `PLAN.md`.
+
+**Vesta ID:** CM-17. **Severity:** low. **Finding:** suspected. **Status:** planned, not started.
+**Objective:** identify which tool reads `allowScripts` in `package.json`.
+**Where:** `package.json`, `esbuild@0.28.2` and `electron-winstaller@5.4.0`.
+**Planned branch:** `milestone/63-allow-scripts`. **Planned checkpoint:** `milestone/C63`. **Planned increment:** none if the reader is only documented; `+0.0.1` if the field is removed.
+**Activities:** find the reader in the repository and in install-time dependencies. Document it or remove the field. Do not guess the tool.
+**Acceptance:** either the security model names the reader and the bump behavior, or the field is gone and installation stays the already approved one.
+**Tests:** if the field stays, a test or script that fails when the reader is no longer the documented one. If it is removed, `npm ci` and the document check.
+**Documentation:** `SECURITY_MODEL.md`, `PLAN.md`.
+
+## M64 — Fork temp e documenti monolitici (CM-18)
+
+**ID Vesta:** CM-18. **Gravità:** bassa. **Stato del rilievo:** verificato, informativo. **Stato:** pianificata, non avviata.
+**Obiettivo:** distinguere il fork `temp` dal pacchetto upstream e rendere mantenibili i documenti troppo lunghi.
+**Dove:** `vendor/temp/UPSTREAM.json` conserva nome e versione `0.9.4` dell’originale anche se la copia è modificata; `PLAN.md` e `SECURITY_MODEL.md` sono i documenti monolitici citati.
+**Branch previsto:** `milestone/64-temp-fork-docs`. **Checkpoint previsto:** `milestone/C64` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`, perché cambia l’identità di versione del fork nel grafo di audit.
+**Attività:** versione del fork `0.9.4-contami.1`, conservando provenienza e licenza upstream; dividere `PLAN.md` e `SECURITY_MODEL.md` per area senza perdere la storia. Non cambiare il comportamento di `temp`.
+**Criteri di accettazione:** l’audit non presenta il fork come l’upstream non modificato; i documenti divisi restano bilingui e il controllo dei documenti obbligatori passa.
+**Test richiesti:** `npm ci`, audit e `scripts/check-required-docs.mjs`. Nessun test con dati privati.
+**Documenti:** `PLAN.md`, `SECURITY_MODEL.md`, inventario dipendenze, `MAP.md` se i percorsi cambiano.
+
+**Vesta ID:** CM-18. **Severity:** low. **Finding:** verified, informational. **Status:** planned, not started.
+**Objective:** distinguish the `temp` fork from the upstream package and split the documents that are too long to maintain.
+**Where:** `vendor/temp/UPSTREAM.json`, `PLAN.md` and `SECURITY_MODEL.md`.
+**Planned branch:** `milestone/64-temp-fork-docs`. **Planned checkpoint:** `milestone/C64` and `vX.Y.Z`. **Planned increment:** `+0.0.1`, because the fork’s version identity in the audit graph changes.
+**Activities:** fork version `0.9.4-contami.1`, keeping upstream provenance and license; split `PLAN.md` and `SECURITY_MODEL.md` by area without losing history. Do not change `temp` behavior.
+**Acceptance:** audit does not present the fork as unmodified upstream; the split documents stay bilingual and the required-document check passes.
+**Tests:** `npm ci`, audit and `scripts/check-required-docs.mjs`. No private data.
+**Documentation:** `PLAN.md`, `SECURITY_MODEL.md`, the dependency inventory and `MAP.md` if paths change.
