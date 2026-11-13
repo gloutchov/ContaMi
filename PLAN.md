@@ -2134,11 +2134,11 @@ Schema v16, logica finanziaria, IPC e rete restano invariati.
 
 ## Baseline Vesta 2026-11-13 — M47–M64
 
-Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnalazioni CM-01…CM-18. Le voci sono pianificate e non avviate. L’incremento indica il tipo previsto dallo standard, da applicare alla versione pubblicata al momento dell’avvio; non è un numero già riservato. `+0.0.1` è una patch di correzione o di hardening. Una voce che tocca solo i workflow non ha un `+0.0.1` proprio. Le voci solo documentali non cambiano la versione e non prevedono una GitHub release (HOME 116; HOME 115 resta la regola generale ed è la domanda aperta sotto). I numeri di riga sono quelli del commit `892f614`.
+Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnalazioni CM-01…CM-18. Le voci sono pianificate e non avviate. L’incremento indica il tipo previsto dallo standard, da applicare alla versione pubblicata al momento dell’avvio; non è un numero già riservato. `+0.0.1` è una patch di correzione o di hardening. Una voce che tocca solo i workflow non ha un `+0.0.1` proprio. Le voci solo documentali non cambiano la versione e non prevedono una GitHub release, per la decisione del 13/11/2026 (HOME 116). I numeri di riga sono quelli del commit `892f614`.
 
 **Ordine di esecuzione.** Non è più l’ordine numerico. M51 e M52 si decidono insieme e si eseguono prima di M47: la CI sulle sole PR verso `main` bloccherebbe comunque gli agenti per il punto 2 dell’addendum, e M47–M50 la farebbero ancora partire. M53 resta una voce separata e si esegue sullo stesso branch di M52. M55 resta una voce separata e si esegue sullo stesso branch di M47, con lo stesso `+0.0.1` e senza un incremento aggiuntivo. M50 è una decisione di Glauco che può prendere in qualsiasi momento. Poi M48, M49, M54 e M56–M64.
 
-**Domanda aperta per Glauco.** Le voci a versione invariata richiedono una GitHub release? HOME 100 consente di lasciare invariata la versione per una modifica esclusivamente documentale. HOME 115 chiede una release per ogni milestone o patch conclusa, comprese le correzioni ordinarie. HOME 116 esenta le modifiche solo documentali.
+**Decisione di Glauco del 13/11/2026.** Le voci a versione invariata non richiedono una GitHub release (HOME 116).
 
 ## M47 — Permessi del workflow di release (CM-01)
 
@@ -2189,15 +2189,15 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **Obiettivo:** scegliere i trigger di `ci.yml` così che gli agenti non siano bloccati dal punto 2 dell’addendum. La CI sulle sole PR verso `main` li bloccherebbe comunque, e M47–M50 la farebbero ancora partire.
 **Dove:** `.github/workflows/ci.yml:3-6` e `17-18`. Non ci sono filtri di percorso né `concurrency`. Il job Quality esegue e2e e audit su macOS e Windows.
 **Branch previsto:** `milestone/51-ci-trigger-scope`. **Checkpoint previsto:** `milestone/C51`, senza tag di versione. **Incremento previsto:** nessuno. Tocca solo i workflow, quindi non ha un `+0.0.1` proprio.
-**Attività:** la scelta dei trigger è una **decisione di Glauco**, ancora aperta, tra due opzioni: (a) CI solo con avvio manuale e sui tag; (b) CI sulle PR verso `main`, con una deroga esplicita di Glauco registrata in `AGENTS.md`. In entrambi i casi si possono aggiungere `concurrency` con `cancel-in-progress` e `paths-ignore` per la documentazione. Non creare un secondo workflow. M52 si decide insieme; M53 sta sul branch di M52. Anche il push del branch di M51, e di quello di M52/M53 se vanno prima, avvia l’attuale `ci.yml`. Serve quindi un’istruzione esplicita di Glauco secondo il punto 2 dell’addendum, oppure la modifica la applica Glauco stesso.
-**Criteri di accettazione:** Glauco ha scelto (a) o (b) e la scelta è scritta nel piano; se sceglie (b), la deroga è in `AGENTS.md` prima che un agente pubblichi un branch; un push di branch non avvia più Quality da solo. Il push che introduce questa modifica parte solo dopo un’istruzione esplicita di Glauco, oppure lo fa Glauco stesso.
+**Attività:** il 13/11/2026 Glauco ha scelto l’opzione (b): la CI parte anche sulle PR verso `main`, con la deroga scritta in `AGENTS.md`. La modifica di `AGENTS.md` resta un’attività di M51 e non fa parte di questa PR. Si possono aggiungere `concurrency` con `cancel-in-progress` e `paths-ignore` per la documentazione. Non creare un secondo workflow. M52 si decide insieme; M53 sta sul branch di M52. Anche il push del branch di M51, e di quello di M52/M53 se vanno prima, avvia l’attuale `ci.yml`. Serve quindi un’istruzione esplicita di Glauco secondo il punto 2 dell’addendum, oppure la modifica la applica Glauco stesso.
+**Criteri di accettazione:** la deroga dell’opzione (b) è scritta in `AGENTS.md` nel lavoro di M51; le PR verso `main` avviano la CI; un push di branch non avvia più Quality da solo. Il push che introduce questa modifica parte solo dopo un’istruzione esplicita di Glauco, oppure lo fa Glauco stesso.
 **Test richiesti:** revisione statica del workflow. Nessuna riesecuzione manuale.
 **Documenti:** `PLAN.md`, `AGENTS.md` se la regola operativa della CI cambia, `SECURITY_MODEL.md` se cambia la descrizione della pipeline.
 
 ## M52 — Allineamento di AGENTS e dello standard (CM-05)
 
 **ID Vesta:** CM-05. **Gravità:** media. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata. Si decide insieme a M51 e si esegue prima di M47. M53 sta su questo stesso branch.
-**Obiettivo:** far seguire agli agenti lo standard HOME e l’addendum, non la copia superata nel repository. Incremento nessuno: modifica solo documentale, senza GitHub release salvo la domanda aperta su HOME 100 e 115 (HOME 116 esenta le modifiche solo documentali).
+**Obiettivo:** far seguire agli agenti lo standard HOME e l’addendum, non la copia superata nel repository. Incremento nessuno: modifica solo documentale, senza GitHub release, per la decisione del 13/11/2026 (HOME 116).
 **Dove:** `AGENTS.md:59` (progressione autonoma e una sola approvazione) e `AGENTS.md:61` (CI obbligatoria); `STARTUP_PREFERENCES.md` nel repository, più corta dello standard HOME.
 **Branch previsto:** `milestone/52-agents-standard`. **Checkpoint previsto:** `milestone/C52`, senza tag di versione. **Incremento previsto:** nessuno. Modifica solo documentale.
 **Attività:** sostituire la copia con un riferimento alla versione HOME e allineare `AGENTS.md` a due approvazioni, CI solo quando necessaria e addendum degli agenti cloud.
@@ -2210,7 +2210,7 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **ID Vesta:** CM-13. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
 **Obiettivo:** dire che la release distribuita è `v1.27.3`.
 **Dove:** `README.md:120`, che indica ancora `v1.27.2` come release distribuita.
-**Branch previsto:** `milestone/52-agents-standard`, lo stesso di M52. **Checkpoint previsto:** `milestone/C53`, senza tag di versione. **Incremento previsto:** nessuno. Resta una voce separata. Modifica solo documentale, senza GitHub release salvo la domanda aperta su HOME 100 e 115 (HOME 116).
+**Branch previsto:** `milestone/52-agents-standard`, lo stesso di M52. **Checkpoint previsto:** `milestone/C53`, senza tag di versione. **Incremento previsto:** nessuno. Resta una voce separata. Modifica solo documentale, senza GitHub release, per la decisione del 13/11/2026 (HOME 116).
 **Attività:** aggiornare la frase in italiano e in inglese, insieme a M52. Non cambiare la versione in `package.json`.
 **Criteri di accettazione:** README e, se ripetono la stessa frase, quick start e manuali non dicono più che la release distribuita è rimasta `v1.27.2`.
 **Test richiesti:** `scripts/check-required-docs.mjs`.
@@ -2221,7 +2221,7 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **ID Vesta:** CM-15. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
 **Obiettivo:** registrare `roadmap-v1.0.0` e `landing-v1.0.0`…`landing-v1.0.5` come eccezioni storiche e non crearne di nuovi.
 **Dove:** tag remoti, già citati nella sequenza web di questo piano. Lo standard prevede solo `vX.Y.Z` e `milestone/C<n>`.
-**Branch previsto:** `milestone/54-historical-tags`. **Checkpoint previsto:** `milestone/C54`, senza tag di versione. **Incremento previsto:** nessuno. Modifica solo documentale, senza GitHub release salvo la domanda aperta su HOME 100 e 115 (HOME 116).
+**Branch previsto:** `milestone/54-historical-tags`. **Checkpoint previsto:** `milestone/C54`, senza tag di versione. **Incremento previsto:** nessuno. Modifica solo documentale, senza GitHub release, per la decisione del 13/11/2026 (HOME 116).
 **Attività:** scrivere nel piano l’elenco e il commit a cui punta ciascun tag; non spostarli, non riscriverli e non aggiungerne altri fuori formato.
 **Criteri di accettazione:** il piano elenca i tag fuori formato come storia chiusa; il lavoro non pubblica tag nuovi.
 **Test richiesti:** confronto di sola lettura con `git ls-remote --tags`.
@@ -2339,11 +2339,11 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 
 ## Baseline Vesta 2026-11-13 — M47–M64 (English)
 
-Source: 13 November 2026 quality and security baseline, commit `892f614`, findings CM-01…CM-18. The entries are planned and not started. The increment is the type required by the standard, applied to the published version when work starts; it is not a reserved number. `+0.0.1` is a fix or hardening patch. An entry that only touches workflows does not take its own `+0.0.1`. Documentation-only entries do not change the version and do not plan a GitHub release (HOME 116; HOME 115 remains the general rule and is the open question below). Line numbers are those of commit `892f614`.
+Source: 13 November 2026 quality and security baseline, commit `892f614`, findings CM-01…CM-18. The entries are planned and not started. The increment is the type required by the standard, applied to the published version when work starts; it is not a reserved number. `+0.0.1` is a fix or hardening patch. An entry that only touches workflows does not take its own `+0.0.1`. Documentation-only entries do not change the version and do not plan a GitHub release, by the decision of 13 November 2026 (HOME 116). Line numbers are those of commit `892f614`.
 
 **Execution order.** It is no longer numeric order. M51 and M52 are decided together and run before M47: CI on pull requests to `main` alone would still block agents under addendum point 2, and M47–M50 would still start it. M53 stays a separate entry and runs on M52’s branch. M55 stays a separate entry and runs on M47’s branch, with that same `+0.0.1` and no extra increment. M50 is Glauco’s decision and he can take it at any time. Then M48, M49, M54 and M56–M64.
 
-**Open question for Glauco.** Do entries that leave the version unchanged still require a GitHub release? HOME 100 allows a purely documentary change to leave the application version unchanged. HOME 115 asks for a release for every completed milestone or patch, including ordinary fixes. HOME 116 exempts purely documentary changes.
+**Glauco’s decision of 13 November 2026.** Entries that leave the version unchanged do not require a GitHub release (HOME 116).
 
 ## M47 — Release workflow permissions (CM-01)
 
@@ -2394,15 +2394,15 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Objective:** choose `ci.yml` triggers so agents are not blocked by addendum point 2. CI on pull requests to `main` alone would still block them, and M47–M50 would still start it.
 **Where:** `.github/workflows/ci.yml:3-6` and `17-18`.
 **Planned branch:** `milestone/51-ci-trigger-scope`. **Planned checkpoint:** `milestone/C51`, no version tag. **Planned increment:** none. It only touches workflows, so it has no `+0.0.1` of its own.
-**Activities:** the trigger choice is **Glauco’s decision** and is still open, between two options: (a) CI only on manual dispatch and on tags; (b) CI on pull requests to `main`, with Glauco’s explicit waiver recorded in `AGENTS.md`. Either option may add `concurrency` with `cancel-in-progress` and `paths-ignore` for documentation. Do not add a second workflow. M52 is decided with this entry; M53 stays on M52’s branch. Pushing the M51 branch, and the M52/M53 branch if those go first, still starts the current `ci.yml`. That push needs Glauco’s explicit instruction under addendum point 2, or Glauco applies the change himself.
-**Acceptance:** Glauco has chosen (a) or (b) and the choice is written in the plan; if he chooses (b), the waiver is in `AGENTS.md` before an agent publishes a branch; a branch push no longer starts Quality by itself. The push that introduces this change happens only after Glauco’s explicit instruction, or Glauco makes it himself.
+**Activities:** on 13 November 2026 Glauco chose option (b): CI also runs on pull requests to `main`, with the waiver written in `AGENTS.md`. Changing `AGENTS.md` remains an activity of M51 and is not part of this PR. `concurrency` with `cancel-in-progress` and `paths-ignore` for documentation may be added. Do not add a second workflow. M52 is decided with this entry; M53 stays on M52’s branch. Pushing the M51 branch, and the M52/M53 branch if those go first, still starts the current `ci.yml`. That push needs Glauco’s explicit instruction under addendum point 2, or Glauco applies the change himself.
+**Acceptance:** the option (b) waiver is written in `AGENTS.md` as part of the M51 work; pull requests to `main` start CI; a branch push no longer starts Quality by itself. The push that introduces this change happens only after Glauco’s explicit instruction, or Glauco makes it himself.
 **Tests:** static workflow review. No manual rerun.
 **Documentation:** `PLAN.md`, `AGENTS.md` if the CI rule changes, and `SECURITY_MODEL.md` if the pipeline description changes.
 
 ## M52 — AGENTS and standard alignment (CM-05)
 
 **Vesta ID:** CM-05. **Severity:** medium. **Finding:** verified. **Status:** planned, not started. Decided together with M51 and executed before M47. M53 stays on this same branch.
-**Objective:** make agents follow the HOME standard and the addendum instead of the outdated copy in the repository. No increment: documentation only, with no GitHub release unless the open question on HOME 100 and 115 says otherwise (HOME 116 exempts purely documentary changes).
+**Objective:** make agents follow the HOME standard and the addendum instead of the outdated copy in the repository. No increment: documentation only, with no GitHub release, by the decision of 13 November 2026 (HOME 116).
 **Where:** `AGENTS.md:59`, `AGENTS.md:61` and in-repo `STARTUP_PREFERENCES.md`.
 **Planned branch:** `milestone/52-agents-standard`. **Planned checkpoint:** `milestone/C52`, no version tag. **Planned increment:** none.
 **Activities:** replace the copy with a reference to the HOME version and align `AGENTS.md` to two approvals, CI only when needed, and the cloud-agent addendum.
@@ -2415,7 +2415,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Vesta ID:** CM-13. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
 **Objective:** state that the distributed release is `v1.27.3`.
 **Where:** `README.md:120`.
-**Planned branch:** `milestone/52-agents-standard`, the same as M52. **Planned checkpoint:** `milestone/C53`, no version tag. **Planned increment:** none. It stays a separate entry. Documentation only, with no GitHub release unless the open question on HOME 100 and 115 says otherwise (HOME 116).
+**Planned branch:** `milestone/52-agents-standard`, the same as M52. **Planned checkpoint:** `milestone/C53`, no version tag. **Planned increment:** none. It stays a separate entry. Documentation only, with no GitHub release, by the decision of 13 November 2026 (HOME 116).
 **Activities:** update the Italian and English sentence, together with M52. Do not change `package.json`.
 **Acceptance:** README and any repeated sentence no longer say the distributed release is still `v1.27.2`.
 **Tests:** `scripts/check-required-docs.mjs`.
@@ -2426,7 +2426,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Vesta ID:** CM-15. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
 **Objective:** record `roadmap-v1.0.0` and `landing-v1.0.0`…`landing-v1.0.5` as historical exceptions and create no new ones.
 **Where:** remote tags already mentioned in this plan’s web sequence. The standard allows only `vX.Y.Z` and `milestone/C<n>`.
-**Planned branch:** `milestone/54-historical-tags`. **Planned checkpoint:** `milestone/C54`, no version tag. **Planned increment:** none. Documentation only, with no GitHub release unless the open question on HOME 100 and 115 says otherwise (HOME 116).
+**Planned branch:** `milestone/54-historical-tags`. **Planned checkpoint:** `milestone/C54`, no version tag. **Planned increment:** none. Documentation only, with no GitHub release, by the decision of 13 November 2026 (HOME 116).
 **Activities:** list each tag and the commit it points at; do not move, rewrite or add out-of-format tags.
 **Acceptance:** the plan lists the out-of-format tags as closed history; the work publishes no new tag.
 **Tests:** read-only comparison with `git ls-remote --tags`.
