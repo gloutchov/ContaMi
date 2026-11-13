@@ -2360,7 +2360,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 
 **ID Vesta:** CM-10. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
 **Obiettivo:** non sostituire in silenzio un file impostazioni corrotto e serializzare `update`.
-**Dove:** `src/main/services/SettingsService.ts`, `get` e `update` (circa righe 19-36). Il percorso della cartella di lavoro si perde senza avviso. `update` è già atomico in scrittura, ma il read-modify-write non è serializzato.
+**Dove:** `src/infrastructure/settings/SettingsService.ts`: `get` righe 19-26, `update` righe 28-36. La baseline indicava `src/main/services/SettingsService.ts` (circa 19-36): quel percorso non esiste su `892f614`; l’intervallo 19-36 copre ancora i due metodi. Il percorso della cartella di lavoro si perde senza avviso. `update` è già atomico in scrittura, ma il read-modify-write non è serializzato.
 **Branch previsto:** `milestone/58-settings-corrupt-backup`. **Checkpoint previsto:** `milestone/C58` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`.
 **Attività:** salvare una copia `.bak` del file corrotto, avvisare l’utente e serializzare `update`.
 **Criteri di accettazione:** un file illeggibile non viene sovrascritto dai default senza copia e senza segnale; due update concorrenti non si perdono a vicenda.
@@ -2369,7 +2369,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 
 **Vesta ID:** CM-10. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
 **Objective:** stop silently replacing a corrupt settings file and serialize `update`.
-**Where:** `src/main/services/SettingsService.ts`, `get` and `update` (about lines 19-36).
+**Where:** `src/infrastructure/settings/SettingsService.ts`: `get` lines 19-26, `update` lines 28-36. The baseline named `src/main/services/SettingsService.ts` (about 19-36); that path does not exist on `892f614`. The range 19-36 still covers both methods.
 **Planned branch:** `milestone/58-settings-corrupt-backup`. **Planned checkpoint:** `milestone/C58` and `vX.Y.Z`. **Planned increment:** `+0.0.1`.
 **Activities:** keep a `.bak` of the corrupt file, tell the user and serialize `update`.
 **Acceptance:** an unreadable file is not replaced by defaults without a copy and a signal; two concurrent updates do not drop each other.
