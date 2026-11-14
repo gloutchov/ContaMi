@@ -1,6 +1,6 @@
 # ContaMì — Piano di sviluppo / Development plan
 
-Questo documento governa lo sviluppo di ContaMì. Va aggiornato alla chiusura di ogni milestone. Il progetto procede in autonomia tra le milestone; sono richieste conferme soltanto per operazioni che richiedono credenziali, autorizzazioni del sistema operativo o altre azioni sensibili non già autorizzate.
+Questo documento governa lo sviluppo di ContaMì. Va aggiornato alla chiusura di ogni milestone. Il progetto procede in autonomia tra le milestone. Prima di ogni chiusura il progettista conferma se la modifica richiede una release (HOME 117). Restano richieste conferme per operazioni che richiedono credenziali, autorizzazioni del sistema operativo o altre azioni sensibili non già autorizzate.
 
 ## Visione del prodotto
 
@@ -19,7 +19,7 @@ ContaMì è un’app desktop bilingue (italiano/inglese) per macOS e Windows che
 
 ## Strategia Git e versioni
 
-Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il numero della milestone né la percentuale aritmetica di codice scritto. Una versione viene promossa soltanto dopo la revisione dei criteri di accettazione pertinenti; le correzioni che non cambiano checkpoint incrementano la patch. La `v1.0.0` resta la prima release stabile installabile e verificata su macOS e Windows.
+Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il numero della milestone né la percentuale aritmetica di codice scritto. Una versione viene promossa soltanto dopo la revisione dei criteri di accettazione pertinenti. Nel periodo pre-1.0, le correzioni che non cambiano checkpoint incrementano la patch solo se richiedono una release (HOME 100). La `v1.0.0` resta la prima release stabile installabile e verificata su macOS e Windows.
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
@@ -90,16 +90,16 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | M47 — Permessi del workflow di release, CM-01 | `milestone/47-release-workflow-permissions` | `milestone/C47`; nessun incremento; nessuna release | Pianificata, non avviata; alta, verificata |
 | M48 — URL del dev server nel pacchetto, CM-06 | `milestone/48-packaged-dev-server-guard` | `milestone/C48`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
 | M49 — Electron 45.3.2, CM-02 | `milestone/49-electron-45-3-2` | `milestone/C49`; `+0.0.1` e release | Pianificata, non avviata; media; range verificato, lockfile sospetto |
-| M50 — Impostazioni di sicurezza GitHub, CM-04 | decisione di Glauco, in qualsiasi momento | nessuno | Pianificata, non avviata; media, verificata |
-| M51 — Trigger della CI, CM-03 | `milestone/51-ci-trigger-scope` | `milestone/C51`; nessuno, solo workflow | Pianificata, non avviata; prima di M47; decisione di Glauco |
-| M52 — Allineamento di AGENTS e dello standard, CM-05 | `milestone/52-agents-standard` | `milestone/C52`; nessun incremento | Pianificata, non avviata; insieme a M51, prima di M47 |
-| M53 — README e release 1.27.3, CM-13 | `milestone/52-agents-standard` | `milestone/C53`; nessun incremento | Pianificata, non avviata; stesso branch di M52 |
-| M54 — Tag storici fuori formato, CM-15 | `milestone/54-historical-tags` | `milestone/C54`; nessun incremento | Pianificata, non avviata; bassa, verificata |
+| M50 — Impostazioni di sicurezza GitHub, CM-04 | decisione di Glauco, in qualsiasi momento | nessun incremento; nessuna release | Pianificata, non avviata; media, verificata |
+| M51 — Trigger della CI, CM-03 | `milestone/51-ci-trigger-scope` | `milestone/C51`; nessun incremento; nessuna release | Pianificata, non avviata; prima di M47; decisione di Glauco |
+| M52 — Allineamento di AGENTS e dello standard, CM-05 | `milestone/52-agents-standard` | `milestone/C52`; nessun incremento; nessuna release | Pianificata, non avviata; insieme a M51, prima di M47 |
+| M53 — README e release 1.27.3, CM-13 | `milestone/52-agents-standard` | `milestone/C53`; nessun incremento; nessuna release | Pianificata, non avviata; stesso branch di M52 |
+| M54 — Tag storici fuori formato, CM-15 | `milestone/54-historical-tags` | `milestone/C54`; nessun incremento; nessuna release | Pianificata, non avviata; bassa, verificata |
 | M55 — Nome e retention del job di release, CM-14 | `milestone/47-release-workflow-permissions` | `milestone/C55`; nessun incremento; nessuna release | Pianificata, non avviata; stesso branch di M47 |
-| M56 — Coda delle operazioni sul workbook, CM-08 | `milestone/56-workbook-operation-queue` | `milestone/C56`; `+0.0.1` e release solo se riprodotto | Pianificata, non avviata; bassa, sospetta |
-| M57 — Revisione dell’anteprima di importazione, CM-09 | `milestone/57-import-preview-revision` | `milestone/C57`; `+0.0.1` e release solo se riprodotto | Pianificata, non avviata; bassa, sospetta |
+| M56 — Coda delle operazioni sul workbook, CM-08 | `milestone/56-workbook-operation-queue` | `milestone/C56`; `+0.0.1` alla chiusura solo se la release è confermata | Pianificata, non avviata; bassa, sospetta |
+| M57 — Revisione dell’anteprima di importazione, CM-09 | `milestone/57-import-preview-revision` | `milestone/C57`; `+0.0.1` alla chiusura solo se la release è confermata | Pianificata, non avviata; bassa, sospetta |
 | M58 — Impostazioni corrotte, CM-10 | `milestone/58-settings-corrupt-backup` | `milestone/C58`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
-| M59 — Seconda istanza, CM-07 | `milestone/59-single-instance-exit` | `milestone/C59`; `+0.0.1` e release solo se riprodotto | Pianificata, non avviata; bassa, sospetta |
+| M59 — Seconda istanza, CM-07 | `milestone/59-single-instance-exit` | `milestone/C59`; `+0.0.1` alla chiusura solo se la release è confermata | Pianificata, non avviata; bassa, sospetta |
 | M60 — Conferma di sovrascrittura Numbers, CM-11 | `milestone/60-numbers-overwrite-confirm` | `milestone/C60`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
 | M61 — warningCode del mirror, CM-12 | `milestone/61-mirror-warning-code` | `milestone/C61`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
 | M62 — Configurazione validata, CM-16 | `milestone/62-validated-app-config` | `milestone/C62`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
@@ -2134,7 +2134,7 @@ Schema v16, logica finanziaria, IPC e rete restano invariati.
 
 ## Baseline Vesta 2026-11-13 — M47–M64
 
-Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnalazioni CM-01…CM-18. Le voci sono pianificate e non avviate. Dal 14/11/2026 la GitHub release segue la regola unica della sezione Release dello standard, senza eccezioni di progetto: solo per comportamento, bug, hardening, sicurezza e dipendenze di runtime. Documentazione, CI, test e refactoring senza effetti non hanno release, lasciano invariata la versione e non creano un tag `vX.Y.Z`. I numeri di riga sono quelli del commit `892f614`.
+Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnalazioni CM-01…CM-18. Le voci sono pianificate e non avviate. L’incremento si applica alla versione pubblicata al momento dell’avvio e non è un numero già riservato. Per M56, M57 e M59 il `+0.0.1` si applica alla chiusura solo se la release è confermata. Dal 14/11/2026 la GitHub release segue la regola unica della sezione Release dello standard, senza eccezioni di progetto: solo per comportamento, bug, hardening, sicurezza e dipendenze di runtime. Documentazione, CI, test e refactoring senza effetti non hanno release, lasciano invariata la versione e non creano un tag `vX.Y.Z`. La classificazione release sì o no è una proposta da confermare con Glauco prima di ogni chiusura (HOME 117). I numeri di riga sono quelli del commit `892f614`.
 
 **Ordine di esecuzione.** Non è più l’ordine numerico. M51 e M52 si decidono insieme e si eseguono prima di M47: la CI sulle sole PR verso `main` bloccherebbe comunque gli agenti per il punto 2 dell’addendum, e M47–M50 la farebbero ancora partire. M53 resta una voce separata e si esegue sullo stesso branch di M52. M55 resta una voce separata e si esegue sullo stesso branch di M47, senza incremento di versione. M50 è una decisione di Glauco che può prendere in qualsiasi momento. Poi M48, M49, M54 e M56–M64.
 
@@ -2147,7 +2147,7 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **Dove:** `.github/workflows/release.yml:9-10` (`permissions: contents: write` sull’intero workflow) e riga 29 (`actions/checkout` senza `persist-credentials: false`).
 **Branch previsto:** `milestone/47-release-workflow-permissions`. **Checkpoint previsto:** `milestone/C47`, senza tag di versione. **Incremento previsto:** nessuno. **GitHub release:** non prevista. La modifica è di CI e segue la regola unica della sezione Release dello standard.
 **Attività:** `contents: read` a livello di workflow e `contents: write` solo nel job `publish`; `persist-credentials: false` su tutti i checkout, compreso `ci.yml:20`; con `npm ci --ignore-scripts`, installazione esplicita di Electron; eventuali permessi di attestazione solo in `publish`. Non avviare `release.yml` a mano durante la pianificazione. M55 si esegue su questo stesso branch, senza incremento di versione.
-**Criteri di accettazione:** `contents: read` a livello di workflow e `contents: write` solo nel job `publish`, che non esegue npm né script; `persist-credentials: false` su tutti i checkout, compreso `ci.yml:20`; tutte e 7 le action restano fissate a SHA (`actions/checkout` e `actions/setup-node` in `ci.yml` e in `release.yml`, `actions/upload-artifact`, `actions/download-artifact`, `softprops/action-gh-release`); eventuali permessi di attestazione solo in `publish`. Criterio di chiusura: il log della prima release mostra `Contents: read` per i job `package`. I gate già richiesti (audit, preflight, ispezione, smoke) restano.
+**Criteri di accettazione:** `contents: read` a livello di workflow e `contents: write` solo nel job `publish`, che non esegue npm né script; `persist-credentials: false` su tutti i checkout, compreso `ci.yml:20`; tutte e 7 le action restano fissate a SHA (`actions/checkout` e `actions/setup-node` in `ci.yml` e in `release.yml`, `actions/upload-artifact`, `actions/download-artifact`, `softprops/action-gh-release`); eventuali permessi di attestazione solo in `publish`. La verifica di `npm ci --ignore-scripts` e di `Contents: read` sui job `package` si fa alla prima release successiva, e C47 la registra come «da verificare», oppure con un `workflow_dispatch` senza pubblicazione, solo su istruzione di Glauco. Se `test:package:inspect` mostra differenze nei pacchetti, la voce passa con release. I gate già richiesti (audit, preflight, ispezione, smoke) restano.
 **Test richiesti:** zizmor e actionlint, più `scripts/check-required-docs.mjs`. Nessun workbook privato.
 **Documenti:** `PLAN.md`, `SECURITY_MODEL.md`.
 
@@ -2243,10 +2243,10 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **ID Vesta:** CM-08. **Gravità:** bassa. **Stato del rilievo:** sospetto. **Stato:** pianificata, non avviata.
 **Obiettivo:** serializzare le operazioni IPC sulla stessa cartella di lavoro.
 **Dove:** `src/main/services/FinanceFileService.ts:131-158`. Un doppio invio può produrre falsi `WORKBOOK_CHANGED_EXTERNALLY` o `WORKBOOK_LOCKED`. Il lock e il controllo di revisione evitano la perdita di dati.
-**Branch previsto:** `milestone/56-workbook-operation-queue`. **Checkpoint previsto:** `milestone/C56` e, solo se il difetto è riprodotto, `vX.Y.Z`. **Incremento previsto:** `+0.0.1` solo se si corregge il comportamento; altrimenti nessuno. **GitHub release:** prevista solo in quel caso, perché è un bug, secondo la regola unica della sezione Release dello standard. Se il test non riproduce il problema, nessuna release.
-**Attività:** una coda di promesse per cartella di lavoro nel main process. Prima confermare il sospetto con un test. Se il test non riproduce il problema, la voce si chiude come «non riprodotto».
-**Criteri di accettazione:** se il test riproduce il problema, due operazioni sovrapposte sulla stessa cartella non producono un falso conflitto e i dati sintetici restano integri; se non lo riproduce, la chiusura registra «non riprodotto» e non aggiunge la coda.
-**Test richiesti:** test di integrazione del servizio con due chiamate concorrenti e dati sintetici.
+**Branch previsto:** `milestone/56-workbook-operation-queue`. **Checkpoint previsto:** `milestone/C56` e, solo se la release è confermata, `vX.Y.Z`. **Incremento previsto:** il `+0.0.1` si applica alla chiusura solo se la release è confermata; altrimenti nessuno. **GitHub release:** proposta solo se il difetto è riprodotto, perché sarebbe un bug, secondo la regola unica della sezione Release dello standard. Glauco la conferma prima della chiusura (HOME 117).
+**Attività:** una coda di promesse per cartella di lavoro nel main process. Prima si scrive un test che fallisce sul commit base e passa dopo la correzione. Se quel test non riproduce il problema, la voce si chiude come «non riprodotto» e non aggiunge la coda. «Non riprodotto» non prova l’assenza di una race.
+**Criteri di accettazione:** riprodotto significa che il test fallisce sul commit base e passa dopo la correzione, e l’esito è scritto nella voce C. Se è riprodotto, due operazioni sovrapposte sulla stessa cartella non producono un falso conflitto e i dati sintetici restano integri. Se non lo è, C56 registra «non riprodotto» e non c’è release.
+**Test richiesti:** test di integrazione del servizio con due chiamate concorrenti e dati sintetici, rosso sulla base e verde dopo la correzione.
 **Documenti:** `PLAN.md`, `SECURITY_MODEL.md`.
 
 ## M57 — Revisione dell’anteprima di importazione (CM-09)
@@ -2254,10 +2254,10 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **ID Vesta:** CM-09. **Gravità:** bassa. **Stato del rilievo:** sospetto. **Stato:** pianificata, non avviata.
 **Obiettivo:** rifiutare la conferma di un’anteprima se la cartella di lavoro è cambiata.
 **Dove:** `src/main/services/ImportDataService.ts:24-62`. I comandi sono calcolati sullo snapshot dell’anteprima e possono essere applicati fino a 15 minuti dopo.
-**Branch previsto:** `milestone/57-import-preview-revision`. **Checkpoint previsto:** `milestone/C57` e, solo se il difetto è riprodotto, `vX.Y.Z`. **Incremento previsto:** `+0.0.1` solo se si corregge il comportamento; altrimenti nessuno. **GitHub release:** prevista solo in quel caso, perché è un bug, secondo la regola unica della sezione Release dello standard. Se il test non riproduce il problema, nessuna release.
-**Attività:** salvare la revisione nell’anteprima e rifiutare la conferma se non coincide. Prima confermare il sospetto con un test. Se il test non riproduce il problema, la voce si chiude come «non riprodotto».
-**Criteri di accettazione:** se il test riproduce il problema, una modifica fra anteprima e conferma non applica i comandi vecchi e l’utente riceve un errore compreso, non un percorso completo; se non lo riproduce, la chiusura registra «non riprodotto».
-**Test richiesti:** test di integrazione con revisione invariata e revisione cambiata, dati sintetici.
+**Branch previsto:** `milestone/57-import-preview-revision`. **Checkpoint previsto:** `milestone/C57` e, solo se la release è confermata, `vX.Y.Z`. **Incremento previsto:** il `+0.0.1` si applica alla chiusura solo se la release è confermata; altrimenti nessuno. **GitHub release:** proposta solo se il difetto è riprodotto, perché sarebbe un bug, secondo la regola unica della sezione Release dello standard. Glauco la conferma prima della chiusura (HOME 117).
+**Attività:** salvare la revisione nell’anteprima e rifiutare la conferma se non coincide. Prima si scrive un test che fallisce sul commit base e passa dopo la correzione. Se quel test non riproduce il problema, la voce si chiude come «non riprodotto».
+**Criteri di accettazione:** riprodotto significa che il test fallisce sul commit base e passa dopo la correzione, e l’esito è scritto nella voce C. Se è riprodotto, una modifica fra anteprima e conferma non applica i comandi vecchi e l’utente riceve un errore compreso, non un percorso completo. Se non lo è, C57 registra «non riprodotto» e non c’è release.
+**Test richiesti:** test di integrazione con revisione invariata e revisione cambiata, dati sintetici, rosso sulla base e verde dopo la correzione.
 **Documenti:** `PLAN.md`, manuali IT/EN se compare un messaggio nuovo.
 
 ## M58 — Impostazioni corrotte (CM-10)
@@ -2276,10 +2276,10 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **ID Vesta:** CM-07. **Gravità:** bassa. **Stato del rilievo:** sospetto. **Stato:** pianificata, non avviata.
 **Obiettivo:** fermare subito il processo che non ottiene il lock di istanza singola.
 **Dove:** `src/main/index.ts:21-22`. Dopo `if (!gotLock) app.quit();` il file prosegue e la registrazione di `whenReady` resta attiva.
-**Branch previsto:** `milestone/59-single-instance-exit`. **Checkpoint previsto:** `milestone/C59` e, solo se il difetto è riprodotto, `vX.Y.Z`. **Incremento previsto:** `+0.0.1` solo se si corregge il comportamento; altrimenti nessuno. **GitHub release:** prevista solo in quel caso, perché è un bug, secondo la regola unica della sezione Release dello standard. Se il test non riproduce il problema, nessuna release.
-**Attività:** rendere testabile l’avvio in `index.ts`, poi racchiudere l’avvio in `else` oppure uscire dal processo. Prima confermare il sospetto. Se il test non riproduce il problema, la voce si chiude come «non riprodotto».
-**Criteri di accettazione:** l’avvio è testabile senza aprire un workbook reale; se il test riproduce il problema, la seconda istanza non registra `whenReady` e non apre una finestra; se non lo riproduce, la chiusura registra «non riprodotto».
-**Test richiesti:** test del ramo senza lock, senza aprire workbook reali.
+**Branch previsto:** `milestone/59-single-instance-exit`. **Checkpoint previsto:** `milestone/C59` e, solo se la release è confermata, `vX.Y.Z`. **Incremento previsto:** il `+0.0.1` si applica alla chiusura solo se la release è confermata; altrimenti nessuno. **GitHub release:** proposta solo se il difetto è riprodotto, perché sarebbe un bug, secondo la regola unica della sezione Release dello standard. Rendere il codice testabile non basta per una release. Glauco la conferma prima della chiusura (HOME 117).
+**Attività:** rendere testabile l’avvio in `index.ts`, poi racchiudere l’avvio in `else` oppure uscire dal processo. Prima si scrive un test che fallisce sul commit base e passa dopo la correzione. Se quel test non riproduce il problema, la voce si chiude come «non riprodotto». Il codice reso testabile, da solo, non è una release.
+**Criteri di accettazione:** riprodotto significa che il test fallisce sul commit base e passa dopo la correzione, e l’esito è scritto nella voce C. Se è riprodotto, la seconda istanza non registra `whenReady` e non apre una finestra. Se non lo è, C59 registra «non riprodotto» e non c’è release, anche se l’avvio è diventato testabile.
+**Test richiesti:** test del ramo senza lock, senza aprire workbook reali, rosso sulla base e verde dopo la correzione.
 **Documenti:** `PLAN.md`.
 
 ## M60 — Conferma di sovrascrittura Numbers (CM-11)
@@ -2339,7 +2339,7 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 
 ## Baseline Vesta 2026-11-13 — M47–M64 (English)
 
-Source: 13 November 2026 quality and security baseline, commit `892f614`, findings CM-01…CM-18. The entries are planned and not started. From 14 November 2026 a GitHub release follows the single rule in the standard’s Release section, with no project exception: only for behavior, bugs, hardening, security and runtime dependencies. Documentation, CI, tests and refactoring without effects have no release, leave the version unchanged and create no `vX.Y.Z` tag. Line numbers are those of commit `892f614`.
+Source: 13 November 2026 quality and security baseline, commit `892f614`, findings CM-01…CM-18. The entries are planned and not started. The increment applies to the published version at the start of the work and is not a reserved number. For M56, M57 and M59, `+0.0.1` applies at closure only if the release is confirmed. From 14 November 2026 a GitHub release follows the single rule in the standard’s Release section, with no project exception: only for behavior, bugs, hardening, security and runtime dependencies. Documentation, CI, tests and refactoring without effects have no release, leave the version unchanged and create no `vX.Y.Z` tag. Whether a release is required is a proposal for Glauco to confirm before each closure (HOME 117). Line numbers are those of commit `892f614`.
 
 **Execution order.** It is no longer numeric order. M51 and M52 are decided together and run before M47: CI on pull requests to `main` alone would still block agents under addendum point 2, and M47–M50 would still start it. M53 stays a separate entry and runs on M52’s branch. M55 stays a separate entry and runs on M47’s branch, with no version increment. M50 is Glauco’s decision and he can take it at any time. Then M48, M49, M54 and M56–M64.
 
@@ -2352,7 +2352,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Where:** `.github/workflows/release.yml:9-10` and line 29.
 **Planned branch:** `milestone/47-release-workflow-permissions`. **Planned checkpoint:** `milestone/C47`, no version tag. **Planned increment:** none. **GitHub release:** not planned. The change is CI and follows the single rule in the standard’s Release section.
 **Activities:** workflow-level `contents: read` and `contents: write` only on `publish`; `persist-credentials: false` on every checkout, including `ci.yml:20`; with `npm ci --ignore-scripts`, install Electron explicitly; attestation permissions only on `publish`. Do not dispatch `release.yml` while this entry is only planned. M55 runs on this same branch, with no version increment.
-**Acceptance:** `contents: read` at workflow level and `contents: write` only on the `publish` job, which runs neither npm nor scripts; `persist-credentials: false` on every checkout, including `ci.yml:20`; all 7 actions stay pinned to a SHA (`actions/checkout` and `actions/setup-node` in `ci.yml` and in `release.yml`, `actions/upload-artifact`, `actions/download-artifact`, `softprops/action-gh-release`); any attestation permissions only on `publish`. Closure criterion: the first release log shows `Contents: read` for the `package` jobs. Existing audit, preflight, inspection and smoke gates remain.
+**Acceptance:** `contents: read` at workflow level and `contents: write` only on the `publish` job, which runs neither npm nor scripts; `persist-credentials: false` on every checkout, including `ci.yml:20`; all 7 actions stay pinned to a SHA (`actions/checkout` and `actions/setup-node` in `ci.yml` and in `release.yml`, `actions/upload-artifact`, `actions/download-artifact`, `softprops/action-gh-release`); any attestation permissions only on `publish`. The check of `npm ci --ignore-scripts` and of `Contents: read` on the `package` jobs is done at the next release, and C47 records it as “to be verified”, or with a `workflow_dispatch` that does not publish, only on Glauco’s instruction. If `test:package:inspect` shows differences in the packages, the entry goes ahead with a release. Existing audit, preflight, inspection and smoke gates remain.
 **Tests:** zizmor and actionlint, plus `scripts/check-required-docs.mjs`. No private workbooks.
 **Documentation:** `PLAN.md`, `SECURITY_MODEL.md`.
 
@@ -2425,7 +2425,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 
 **Vesta ID:** CM-15. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
 **Objective:** record out-of-format tags as historical exceptions and create no new ones.
-**Where:** remote tags `roadmap-v1.0.0`, `landing-v1.0.0`…`landing-v1.0.5` and `docs/plan-vesta-baseline-2026-11-13`. The last one is already published on merge `d45a003` and stays historical: it is not moved or deleted. The standard uses `vX.Y.Z` only with a release and `milestone/C<numero>` for a closed milestone checkpoint.
+**Where:** remote tags `roadmap-v1.0.0`, `landing-v1.0.0`…`landing-v1.0.5` and `docs/plan-vesta-baseline-2026-11-13`. The last one is already published on merge `d45a003` and stays historical: it is not moved or deleted. The standard uses `vX.Y.Z` only with a release and `milestone/C<number>` for a closed milestone checkpoint.
 **Planned branch:** `milestone/54-historical-tags`. **Planned checkpoint:** `milestone/C54`, no version tag. **Planned increment:** none. **GitHub release:** not planned. It is documentation and follows the single rule in the standard’s Release section.
 **Activities:** list each tag and the commit it points at, including `docs/plan-vesta-baseline-2026-11-13`; do not move, rewrite or add out-of-format tags.
 **Acceptance:** the plan lists the out-of-format tags as closed history; the work publishes no new tag.
@@ -2448,10 +2448,10 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Vesta ID:** CM-08. **Severity:** low. **Finding:** suspected. **Status:** planned, not started.
 **Objective:** serialize IPC operations on the same workbook.
 **Where:** `src/main/services/FinanceFileService.ts:131-158`.
-**Planned branch:** `milestone/56-workbook-operation-queue`. **Planned checkpoint:** `milestone/C56` and, only if the defect is reproduced, `vX.Y.Z`. **Planned increment:** `+0.0.1` only if behavior is fixed; otherwise none. **GitHub release:** planned only in that case, because it is a bug, under the single rule in the standard’s Release section. If the test does not reproduce the problem, no release.
-**Activities:** a per-workbook promise queue in the main process, after a test confirms the suspicion. If the test does not reproduce the problem, the entry closes as “not reproduced”.
-**Acceptance:** if the test reproduces the problem, two overlapping operations on the same workbook do not raise a false conflict and synthetic data stays intact; if it does not, the closure records “not reproduced” and does not add the queue.
-**Tests:** service integration test with two concurrent calls and synthetic data.
+**Planned branch:** `milestone/56-workbook-operation-queue`. **Planned checkpoint:** `milestone/C56` and, only if the release is confirmed, `vX.Y.Z`. **Planned increment:** `+0.0.1` applies at closure only if the release is confirmed; otherwise none. **GitHub release:** proposed only if the defect is reproduced, because it would be a bug, under the single rule in the standard’s Release section. Glauco confirms it before closure (HOME 117).
+**Activities:** a per-workbook promise queue in the main process. First write a test that fails on the base commit and passes after the fix. If that test does not reproduce the problem, the entry closes as “not reproduced” and does not add the queue. “Not reproduced” does not prove that a race is absent.
+**Acceptance:** reproduced means the test fails on the base commit and passes after the fix, and the outcome is written in the C entry. If it is reproduced, two overlapping operations on the same workbook do not raise a false conflict and synthetic data stays intact. If it is not, C56 records “not reproduced” and there is no release.
+**Tests:** a service integration test with two concurrent calls and synthetic data, failing on the base and passing after the fix.
 **Documentation:** `PLAN.md`, `SECURITY_MODEL.md`.
 
 ## M57 — Import preview revision (CM-09)
@@ -2459,10 +2459,10 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Vesta ID:** CM-09. **Severity:** low. **Finding:** suspected. **Status:** planned, not started.
 **Objective:** reject an import confirmation when the workbook changed after the preview.
 **Where:** `src/main/services/ImportDataService.ts:24-62`.
-**Planned branch:** `milestone/57-import-preview-revision`. **Planned checkpoint:** `milestone/C57` and, only if the defect is reproduced, `vX.Y.Z`. **Planned increment:** `+0.0.1` only if behavior is fixed; otherwise none. **GitHub release:** planned only in that case, because it is a bug, under the single rule in the standard’s Release section. If the test does not reproduce the problem, no release.
-**Activities:** store the revision in the preview and reject a mismatched confirmation, after a test confirms the suspicion. If the test does not reproduce the problem, the entry closes as “not reproduced”.
-**Acceptance:** if the test reproduces the problem, a change between preview and confirmation does not apply the old commands and the user gets a clear error without a full path; if it does not, the closure records “not reproduced”.
-**Tests:** integration tests for an unchanged and a changed revision, with synthetic data.
+**Planned branch:** `milestone/57-import-preview-revision`. **Planned checkpoint:** `milestone/C57` and, only if the release is confirmed, `vX.Y.Z`. **Planned increment:** `+0.0.1` applies at closure only if the release is confirmed; otherwise none. **GitHub release:** proposed only if the defect is reproduced, because it would be a bug, under the single rule in the standard’s Release section. Glauco confirms it before closure (HOME 117).
+**Activities:** store the revision in the preview and reject a mismatched confirmation. First write a test that fails on the base commit and passes after the fix. If that test does not reproduce the problem, the entry closes as “not reproduced”.
+**Acceptance:** reproduced means the test fails on the base commit and passes after the fix, and the outcome is written in the C entry. If it is reproduced, a change between preview and confirmation does not apply the old commands and the user gets a clear error without a full path. If it is not, C57 records “not reproduced” and there is no release.
+**Tests:** integration tests for an unchanged and a changed revision, with synthetic data, failing on the base and passing after the fix.
 **Documentation:** `PLAN.md` and the IT/EN manuals if a new message appears.
 
 ## M58 — Corrupt settings (CM-10)
@@ -2481,10 +2481,10 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Vesta ID:** CM-07. **Severity:** low. **Finding:** suspected. **Status:** planned, not started.
 **Objective:** stop the process that does not get the single-instance lock.
 **Where:** `src/main/index.ts:21-22`.
-**Planned branch:** `milestone/59-single-instance-exit`. **Planned checkpoint:** `milestone/C59` and, only if the defect is reproduced, `vX.Y.Z`. **Planned increment:** `+0.0.1` only if behavior is fixed; otherwise none. **GitHub release:** planned only in that case, because it is a bug, under the single rule in the standard’s Release section. If the test does not reproduce the problem, no release.
-**Activities:** make startup in `index.ts` testable, then put startup in `else` or exit the process, after confirming the suspicion. If the test does not reproduce the problem, the entry closes as “not reproduced”.
-**Acceptance:** startup is testable without opening a real workbook; if the test reproduces the problem, the second instance does not register `whenReady` and does not open a window; if it does not, the closure records “not reproduced”.
-**Tests:** a test of the branch without the lock, without opening a real workbook.
+**Planned branch:** `milestone/59-single-instance-exit`. **Planned checkpoint:** `milestone/C59` and, only if the release is confirmed, `vX.Y.Z`. **Planned increment:** `+0.0.1` applies at closure only if the release is confirmed; otherwise none. **GitHub release:** proposed only if the defect is reproduced, because it would be a bug, under the single rule in the standard’s Release section. Making the code testable is not enough for a release. Glauco confirms it before closure (HOME 117).
+**Activities:** make startup in `index.ts` testable, then put startup in `else` or exit the process. First write a test that fails on the base commit and passes after the fix. If that test does not reproduce the problem, the entry closes as “not reproduced”. Testable code alone is not a release.
+**Acceptance:** reproduced means the test fails on the base commit and passes after the fix, and the outcome is written in the C entry. If it is reproduced, the second instance does not register `whenReady` and does not open a window. If it is not, C59 records “not reproduced” and there is no release, even if startup has been made testable.
+**Tests:** a test of the branch without the lock, without opening a real workbook, failing on the base and passing after the fix.
 **Documentation:** `PLAN.md`.
 
 ## M60 — Numbers overwrite confirmation (CM-11)

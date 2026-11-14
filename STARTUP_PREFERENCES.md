@@ -88,7 +88,7 @@ La checklist minima di chiusura milestone deve includere:
 
 Usare versionamento semantico, adattato alla scala reale del progetto:
 
-- `+0.0.1`: patch piccola, bugfix, correzione documentale con impatto minimo o hardening circoscritto.
+- `+0.0.1`: patch piccola, bugfix o hardening circoscritto, quando la modifica richiede una release. Documentazione, CI, test e refactoring senza effetti sul comportamento non cambiano la versione (HOME 100).
 - `+0.1.0`: nuova funzionalita' minore o miglioramento funzionale rilevante.
 - `+1.0.0`: milestone importante, cambio architetturale, nuova superficie principale o rilascio stabile.
 
@@ -101,12 +101,14 @@ Quando la versione cambia, sincronizzarla in tutti i punti canonici del progetto
 - `PLAN.md`, `AGENTS.md`, `MAP.md`;
 - note release.
 
-Il tag Git deve seguire il formato `vX.Y.Z`.
+I tag Git di versione seguono il formato `vX.Y.Z`. I tag di checkpoint delle milestone seguono `milestone/C<numero>`. Un tag di checkpoint non implica una GitHub release (HOME 111).
 
 ## Release
 
 - Dal 14/11/2026 vale la regola unica della sezione Release dello standard HOME, senza eccezioni di progetto: una GitHub release solo per modifiche significative per il funzionamento dell'app (comportamento, bug, hardening, sicurezza, dipendenze di runtime). Non si pubblica per documentazione, CI, test e refactoring senza effetti. Le regole diverse di questo file sono superate.
-- Se la modifica non richiede una release, la versione applicativa resta invariata e non si crea un tag `vX.Y.Z`. I tag di checkpoint delle milestone seguono `milestone/C<numero>`.
+- Il tipo di modifica, e quindi release si' o no, e' una proposta da confermare con il progettista prima della chiusura (HOME 117).
+- Se il programma non e' ancora utilizzabile, contrassegnare la release come prerelease e indicarne chiaramente lo stato (HOME 118).
+- Se la modifica non richiede una release, la versione applicativa resta invariata e non si crea un tag `vX.Y.Z`. I tag di checkpoint delle milestone seguono `milestone/C<numero>`. Un tag di checkpoint non implica una GitHub release.
 - Quando una release e' prevista, generare artifact per Windows e macOS se applicabile.
 - Ogni release deve includere checksum SHA-256 degli artifact.
 - Se non sono disponibili certificati o credenziali di firma, distribuire artifact non firmati e documentare chiaramente avvisi SmartScreen/Gatekeeper.
@@ -508,7 +510,7 @@ Prima di iniziare lo sviluppo effettivo:
 - configurare test minimi;
 - configurare CI minima;
 - definire strategia versioning;
-- definire quando attivare release;
+- applicare la regola unica della sezione Release dello standard HOME, confermata dal progettista prima della chiusura;
 - verificare che `.gitignore` escluda segreti, log, build output, cache e stato locale.
 
 ## Checklist prima di chiudere una milestone
