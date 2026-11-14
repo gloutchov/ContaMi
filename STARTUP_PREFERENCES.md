@@ -105,10 +105,8 @@ Il tag Git deve seguire il formato `vX.Y.Z`.
 
 ## Release
 
-- Le release automatiche o GitHub Actions di release devono essere attivate solo quando il programma raggiunge una versione funzionale.
-- Durante le prime milestone di sviluppo, evitare release inutili: CI, test e build sono sufficienti.
-- Generare una GitHub release solo quando le modifiche introducono nuove funzionalita' o milestone rilasciabili (`+0.1.0` o `+1.0.0`), oppure quando correggono falle di sicurezza gravi.
-- Per patch piccole, bugfix ordinari, correzioni documentali o hardening circoscritti (`+0.0.1`), chiedere sempre al progettista se creare o meno una GitHub release.
+- Dal 14/11/2026 vale la regola unica della sezione Release dello standard HOME, senza eccezioni di progetto: una GitHub release solo per modifiche significative per il funzionamento dell'app (comportamento, bug, hardening, sicurezza, dipendenze di runtime). Non si pubblica per documentazione, CI, test e refactoring senza effetti. Le regole diverse di questo file sono superate.
+- Se la modifica non richiede una release, la versione applicativa resta invariata e non si crea un tag `vX.Y.Z`. I tag di checkpoint delle milestone seguono `milestone/C<numero>`.
 - Quando una release e' prevista, generare artifact per Windows e macOS se applicabile.
 - Ogni release deve includere checksum SHA-256 degli artifact.
 - Se non sono disponibili certificati o credenziali di firma, distribuire artifact non firmati e documentare chiaramente avvisi SmartScreen/Gatekeeper.
