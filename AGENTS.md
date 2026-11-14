@@ -59,7 +59,8 @@ npm audit
 - Il proprietario ha autorizzato la progressione autonoma tra milestone. Alla chiusura di una milestone o patch, congela il branch sul commit finale locale e presenta hash, diff, test ed eventuali limiti: merge, tag, push, release e rimozione del branch richiedono il controllo personale di quel preciso commit e l'approvazione esplicita del proprietario. Una modifica successiva richiede un nuovo controllo e una nuova approvazione.
 - Aggiorna insieme codice, test, `PLAN.md`, manuali, `MAP.md` e `SECURITY_MODEL.md` quando pertinenti.
 - La CI e il packaging usano `npm audit --include=dev`, completo e bloccante, con soglia info, fetch timeout 120 secondi/zero retry e step CI di 3 minuti: nessuna eccezione, soglia ridotta o scadenza. `npm ci` usa `.npmrc` con `install-links=true` per impacchettare `vendor/temp` anziché escluderlo dall’audit come symlink. Conserva nome/versione upstream, licenza, provenienza e regressioni del componente; non modificare manualmente `node_modules`. `vendor/` conserva lo stile upstream ed è escluso dal lint, mentre i test verificano la copia realmente installata.
-- Non pubblicare release finché CI macOS/Windows, artifact e checksum non sono verificati.
+- Se pubblicare una GitHub release segue la regola unica della sezione Release dello standard HOME, dal 14/11/2026, senza eccezioni di progetto. Senza release la versione resta invariata e non si crea un tag `vX.Y.Z`. Il tag di checkpoint di una milestone chiusa è `milestone/C<numero>`.
+- Non pubblicare una release dovuta finché CI macOS/Windows, artifact e checksum non sono verificati.
 - Le build restano non firmate finché non esiste un processo documentato con credenziali fornite esplicitamente.
 - Non spostare tag pubblicati e non eliminare branch prima di merge e verifica CI.
 
