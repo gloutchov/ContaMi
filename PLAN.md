@@ -102,7 +102,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | M59 — Seconda istanza, CM-07 | `milestone/59-single-instance-exit` | `milestone/C59`; `+0.0.1` e release solo se riprodotto | Pianificata, non avviata; bassa, sospetta |
 | M60 — Conferma di sovrascrittura Numbers, CM-11 | `milestone/60-numbers-overwrite-confirm` | `milestone/C60`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
 | M61 — warningCode del mirror, CM-12 | `milestone/61-mirror-warning-code` | `milestone/C61`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
-| M62 — Configurazione validata, CM-16 | `milestone/62-validated-app-config` | `milestone/C62`; nessun incremento; nessuna release | Pianificata, non avviata; bassa, verificata |
+| M62 — Configurazione validata, CM-16 | `milestone/62-validated-app-config` | `milestone/C62`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
 | M63 — Campo allowScripts, CM-17 | `milestone/63-allow-scripts` | `milestone/C63`; nessun incremento; nessuna release | Pianificata, non avviata; bassa, sospetta |
 | M64 — Fork temp e documenti monolitici, CM-18 | `milestone/64-temp-fork-docs` | `milestone/C64`; nessun incremento; nessuna release | Pianificata, non avviata; bassa, verificata |
 
@@ -2309,7 +2309,7 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **ID Vesta:** CM-16. **Gravità:** bassa. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata.
 **Obiettivo:** sostituire la costante compilata con un file di configurazione centrale validato all’avvio.
 **Dove:** `src/config/appConfig.ts`. `APP_CONFIG` è compilata nel pacchetto.
-**Branch previsto:** `milestone/62-validated-app-config`. **Checkpoint previsto:** `milestone/C62`, senza tag di versione. **Incremento previsto:** nessuno. **GitHub release:** non prevista. Con gli stessi predefiniti non cambia il comportamento dell’app: è refactoring e segue la regola unica della sezione Release dello standard.
+**Branch previsto:** `milestone/62-validated-app-config`. **Checkpoint previsto:** `milestone/C62` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`. **GitHub release:** prevista. Introduce un file JSON in userData, validato all’avvio, con valori predefiniti e limiti: l’utente può cambiare i parametri e il comportamento visibile cambia. Segue la regola unica della sezione Release dello standard.
 **Attività:** file JSON in userData, senza segreti. Valore assente o di tipo sbagliato: si usa il predefinito. Valore fuori intervallo: si applica il limite. Il comportamento è documentato.
 **Criteri di accettazione:** i parametri oggi cablati che lo standard vuole configurabili stanno nel file in userData; un valore assente o di tipo sbagliato diventa il predefinito; un valore fuori intervallo diventa il limite; il renderer non legge il file dal disco.
 **Test richiesti:** test della validazione con valori sintetici validi, mancanti e fuori limite.
@@ -2514,7 +2514,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Vesta ID:** CM-16. **Severity:** low. **Finding:** verified. **Status:** planned, not started.
 **Objective:** replace the compiled constant with a central configuration file validated at startup.
 **Where:** `src/config/appConfig.ts`.
-**Planned branch:** `milestone/62-validated-app-config`. **Planned checkpoint:** `milestone/C62`, no version tag. **Planned increment:** none. **GitHub release:** not planned. With the same defaults it does not change how the app behaves: it is refactoring and follows the single rule in the standard’s Release section.
+**Planned branch:** `milestone/62-validated-app-config`. **Planned checkpoint:** `milestone/C62` and `vX.Y.Z`. **Planned increment:** `+0.0.1`. **GitHub release:** planned. It adds a JSON file in userData, validated at startup, with defaults and limits: the user can change the parameters and the visible behavior changes. It follows the single rule in the standard’s Release section.
 **Activities:** a JSON file in userData, without secrets. A missing value or a value of the wrong type uses the default. A value outside the range is clamped to the limit. The behavior is documented.
 **Acceptance:** settings the standard wants configurable live in the userData file; a missing value or a value of the wrong type becomes the default; a value outside the range becomes the limit; the renderer does not read the file from disk.
 **Tests:** validation tests with synthetic valid, missing and out-of-range values.
