@@ -23,9 +23,9 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** `main` è `892f614841d481f663a49f08de99c61fd04b3a35`, con tag e release `v1.27.3`. C46 resta la milestone chiusa precedente, pubblicata come `v1.27.2`. La baseline di Vesta del 13/11/2026 è pianificata e non avviata: M47–M64 corrispondono a CM-01…CM-18. Nessuna voce M già presente e non avviata copriva questi ID, quindi non c’è stata integrazione. CM-01 è l’unica gravità alta. CM-04 è una decisione di Glauco sulle impostazioni del repository, che può prendere in qualsiasi momento. L’ordine di esecuzione non è più quello numerico: M51 e M52, con M53 sullo stesso branch di M52, precedono M47. Schema v16 invariato. Le sezioni chiuse restano storiche.
+**Stato corrente:** copia locale sincronizzata il 17/11/2026 con `main` remoto `470f42e4d24a86ca30036404bc68d5d37cc0515b`; tag e release `v1.27.3` restano sul commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 resta la milestone chiusa precedente, pubblicata come `v1.27.2`. La baseline di Vesta del 13/11/2026 è pianificata e non avviata: M47–M64 corrispondono a CM-01…CM-18. Nessuna voce M già presente e non avviata copriva questi ID, quindi non c’è stata integrazione. CM-01 è l’unica gravità alta. CM-04 è una decisione di Glauco sulle impostazioni del repository, che può prendere in qualsiasi momento. L’ordine di esecuzione non è più quello numerico: M51 e M52, con M53 sullo stesso branch di M52, precedono M47. M65 aggiunge la manutenzione congiunta delle sei PR Dependabot #150–#155 dopo M64, coordinando Electron con M49; anche M65 è pianificata e non avviata. Schema v16 invariato. Le sezioni chiuse restano storiche.
 
-**Current status:** `main` is `892f614841d481f663a49f08de99c61fd04b3a35`, with tag and release `v1.27.3`. C46 remains the previous closed milestone, published as `v1.27.2`. Vesta’s 13 November 2026 baseline is planned and not started: M47–M64 are CM-01…CM-18. No existing unstarted M entry covered these IDs, so none was extended. CM-01 is the only high severity. CM-04 is Glauco’s decision on repository settings, and he can take it at any time. Execution order is no longer numeric: M51 and M52, with M53 on M52’s branch, come before M47. Schema v16 is unchanged. Closed sections stay historical.
+**Current status:** local checkout synchronized on 17 November 2026 with remote `main` `470f42e4d24a86ca30036404bc68d5d37cc0515b`; tag and release `v1.27.3` remain on commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 remains the previous closed milestone, published as `v1.27.2`. Vesta’s 13 November 2026 baseline is planned and not started: M47–M64 are CM-01…CM-18. No existing unstarted M entry covered these IDs, so none was extended. CM-01 is the only high severity. CM-04 is Glauco’s decision on repository settings, and he can take it at any time. Execution order is no longer numeric: M51 and M52, with M53 on M52’s branch, come before M47. M65 adds grouped maintenance of the six Dependabot PRs #150–#155 after M64, coordinating Electron with M49; M65 is also planned and not started. Schema v16 is unchanged. Closed sections stay historical.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -105,6 +105,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | M62 — Configurazione validata, CM-16 | `milestone/62-validated-app-config` | `milestone/C62`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
 | M63 — Campo allowScripts, CM-17 | `milestone/63-allow-scripts` | `milestone/C63`; nessun incremento; nessuna release | Pianificata, non avviata; bassa, sospetta |
 | M64 — Fork temp e documenti monolitici, CM-18 | `milestone/64-temp-fork-docs` | `milestone/C64`; nessun incremento; nessuna release | Pianificata, non avviata; bassa, verificata |
+| M65 — Manutenzione Dependabot #150–#155 | `milestone/65-dependabot-maintenance` | `milestone/C65`; patch e release proposte per Lucide runtime | Pianificata, non avviata; dopo M64, Electron coordinato con M49 |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1` → manutenzione dipendenze e catena di rilascio `v1.21.0` → letture acqua delle residenze `v1.22.0` → compatibilità configurazione Vite `v1.22.1` → trasparenza costo/km Automobile `v1.22.2` → release Electron 44 `v1.23.0` → costo d’uso e costo complessivo/km `v1.24.0`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
@@ -2168,6 +2169,7 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **Obiettivo:** portare Electron alla 45.3.2, la stessa versione fissata in modo esatto di Plancia, e rifare i pacchetti solo dopo approvazione esplicita della release.
 **Branch previsto:** `milestone/49-electron-45-3-2`. **Checkpoint previsto:** `milestone/C49` e `vX.Y.Z`. **Incremento previsto:** `+0.0.1`. **GitHub release:** prevista, perché aggiorna una dipendenza di runtime, secondo la regola unica della sezione Release dello standard.
 **Attività:** leggere il lockfile; sostituire il range `^45.2.3` con la versione esatta `45.3.2`; verificare le note di rilascio 45.3.0–45.3.2; non avviare il workflow di release prima dell’approvazione.
+**Raccordo con M65:** questo aggiornamento soddisfa anche la PR Dependabot #153, che propone 45.3.0. M65 ne verifica l’integrazione e la chiusura senza reintrodurre il range `^45.3.0` o abbassare la versione esatta prevista qui.
 **Criteri di accettazione:** manifest e lockfile fissano esattamente `45.3.2`, la stessa versione di Plancia; audit completo senza nuove eccezioni; schema v16, IPC e rete dell’app invariati.
 **Test richiesti:** `npm ci`, preflight, coverage, ispezione del preload. Packaging e smoke solo sul commit approvato per la release.
 **Documenti:** `PLAN.md`, `SECURITY_MODEL.md`, README, manuali IT/EN, quick start, inventario dipendenze.
@@ -2337,6 +2339,55 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 **Test richiesti:** `npm ci`, audit e `scripts/check-required-docs.mjs`. Nessun test con dati privati.
 **Documenti:** `PLAN.md`, `SECURITY_MODEL.md`, inventario dipendenze, `MAP.md` se i percorsi cambiano.
 
+## M65 — Manutenzione Dependabot #150–#155
+
+**Stato:** pianificata il 17/11/2026 su richiesta del proprietario, non avviata. Questa preparazione modifica soltanto il piano.
+**Obiettivo:** risolvere insieme le sei PR aperte, mantenendo coerenti dipendenze, test browser e pubblicazione dei pacchetti. Il risultato verificabile è un’app con icone Lucide aggiornate e strumenti compatibili, senza regressioni nei flussi finanziari.
+**Prerequisiti e ordine:** dopo M64 e i checkpoint precedenti nell’ordine già approvato; M50 resta una decisione separata del proprietario. Non anticipare le modifiche a CI, permessi o Electron delle milestone esistenti. All’avvio verificare identità, worktree, `main` e checkpoint remoto C64, rileggendo gli eventuali documenti separati da M64.
+**Branch previsto:** `milestone/65-dependabot-maintenance`, da `main` aggiornato; worktree isolato se il checkout contiene modifiche estranee. **Checkpoint previsto:** `milestone/C65`.
+**Incremento previsto:** patch `+0.0.1` sulla versione pubblicata all’avvio, senza riservare ora un numero. **GitHub release:** proposta perché `lucide-react` è una dipendenza di runtime inclusa nel renderer; classificazione e pubblicazione da confermare con il proprietario prima della chiusura. Se gli aggiornamenti runtime risultano già integrati e restano soltanto CI/test/sviluppo senza effetti sull’app, proporre nessuna release, versione invariata e nessun tag `vX.Y.Z`. La pianificazione non cambia la versione sorgente `1.27.3`.
+
+**Inventario verificato su GitHub il 17/11/2026**, base delle sei PR `470f42e`; versioni confermate dai diff e dai lockfile dei branch bot:
+
+| PR | Componente | Aggiornamento proposto dal bot | Trattamento nella milestone |
+|---|---|---|---|
+| [#150](https://github.com/gloutchov/ContaMi/pull/150) | `softprops/action-gh-release` | 3.0.3 → 3.0.4 | Verificare lo SHA upstream e conservare i permessi definiti da M47. |
+| [#151](https://github.com/gloutchov/ContaMi/pull/151) | `@playwright/test`, `playwright` | 1.64.1 → 1.65.0 | Allineare entrambi i range diretti e le versioni risolte; il bot cambia soltanto il range di `@playwright/test`. |
+| [#152](https://github.com/gloutchov/ContaMi/pull/152) | `lucide-react` | 1.68.0 → 1.72.0 | Verificare icone usate, import e resa IT/EN nei due temi. |
+| [#153](https://github.com/gloutchov/ContaMi/pull/153) | `electron` | 45.2.3 → 45.3.0 | Già coperta dal target esatto 45.3.2 di M49: riconciliare, senza downgrade o secondo aggiornamento. |
+| [#154](https://github.com/gloutchov/ContaMi/pull/154) | `@testing-library/user-event` | 14.6.8 → 14.6.9 | Verificare input, focus e interazioni nei test renderer. |
+| [#155](https://github.com/gloutchov/ContaMi/pull/155) | `concurrently` | 10.0.6 → 10.0.7 | Verificare avvio e arresto dei processi con un probe sintetico. |
+
+**Audit della base sincronizzata — 17/11/2026:** installazione pulita e `npm ls --all` riusciti con Node 24.18.1. L’audit completo termina con codice 1: **19 segnalazioni alte, zero critiche**, propagate da un solo advisory, [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf), sul ReDoS di `picomatch` ≤4.0.7. Il lockfile risolve `picomatch` 4.0.7, marcato `dev`; le catene coinvolgono Vite/Vitest, typescript-eslint e node-gyp/electron-builder. L’advisory consultato oggi non indica una versione corretta. Sono risultati della base `470f42e`, precedenti all’implementazione di M65, e non 19 difetti indipendenti dell’app. La risoluzione è parte della manutenzione e blocca i gate audit delle pubblicazioni; non rinviare un gate fallito a M65 per chiudere altre milestone. Se serve anticipare la manutenzione rispetto a M64, sottoporre al proprietario la revisione esplicita dell’ordine già approvato.
+
+**Verifiche della sola preparazione — 17/11/2026:** controllo dei 15 documenti richiesti, `git diff --check`, parità dell’inventario/checklist IT/EN, baseline Node e landing superati. Sulla base sincronizzata passano anche typecheck, **439 test in 67 file**, build renderer/Electron e controllo CSP, eseguiti separatamente. Il preflight completo non è verde: il lint è rimasto senza avanzamenti visibili ed è stato interrotto dopo 180 secondi; causa non diagnosticata in questa pianificazione. Audit non verde come sopra. Coverage, browser/QA visiva, packaging, smoke nativi e CI non eseguiti: restano verifiche dell’implementazione, che non è stata avviata. Nessuna PR chiusa, dipendenza aggiornata rispetto al lockfile remoto o modifica applicativa introdotta da questa preparazione.
+
+**Attività principali:**
+
+- Rileggere PR, stato e diff all’avvio: versioni e SHA sono un inventario datato, non target immutabili. Registrare quali aggiornamenti sono già su `main`, quali restano da applicare e la motivazione di ogni sostituzione.
+- Integrare i cambi npm sul lockfile corrente come un unico grafo; non sovrascriverlo con quelli bot precedenti a M49–M64. Preservare gli override di sicurezza, l’audit completo senza eccezioni, Vitest/coverage allineati e la provenienza/licenza della copia `temp`, rispettando l’eventuale versione introdotta da M64.
+- Riesaminare l’advisory `picomatch` e ogni catena segnalata, verificando le correzioni upstream disponibili all’avvio. Non presumere che le sei PR eliminino il problema e non applicare `npm audit fix --force` o downgrade indiscriminati della toolchain. Una correzione richiede compatibilità verificata e regressione sintetica con limiti di tempo/memoria; finché manca una soluzione verificabile, registrare il blocco senza ridurre l’audit o dichiarare completata M65.
+- Per #151 aggiornare anche il requisito diretto `playwright`, rimasto `^1.64.1` nel diff bot; verificare la revisione Chromium richiesta. Per #153 verificare manifest, lockfile e integrazione C49: la baseline locale letta oggi risolve 45.2.3, ma il target esatto 45.3.2 resta di M49.
+- Per #150 verificare nel repository ufficiale che `8a0cd651e5b2365bd640854a3fa5dfc70e4875f3` corrisponda a v3.0.4; conservare pin SHA, permessi minimi e pubblicazione solo da tag. Documentare la verifica del job `publish` alla prima release dovuta, senza creare una release solo per provare l’Action.
+- Dopo controllo e approvazione del commit finale, integrare il gruppo e riconciliare le sei PR: accettare la chiusura automatica oppure proporre la chiusura come sostituite soltanto dopo l’integrazione verificata. Non chiudere anticipatamente PR e non eliminare branch bot prima dei gate.
+
+**Criteri di accettazione:** tutte le sei PR hanno un esito tracciato, con aggiornamento integrato o sostituzione motivata; Playwright ha range e versioni coerenti; Electron conserva il pin esatto di C49; `npm ci` è riproducibile, `npm ls --all` valido e `npm audit --include=dev --audit-level=info --fetch-timeout=120000 --fetch-retries=0` riporta zero vulnerabilità. Preflight, coverage e browser sono verdi; icone e interazioni restano leggibili IT/EN, chiaro/scuro, a 1080 px. Schema v16, dati privati, IPC, sandbox, CSP e rete dell’app restano invariati. Eventuali nuove vulnerabilità o incompatibilità impediscono la chiusura finché non risolte o ripianificate esplicitamente dal proprietario, senza eccezioni all’audit.
+
+**Test richiesti:** Node.js 24 LTS ≥24.15.0; `npm ci`, `npm ls --all`, `npm run preflight`, `npm run test:coverage`, `node scripts/check-required-docs.mjs`, audit completo; `npm run test:e2e` e `npm run test:landing:e2e`, aggiornando prima il browser richiesto; collaudo Playwright CLI IT/EN e chiaro/scuro, regressione del preload compilato e probe sintetico di `concurrently`. Per #150: actionlint, zizmor e verifica SHA upstream. CI macOS/Windows e packaging/ispezione/smoke unpacked e installato solo quando necessari e sul commit approvato; per una release, verificare sei pacchetti, `app.asar`, sorgenti e SHA-256 sui file scaricati. Dichiarare i limiti di hardware nativo, in particolare macOS Intel. Nessun workbook o profilo reale nei test. Nessun push intermedio o avvio manuale di workflow durante la pianificazione.
+
+**Documenti da aggiornare:** `PLAN.md` con esiti, limiti, versione e passaggio M65→C65; `documents/dependency-maintenance.md` o il suo successore dopo M64; `SECURITY_MODEL.md` per supply chain, Action e dipendenze runtime; README, `ISTRUZIONI.md`, `INSTRUCTIONS.md` e quick start per manutenzione e release; `MAP.md` se cambiano test, comandi o struttura; `AGENTS.md` solo se cambiano regole operative. Note release bilingui se la pubblicazione è confermata.
+
+**Checklist di chiusura:**
+
+- [ ] Prerequisiti, identità e checkpoint remoti verificati; branch dedicato creato.
+- [ ] Grafo combinato e raccordo C49 verificati; sei PR riconciliate nell’inventario.
+- [ ] Test locali, audit, smoke e collaudo UI superati; limiti e controlli non eseguiti dichiarati.
+- [ ] Documentazione aggiornata; decisione sulla release confermata e versione sincronizzata solo se dovuta.
+- [ ] Commit locali soltanto sul branch dedicato; branch congelato con hash finale, diff rispetto a `main`, esiti e limiti presentati al proprietario.
+- [ ] Controllo personale e approvazione esplicita su quel commit prima di merge, tag, push, release o rimozione branch; nuovo controllo se l’hash cambia.
+- [ ] CI e packaging necessari verificati; merge e checkpoint annotato `milestone/C65` su `main` pubblicati e verificati; M65 rinominata C65.
+- [ ] Se confermata: tag versione, release macOS/Windows, artifact e checksum verificati; PR e branch obsoleti chiusi/rimossi solo dopo tutti i gate e l’approvazione.
+
 ## Baseline Vesta 2026-11-13 — M47–M64 (English)
 
 Source: 13 November 2026 quality and security baseline, commit `892f614`, findings CM-01…CM-18. The entries are planned and not started. The increment applies to the published version at the start of the work and is not a reserved number. For M47, M56, M57 and M59, `+0.0.1` applies at closure only if the release is confirmed. From 14 November 2026 a GitHub release follows the single rule in the standard’s Release section, with no project exception: only for behavior, bugs, hardening, security and runtime dependencies. Documentation, CI, tests and refactoring without effects have no release, leave the version unchanged and create no `vX.Y.Z` tag. Whether a release is required is a proposal for Glauco to confirm before each closure (HOME 117). Line numbers are those of commit `892f614`.
@@ -2373,6 +2424,7 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Objective:** move Electron to 45.3.2, the same version Plancia pins exactly, and rebuild packages only after an explicit release approval.
 **Planned branch:** `milestone/49-electron-45-3-2`. **Planned checkpoint:** `milestone/C49` and `vX.Y.Z`. **Planned increment:** `+0.0.1`. **GitHub release:** planned, because it updates a runtime dependency, under the single rule in the standard’s Release section.
 **Activities:** read the lockfile; replace the `^45.2.3` range with the exact version `45.3.2`; check the 45.3.0–45.3.2 release notes.
+**Coordination with M65:** this update also satisfies Dependabot PR #153, which proposes 45.3.0. M65 verifies its integration and closure without restoring the `^45.3.0` range or lowering the exact version planned here.
 **Acceptance:** manifest and lockfile pin exactly `45.3.2`, the same version as Plancia; full audit stays without new exceptions; schema v16, IPC and app network stay unchanged.
 **Tests:** `npm ci`, preflight, coverage and preload inspection. Packaging and smoke only on the commit approved for release.
 **Documentation:** `PLAN.md`, `SECURITY_MODEL.md`, README, IT/EN manuals, quick start and the dependency inventory.
@@ -2541,3 +2593,52 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 **Acceptance:** for the fork, audit does not present the copy as unmodified upstream and `temp` behavior stays as it is. For the documents, Glauco has decided the structure; the split parts stay bilingual, the required-document check passes, and the history of closed milestones stays readable.
 **Tests:** `npm ci`, audit and `scripts/check-required-docs.mjs`. No private data.
 **Documentation:** `PLAN.md`, `SECURITY_MODEL.md`, the dependency inventory and `MAP.md` if paths change.
+
+## M65 — Dependabot maintenance #150–#155 (English)
+
+**Status:** planned on 17 November 2026 at the owner’s request, not started. This preparation changes only the plan.
+**Objective:** resolve the six open PRs together, keeping dependencies, browser tests and package publication compatible. The verifiable outcome is updated Lucide icons and compatible tools without financial workflow regressions.
+**Prerequisites and order:** after M64 and prior checkpoints in the approved order; M50 remains the owner’s separate decision. Do not bring forward existing CI, permission or Electron milestones. At startup verify identity, worktree, `main` and remote checkpoint C64, rereading any documents split by M64.
+**Planned branch:** `milestone/65-dependabot-maintenance`, from updated `main`; use an isolated worktree if unrelated changes exist. **Planned checkpoint:** `milestone/C65`.
+**Planned increment:** patch `+0.0.1` on the version published at startup; no version number is reserved now. **GitHub release:** proposed because `lucide-react` is a runtime dependency bundled in the renderer; the owner confirms classification and publication before closure. If runtime updates are already integrated and only CI/test/development changes without app effects remain, propose no release, leave the version unchanged and create no `vX.Y.Z` tag. Planning leaves source version `1.27.3` unchanged.
+
+**Inventory verified on GitHub on 17 November 2026**, all six PRs based on `470f42e`; versions checked in bot diffs and lockfiles:
+
+| PR | Component | Bot update | Milestone handling |
+|---|---|---|---|
+| [#150](https://github.com/gloutchov/ContaMi/pull/150) | `softprops/action-gh-release` | 3.0.3 → 3.0.4 | Verify upstream SHA and preserve M47 permissions. |
+| [#151](https://github.com/gloutchov/ContaMi/pull/151) | `@playwright/test`, `playwright` | 1.64.1 → 1.65.0 | Align both direct ranges and resolved versions; the bot changes only the `@playwright/test` range. |
+| [#152](https://github.com/gloutchov/ContaMi/pull/152) | `lucide-react` | 1.68.0 → 1.72.0 | Check used icons, imports and IT/EN rendering in both themes. |
+| [#153](https://github.com/gloutchov/ContaMi/pull/153) | `electron` | 45.2.3 → 45.3.0 | Already covered by M49’s exact 45.3.2 target: reconcile without a downgrade or duplicate update. |
+| [#154](https://github.com/gloutchov/ContaMi/pull/154) | `@testing-library/user-event` | 14.6.8 → 14.6.9 | Check input, focus and renderer test interactions. |
+| [#155](https://github.com/gloutchov/ContaMi/pull/155) | `concurrently` | 10.0.6 → 10.0.7 | Check process startup and shutdown with a synthetic probe. |
+
+**Synchronized baseline audit — 17 November 2026:** clean installation and `npm ls --all` passed with Node 24.18.1. Full audit exits with code 1: **19 high findings, zero critical**, propagated from one advisory, [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf), for ReDoS in `picomatch` ≤4.0.7. The lockfile resolves `picomatch` 4.0.7 marked `dev`; affected chains include Vite/Vitest, typescript-eslint and node-gyp/electron-builder. The advisory consulted today lists no patched version. These are baseline `470f42e` findings predating M65 implementation, not 19 independent app defects. Remediation belongs to maintenance and blocks publication audit gates; do not defer a failing gate to M65 to close other milestones. If maintenance must precede M64, submit an explicit revision of the approved order to the owner.
+
+**Planning-only validation — 17 November 2026:** the 15 required-document checks, `git diff --check`, IT/EN inventory/checklist parity, Node baseline and landing passed. Standalone typecheck, **439 tests in 67 files**, renderer/Electron build and CSP checks also passed on the synchronized baseline. Full preflight is not green: lint made no visible progress and was stopped after 180 seconds; its cause was not diagnosed during planning. Audit is not green as stated above. Coverage, browser/visual QA, packaging, native smoke and CI were not run: they remain implementation checks, and implementation has not started. This preparation closed no PR, updated no dependency beyond the remote lockfile and introduced no application change.
+
+**Activities:**
+
+- Refresh PR status and diffs at startup: versions and SHAs are a dated inventory, not immutable targets. Record updates already on `main`, pending changes and reasons for replacements.
+- Apply npm changes to the current lockfile as one graph, without replacing it with bot lockfiles predating M49–M64. Preserve security overrides, unconditional full audit, aligned Vitest/coverage and the `temp` copy’s provenance/license, including any version introduced by M64.
+- Reassess the `picomatch` advisory and each affected chain, checking upstream fixes available at startup. Do not assume the six PRs remove it or apply `npm audit fix --force` or indiscriminate toolchain downgrades. A fix requires verified compatibility and a synthetic regression with time/memory limits; until a verifiable solution exists, record the blocker without weakening audit or marking M65 complete.
+- For #151 also update the direct `playwright` requirement, left at `^1.64.1` in the bot diff; check the required Chromium revision. For #153 verify manifest, lockfile and C49 integration: today’s local baseline resolves 45.2.3, while the exact 45.3.2 target remains owned by M49.
+- For #150 verify in the official repository that `8a0cd651e5b2365bd640854a3fa5dfc70e4875f3` matches v3.0.4; preserve SHA pins, minimum permissions and tag-only publication. Record `publish` validation at the next required release; do not create a release just to test the Action.
+- After review and approval of the final commit, integrate the group and reconcile all six PRs: accept automatic closure or propose closing superseded PRs only after verified integration. Do not close PRs or remove bot branches before the gates.
+
+**Acceptance:** all six PR outcomes are tracked as integrated updates or justified replacements; Playwright ranges and versions agree; Electron retains C49’s exact pin; `npm ci` is reproducible, `npm ls --all` valid and `npm audit --include=dev --audit-level=info --fetch-timeout=120000 --fetch-retries=0` reports zero vulnerabilities. Preflight, coverage and browser tests pass; icons and interactions remain readable in IT/EN, light/dark, at 1080 px. Schema v16, private data, IPC, sandbox, CSP and app network stay unchanged. New vulnerabilities or incompatibilities block closure until resolved or explicitly replanned by the owner, without audit exceptions.
+
+**Tests:** Node.js 24 LTS ≥24.15.0; `npm ci`, `npm ls --all`, `npm run preflight`, `npm run test:coverage`, `node scripts/check-required-docs.mjs`, full audit; `npm run test:e2e` and `npm run test:landing:e2e` after installing the required browser; Playwright CLI IT/EN and light/dark checks, compiled-preload regression and a synthetic `concurrently` probe. For #150: actionlint, zizmor and upstream SHA verification. macOS/Windows CI and packaging/inspection/unpacked and installed smoke only when needed and on the approved commit; releases require downloaded verification of six packages, `app.asar`, source archives and SHA-256. Declare native hardware limits, especially Intel macOS. No real workbook or user profile in tests. No intermediate push or manual workflow run during planning.
+
+**Documentation:** `PLAN.md` with outcomes, limits, version and M65→C65; `documents/dependency-maintenance.md` or its post-M64 successor; `SECURITY_MODEL.md` for supply chain, Action and runtime dependencies; README, IT/EN manuals and quick start for maintenance and release; `MAP.md` if tests, commands or structure change; `AGENTS.md` only for operational rule changes. Bilingual release notes if publication is confirmed.
+
+**Closure checklist:**
+
+- [ ] Prerequisites, identity and remote checkpoints verified; dedicated branch created.
+- [ ] Combined graph and C49 coordination verified; six PRs reconciled in the inventory.
+- [ ] Local tests, audit, smoke and UI checks passed; limits and skipped checks stated.
+- [ ] Documentation updated; release decision confirmed, version synchronized only if required.
+- [ ] Local commits only on the dedicated branch; branch frozen with final hash, diff against `main`, results and limits presented to the owner.
+- [ ] Personal review and explicit approval for that commit before merge, tags, push, release or branch removal; renewed review if its hash changes.
+- [ ] Necessary CI and package checks verified; merge and annotated `milestone/C65` on `main` published and verified; M65 renamed C65.
+- [ ] If confirmed: version tag, macOS/Windows release, artifacts and checksums verified; obsolete PRs/branches closed/removed only after all gates and approval.
