@@ -352,6 +352,8 @@ See [SECURITY_MODEL.md](SECURITY_MODEL.md) for technical controls and residual r
 
 ## 19. Updates and removal
 
+Automatic repository checks are associated with pull requests to `main` and version tags. A change limited to Markdown files or the license may have no associated CI run; always use Releases to choose an installable package and verify its SHA-256 checksum.
+
 Close ContaMì and keep a workbook copy before updating, then install the new release over the old one.
 
 Version 1.23.0 updates the runtime to Electron 44 and the verified development dependencies without changing features, data, or the workbook schema. It requires macOS 13 or later; macOS 12 users can continue with `v1.22.2`. Version 1.22.2 shows the total and categories behind Vehicle cost/km, separates any unitemized historical costs, and excludes planned instalments from incurred costs. It does not automatically change historical data or the workbook schema. Version 1.22.1 fixes a Vite development-configuration warning. Keeping a copy first remains recommended for every update.

@@ -23,9 +23,9 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** copia locale sincronizzata il 17/11/2026 con `main` remoto `470f42e4d24a86ca30036404bc68d5d37cc0515b`; tag e release `v1.27.3` restano sul commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 resta la milestone chiusa precedente, pubblicata come `v1.27.2`. La baseline di Vesta del 13/11/2026 è pianificata e non avviata: M47–M64 corrispondono a CM-01…CM-18. Nessuna voce M già presente e non avviata copriva questi ID, quindi non c’è stata integrazione. CM-01 è l’unica gravità alta. CM-04 è una decisione di Glauco sulle impostazioni del repository, che può prendere in qualsiasi momento. L’ordine di esecuzione non è più quello numerico: M51 e M52, con M53 sullo stesso branch di M52, precedono M47. M65 aggiunge la manutenzione congiunta delle sei PR Dependabot #150–#155 dopo M64, coordinando Electron con M49; anche M65 è pianificata e non avviata. Schema v16 invariato. Le sezioni chiuse restano storiche.
+**Stato corrente:** base `main` verificata per M51: `60ad38d8b8d8bf75e64ababe9226252628b71d43`; tag e release `v1.27.3` restano sul commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 resta l’ultima milestone chiusa. M51 è implementata localmente e in attesa del controllo del commit; le altre voci M47–M65 restano pianificate e non avviate. L’ordine approvato parte da M51 e M52, con M53 sul branch di M52, poi M47 con M55 sullo stesso branch; seguono M48, M49, M54, M56–M64 e M65. M50 resta una decisione del proprietario in qualsiasi momento. Versione sorgente 1.27.3 e schema v16 invariati. Le sezioni chiuse restano storiche.
 
-**Current status:** local checkout synchronized on 17 November 2026 with remote `main` `470f42e4d24a86ca30036404bc68d5d37cc0515b`; tag and release `v1.27.3` remain on commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 remains the previous closed milestone, published as `v1.27.2`. Vesta’s 13 November 2026 baseline is planned and not started: M47–M64 are CM-01…CM-18. No existing unstarted M entry covered these IDs, so none was extended. CM-01 is the only high severity. CM-04 is Glauco’s decision on repository settings, and he can take it at any time. Execution order is no longer numeric: M51 and M52, with M53 on M52’s branch, come before M47. M65 adds grouped maintenance of the six Dependabot PRs #150–#155 after M64, coordinating Electron with M49; M65 is also planned and not started. Schema v16 is unchanged. Closed sections stay historical.
+**Current status:** `main` baseline verified for M51: `60ad38d8b8d8bf75e64ababe9226252628b71d43`; tag and release `v1.27.3` remain on commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 remains the last closed milestone. M51 is implemented locally and awaiting commit review; other entries M47–M65 remain planned and not started. The approved order starts with M51 and M52, with M53 on M52’s branch, then M47 with M55 on the same branch; M48, M49, M54, M56–M64 and M65 follow. M50 remains the owner’s decision at any time. Source version 1.27.3 and schema v16 stay unchanged. Closed sections remain historical.
 
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
@@ -91,7 +91,7 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | M48 — URL del dev server nel pacchetto, CM-06 | `milestone/48-packaged-dev-server-guard` | `milestone/C48`; `+0.0.1` e release | Pianificata, non avviata; bassa, verificata |
 | M49 — Electron 45.3.2, CM-02 | `milestone/49-electron-45-3-2` | `milestone/C49`; `+0.0.1` e release | Pianificata, non avviata; media; range verificato, lockfile sospetto |
 | M50 — Impostazioni di sicurezza GitHub, CM-04 | decisione di Glauco, in qualsiasi momento | nessun incremento; nessuna release | Pianificata, non avviata; media, verificata |
-| M51 — Trigger della CI, CM-03 | `milestone/51-ci-trigger-scope` | `milestone/C51`; nessun incremento; nessuna release | Pianificata, non avviata; prima di M47; decisione di Glauco |
+| M51 — Trigger della CI, CM-03 | `milestone/51-ci-trigger-scope` | `milestone/C51`; nessun incremento; nessuna release | Implementata localmente, in attesa di controllo; verifiche statiche superate, audit preesistente non verde |
 | M52 — Allineamento di AGENTS e dello standard, CM-05 | `milestone/52-agents-standard` | `milestone/C52`; nessun incremento; nessuna release | Pianificata, non avviata; insieme a M51, prima di M47 |
 | M53 — README e release 1.27.3, CM-13 | `milestone/52-agents-standard` | `milestone/C53`; nessun incremento; nessuna release | Pianificata, non avviata; stesso branch di M52 |
 | M54 — Tag storici fuori formato, CM-15 | `milestone/54-historical-tags` | `milestone/C54`; nessun incremento; nessuna release | Pianificata, non avviata; bassa, verificata |
@@ -2187,14 +2187,37 @@ Fonte: baseline di qualità e sicurezza del 13/11/2026, commit `892f614`, segnal
 
 ## M51 — Trigger della CI (CM-03)
 
-**ID Vesta:** CM-03. **Gravità:** media. **Stato del rilievo:** verificato. **Stato:** pianificata, non avviata. Si decide insieme a M52 e si esegue prima di M47.
-**Obiettivo:** scegliere i trigger di `ci.yml` così che gli agenti non siano bloccati dal punto 2 dell’addendum. La CI sulle sole PR verso `main` li bloccherebbe comunque, e M47–M50 la farebbero ancora partire.
-**Dove:** `.github/workflows/ci.yml:3-6` e `17-18`. Non ci sono filtri di percorso né `concurrency`. Il job Quality esegue e2e e audit su macOS e Windows.
-**Branch previsto:** `milestone/51-ci-trigger-scope`. **Checkpoint previsto:** `milestone/C51`, senza tag di versione. **Incremento previsto:** nessuno. **GitHub release:** non prevista. Tocca solo la CI e segue la regola unica della sezione Release dello standard.
-**Attività:** il 13/11/2026 Glauco ha scelto l’opzione (b): la CI parte anche sulle PR verso `main`, con la deroga scritta in `AGENTS.md`. La modifica di `AGENTS.md` resta un’attività di M51 e non fa parte di questa PR. Si possono aggiungere `concurrency` con `cancel-in-progress` e `paths-ignore` per la documentazione. Non creare un secondo workflow. M52 si decide insieme; M53 sta sul branch di M52. Anche il push del branch di M51, e di quello di M52/M53 se vanno prima, avvia l’attuale `ci.yml`. Serve quindi un’istruzione esplicita di Glauco secondo il punto 2 dell’addendum, oppure la modifica la applica Glauco stesso.
-**Criteri di accettazione:** la deroga dell’opzione (b) è scritta in `AGENTS.md` nel lavoro di M51; le PR verso `main` avviano la CI; un push di branch non avvia più Quality da solo. Il push che introduce questa modifica parte solo dopo un’istruzione esplicita di Glauco, oppure lo fa Glauco stesso.
-**Test richiesti:** revisione statica del workflow. Nessuna riesecuzione manuale.
-**Documenti:** `PLAN.md`, `AGENTS.md` se la regola operativa della CI cambia, `SECURITY_MODEL.md` se cambia la descrizione della pipeline.
+**ID Vesta:** CM-03. **Gravità:** media. **Stato del rilievo:** verificato. **Stato:** implementata localmente il 17/11/2026, in attesa del controllo personale del commit. M52 e M53 non avviate; resta la precedenza su M47.
+**Obiettivo:** applicare l’opzione (b) scelta dal proprietario il 13/11/2026: conservare la CI sulle PR verso `main`, esplicitando in `AGENTS.md` la deroga al punto 2 dell’addendum e riducendo le esecuzioni duplicate.
+**Dove:** trigger e concurrency di `.github/workflows/ci.yml`; deroga operativa in `AGENTS.md`. Il job Quality resta identico alla base e copre macOS e Windows.
+**Branch:** `milestone/51-ci-trigger-scope`, creato da `main` `60ad38d` con worktree pulito, identità privata verificata e checkpoint remoto C46 su `a1f13ba`. **Checkpoint previsto:** `milestone/C51`, dopo approvazione e integrazione verificata. **Incremento:** nessuno, versione `1.27.3` e workbook v16 invariati. **GitHub release:** non prevista, perché la modifica riguarda soltanto CI e documentazione.
+
+**Implementazione:**
+
+- `push` accetta soltanto tag di versione `v*.*.*`: i push dei branch, incluso `main`, e dei checkpoint non avviano Quality. Il workflow Release resta identico alla base.
+- `pull_request` accetta la base `main` ed esclude i changeset composti soltanto da `**/*.md` e/o `LICENSE`. Un changeset misto, i workflow, le dipendenze, la baseline Node, HTML/CSS/JavaScript e media della landing continuano ad attivare Quality. I controlli documentali delle PR escluse restano locali.
+- `workflow_dispatch` è conservato e resta soggetto ad autorizzazione e necessità. Non sono stati creati workflow aggiuntivi.
+- La concurrency distingue workflow, evento e numero PR/ref. Solo gli aggiornamenti della stessa PR cancellano il suo run precedente in corso; PR diverse, avvii manuali e tag restano separati. Nessuna cancellazione automatica del run in corso per tag o dispatch.
+- `AGENTS.md` registra la deroga dell’opzione (b): dopo controllo del commit e autorizzazione alla pubblicazione, l’avvio automatico della CI sulla PR approvata non richiede una conferma ulteriore per quel solo trigger. Il primo push di M51 resta soggetto all’istruzione esplicita del proprietario prevista dal piano. Manual run, rerun, merge, tag, release e altri workflow conservano i propri vincoli.
+
+**Criteri di accettazione:** PR verso `main` con modifiche operative e tag di versione attivano Quality; push di branch, tag checkpoint e PR solo Markdown/LICENSE non lo attivano. I run obsoleti della stessa PR sono cancellabili senza coinvolgere le altre PR. Job, matrice, audit completo bloccante, permessi `contents: read` e pin SHA restano invariati. La deroga è presente in `AGENTS.md`; pubblicazione soltanto dopo controllo e approvazione del commit.
+
+**Verifiche locali — 17/11/2026:** actionlint 1.7.12 passa sul workflow, con shellcheck/pyflakes disabilitati perché le istruzioni shell non cambiano; binario ufficiale macOS ARM64 e manifesto checksum verificati con SHA-256 e digest della release upstream. Revisione statica di **25 scenari** superata: push branch/main/Dependabot, tag versione/checkpoint, PR codice/documenti/miste, landing e dispatch. Confronto YAML con `main`: job, matrice, audit, permessi e Action identici; `release.yml`, manifest e lockfile identici byte per byte. Superati controllo dei 15 documenti richiesti, baseline Node e `git diff --check`. Nessuna GitHub Action avviata o rieseguita. Evidenze e strumento conservati in `/private/tmp/contami-m51-validation-20261117`.
+
+**Limiti:** la revisione degli eventi è statica, non una prova dell’esecuzione su GitHub. La copertura runtime macOS/Windows non è stata rieseguita: nessun codice, dipendenza o comando del job è cambiato e la milestone richiede revisione statica. Lint applicativo, typecheck, suite, coverage, build, E2E e packaging non rieseguiti per lo stesso motivo; il precedente arresto del lint resta registrato in M65. L’audit completo è stato invece ripetuto: codice 1, **19 segnalazioni alte e zero critiche**, stesso advisory `picomatch` di M65; la policy non è ridotta e il problema non è dichiarato risolto. Un eventuale run Quality resta bloccato dall’audit finché la manutenzione non lo corregge. I filtri documentali possono lasciare check richiesti in attesa: M50 deve tenerne conto prima di rendere Quality obbligatorio per il merge. Nessun dato privato aperto o modificato.
+
+**Documenti aggiornati:** `PLAN.md`, `AGENTS.md`, `SECURITY_MODEL.md` IT/EN, descrizione workflow in `MAP.md`, sviluppo in README e nota sulla lettura dei controlli repository nei manuali IT/EN. Le correzioni di versione documentale previste da M53 restano separate.
+
+**Checklist:**
+
+- [x] Identità, worktree, base `main` e checkpoint C46 verificati; branch dedicato creato.
+- [x] Trigger, filtri documentali, concurrency e deroga dell’opzione (b) implementati.
+- [x] Revisione statica, actionlint, controllo documenti e baseline Node superati; audit e limiti dichiarati.
+- [x] Documentazione aggiornata; versione e dipendenze invariate, nessuna release proposta.
+- [ ] Commit locale congelato, hash/diff/esiti presentati e controllo personale completato.
+- [ ] Istruzione esplicita per il primo push e approvazione del commit finale prima di pubblicazione; nuovo controllo se cambia l’hash.
+- [ ] Passaggio M51→C51, integrazione e controlli remoti necessari verificati; checkpoint annotato `milestone/C51` pubblicato e verificato su `main`.
+- [ ] Branch rimosso soltanto dopo approvazione e verifiche; nessun tag versione o GitHub release.
 
 ## M52 — Allineamento di AGENTS e dello standard (CM-05)
 
@@ -2442,14 +2465,37 @@ Source: 13 November 2026 quality and security baseline, commit `892f614`, findin
 
 ## M51 — CI triggers (CM-03)
 
-**Vesta ID:** CM-03. **Severity:** medium. **Finding:** verified. **Status:** planned, not started. Decided together with M52 and executed before M47.
-**Objective:** choose `ci.yml` triggers so agents are not blocked by addendum point 2. CI on pull requests to `main` alone would still block them, and M47–M50 would still start it.
-**Where:** `.github/workflows/ci.yml:3-6` and `17-18`.
-**Planned branch:** `milestone/51-ci-trigger-scope`. **Planned checkpoint:** `milestone/C51`, no version tag. **Planned increment:** none. **GitHub release:** not planned. It only touches CI and follows the single rule in the standard’s Release section.
-**Activities:** on 13 November 2026 Glauco chose option (b): CI also runs on pull requests to `main`, with the waiver written in `AGENTS.md`. Changing `AGENTS.md` remains an activity of M51 and is not part of this PR. `concurrency` with `cancel-in-progress` and `paths-ignore` for documentation may be added. Do not add a second workflow. M52 is decided with this entry; M53 stays on M52’s branch. Pushing the M51 branch, and the M52/M53 branch if those go first, still starts the current `ci.yml`. That push needs Glauco’s explicit instruction under addendum point 2, or Glauco applies the change himself.
-**Acceptance:** the option (b) waiver is written in `AGENTS.md` as part of the M51 work; pull requests to `main` start CI; a branch push no longer starts Quality by itself. The push that introduces this change happens only after Glauco’s explicit instruction, or Glauco makes it himself.
-**Tests:** static workflow review. No manual rerun.
-**Documentation:** `PLAN.md`, `AGENTS.md` if the CI rule changes, and `SECURITY_MODEL.md` if the pipeline description changes.
+**Vesta ID:** CM-03. **Severity:** medium. **Finding:** verified. **Status:** implemented locally on 17 November 2026, awaiting personal commit review. M52 and M53 have not started; this still precedes M47.
+**Objective:** implement option (b), chosen by the owner on 13 November 2026: preserve CI on PRs targeting `main`, record the addendum point 2 waiver in `AGENTS.md` and reduce duplicate runs.
+**Where:** triggers and concurrency in `.github/workflows/ci.yml`; operational waiver in `AGENTS.md`. Quality remains identical to the baseline and covers macOS and Windows.
+**Branch:** `milestone/51-ci-trigger-scope`, created from `main` `60ad38d` with a clean worktree, verified private identity and remote C46 checkpoint at `a1f13ba`. **Planned checkpoint:** `milestone/C51`, after approval and verified integration. **Increment:** none; version `1.27.3` and workbook v16 stay unchanged. **GitHub release:** not planned, because this change concerns only CI and documentation.
+
+**Implementation:**
+
+- `push` accepts only version tags `v*.*.*`: branch pushes, including `main`, and checkpoint tags do not run Quality. Release workflow remains identical to the baseline.
+- `pull_request` targets `main` and excludes changesets consisting only of `**/*.md` and/or `LICENSE`. Mixed changesets, workflows, dependencies, the Node baseline, landing HTML/CSS/JavaScript and media still trigger Quality. Document checks for excluded PRs remain local.
+- `workflow_dispatch` is preserved and remains subject to authorization and necessity. No additional workflow was created.
+- Concurrency distinguishes workflow, event and PR number/ref. Only updates of the same PR cancel its previous running CI; different PRs, manual dispatches and tags remain separate. Running tag or dispatch jobs are not automatically canceled.
+- `AGENTS.md` records the option (b) waiver: after commit review and publication authorization, automatic CI for the approved PR needs no additional confirmation for that trigger alone. The first M51 push still needs the owner’s explicit instruction required by the plan. Manual runs, reruns, merge, tags, release and other workflows retain their existing constraints.
+
+**Acceptance:** operational PRs targeting `main` and version tags trigger Quality; branch pushes, checkpoint tags and Markdown/LICENSE-only PRs do not. Obsolete runs of the same PR can be canceled without affecting other PRs. Jobs, matrix, unconditional full audit, `contents: read` permissions and SHA pins remain unchanged. The waiver is recorded in `AGENTS.md`; publication requires review and approval of the commit.
+
+**Local validation — 17 November 2026:** actionlint 1.7.12 passes on the workflow, with shellcheck/pyflakes disabled because shell instructions are unchanged; the official macOS ARM64 binary and checksum manifest were verified against SHA-256 and upstream release digests. Static review of **25 scenarios** passed: feature/main/Dependabot pushes, version/checkpoint tags, source/docs/mixed PRs, landing and dispatch. YAML comparison with `main` confirms identical jobs, matrix, audit, permissions and Actions; `release.yml`, manifest and lockfile are byte-identical. The 15 required-document checks, Node baseline and `git diff --check` passed. No GitHub Action was started or rerun. Evidence and tool retained in `/private/tmp/contami-m51-validation-20261117`.
+
+**Limits:** event review is static, not an execution test on GitHub. macOS/Windows runtime coverage was not rerun: no code, dependency or job command changed and this milestone requires static review. Application lint, typecheck, suite, coverage, build, E2E and packaging were not rerun for the same reason; the earlier lint interruption remains recorded under M65. Full audit was repeated: exit code 1, **19 high findings and zero critical**, from the same `picomatch` advisory tracked by M65; policy is not weakened and the issue is not marked resolved. A Quality run remains blocked by audit until maintenance fixes it. Documentation filters can leave required checks pending: M50 must account for that before making Quality mandatory for merging. No private data was opened or changed.
+
+**Updated documentation:** `PLAN.md`, `AGENTS.md`, IT/EN `SECURITY_MODEL.md`, workflow description in `MAP.md`, README development section and the IT/EN manuals’ explanation of repository checks. M53’s documentation version corrections remain separate.
+
+**Checklist:**
+
+- [x] Identity, worktree, `main` baseline and C46 checkpoint verified; dedicated branch created.
+- [x] Triggers, document filters, concurrency and option (b) waiver implemented.
+- [x] Static review, actionlint, required documents and Node baseline passed; audit and limits stated.
+- [x] Documentation updated; version and dependencies unchanged, no release proposed.
+- [ ] Local commit frozen, hash/diff/results presented and personal review completed.
+- [ ] Explicit instruction for the first push and final-commit approval before publication; renewed review if its hash changes.
+- [ ] M51→C51, integration and necessary remote checks verified; annotated `milestone/C51` published and verified on `main`.
+- [ ] Branch removed only after approval and checks; no version tag or GitHub release.
 
 ## M52 — AGENTS and standard alignment (CM-05)
 

@@ -383,6 +383,8 @@ Vedi [SECURITY_MODEL.md](SECURITY_MODEL.md) per dettagli tecnici e rischi residu
 
 ## 19. Aggiornamento e rimozione
 
+I controlli automatici del repository sono associati alle PR verso `main` e ai tag di versione. Una modifica dei soli file Markdown o della licenza può non avere un run CI associato; per scegliere un pacchetto installabile consulta sempre Releases e verifica il relativo checksum SHA-256.
+
 Prima di aggiornare, chiudi ContaMì e conserva una copia del workbook. Installa la nuova release sopra la precedente.
 
 La versione 1.23.0 aggiorna il runtime a Electron 44 e le dipendenze di sviluppo verificate, senza cambiare funzioni, dati o schema del workbook. Su macOS richiede almeno la versione 13; chi usa macOS 12 può continuare con `v1.22.2`. La versione 1.22.2 mostra il totale e le categorie che compongono il costo/km dell'Automobile, separa gli eventuali costi storici non dettagliati ed esclude le rate pianificate dai costi sostenuti. Non modifica automaticamente i dati storici né lo schema del workbook. La versione 1.22.1 corregge un avviso della configurazione di sviluppo Vite. La copia preventiva resta raccomandata come per ogni aggiornamento.

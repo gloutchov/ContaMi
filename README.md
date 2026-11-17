@@ -101,6 +101,10 @@ npm run test:e2e
 npm audit
 ```
 
+Il workflow CI esegue i controlli macOS/Windows sulle PR verso `main` che includono modifiche oltre ai file Markdown o `LICENSE`, sui tag di versione `v*.*.*` e su avvio manuale autorizzato. I push dei branch e i tag di checkpoint non avviano Quality; un nuovo run CI della stessa PR cancella quello precedente ancora in corso. Le modifiche alla landing HTML/CSS/JavaScript e ai media restano coperte. Per PR esclusivamente documentali esegui localmente il controllo dei documenti e `git diff --check`. La deroga operativa per gli agenti è in [AGENTS.md](AGENTS.md#deroga-ci-m51--opzione-b).
+
+CI runs macOS/Windows checks for pull requests to `main` that include changes beyond Markdown or `LICENSE`, version tags `v*.*.*`, and authorized manual runs. Branch pushes and checkpoint tags do not start Quality; a new CI run for the same PR cancels its previous running CI. Landing HTML/CSS/JavaScript and media changes remain covered. For documentation-only PRs, run the required-document check and `git diff --check` locally. See the agent workflow waiver in [AGENTS.md](AGENTS.md#deroga-ci-m51--opzione-b).
+
 Nel sorgente `1.27.1`, M45 porta **l’audit completo a zero vulnerabilità note**, comprese le dipendenze di sviluppo, e rimuove eccezioni e scadenza temporanea. CI e packaging eseguono `npm audit --include=dev` senza soglie ridotte. Lo schema workbook resta v16; la pubblicazione della patch richiede il controllo del commit e i gate dei pacchetti. [Inventario e verifiche](documents/dependency-maintenance.md). / In source `1.27.1`, M45 brings the **full audit to zero known vulnerabilities**, including development dependencies, and removes exceptions and their expiry. CI and packaging run `npm audit --include=dev` without a raised threshold. Workbook schema remains v16; patch publication requires commit review and package gates. See the [inventory and validation](documents/dependency-maintenance.md).
 
 Build e pacchetti / Build and packages:

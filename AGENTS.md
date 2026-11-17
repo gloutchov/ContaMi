@@ -64,6 +64,13 @@ npm audit
 - Le build restano non firmate finché non esiste un processo documentato con credenziali fornite esplicitamente.
 - Non spostare tag pubblicati e non eliminare branch prima di merge e verifica CI.
 
+### Deroga CI M51 — opzione (b)
+
+- Decisione del proprietario del 13/11/2026: per questo repository le PR verso `main` possono avviare automaticamente il workflow `CI`, in deroga al punto 2 dell’addendum per agenti cloud citato in M51. Dopo l’approvazione del commit e l’autorizzazione alla pubblicazione, l’agente può aprire o aggiornare la PR senza chiedere un’ulteriore conferma per quel solo avvio automatico.
+- `ci.yml` esegue Quality sulle PR verso `main` che modificano almeno un file diverso da Markdown (`**/*.md`) o `LICENSE`, sui tag di versione `v*.*.*` e tramite `workflow_dispatch`. I push dei branch, incluso `main`, e i checkpoint `milestone/C<n>` non avviano Quality; le modifiche a HTML, CSS, JavaScript e media della landing restano coperte. I controlli documentali delle PR escluse vanno eseguiti localmente.
+- Quando la stessa PR avvia un nuovo run CI, quello precedente ancora in corso viene cancellato; PR diverse, tag di versione e avvii manuali hanno gruppi separati. Gli avvii manuali e i run sui tag non cancellano quelli già in corso.
+- La deroga riguarda soltanto il trigger automatico di `CI`: restano necessari il controllo personale e l’approvazione del commit prima di pubblicarlo; il primo push che introduce M51 richiede l’istruzione esplicita del proprietario prevista dal piano. Per avvii manuali, riesecuzioni, tag, release e altri workflow valgono le autorizzazioni e le verifiche di necessità già richieste. Conservare i gate di audit/test e i permessi minimi del workflow.
+
 ## Packaging
 
 - `sources/`, workbook, backup, file `.env`, chiavi e certificati non devono entrare in Git o artifact.

@@ -7,7 +7,7 @@ ContaMì/
 ├── .github/
 │   ├── dependabot.yml                 # aggiornamenti dipendenze / dependency updates
 │   └── workflows/
-│       ├── ci.yml                     # qualità macOS + Windows e audit completo senza eccezioni
+│       ├── ci.yml                     # PR main non solo Markdown/LICENSE, tag versione e manuale; qualità macOS/Windows, audit completo e concurrency
 │       └── release.yml                # audit, pacchetti, smoke, checksum e release
 ├── .npmrc                              # impacchetta i file: locali per includerli nell’audit npm
 ├── assets/
