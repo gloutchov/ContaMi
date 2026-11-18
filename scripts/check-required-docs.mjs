@@ -8,6 +8,9 @@ const required = [
   "documents/landing-maintenance.md", "docs/index.html", "docs/.nojekyll",
 ];
 const releaseChecks = [
+  "scripts/audit-dependencies.mjs",
+  "scripts/audit-policy.mjs",
+  "scripts/dependency-audit-policy.json",
   "scripts/check-node-baseline.mjs",
   "scripts/validate-landing.mjs",
   "scripts/inspect-packaged.mjs",
@@ -69,6 +72,11 @@ if (!readme.includes(`**${manifest.version} —`) || !securityModel.includes(`Ap
   throw new Error(`README/SECURITY_MODEL version mismatch for ${manifest.version}`);
 }
 const releaseWorkflow = workflowText[1];
+for (const text of workflowText) {
+  if (!text.includes("- run: npm run audit:ci") || manifest.scripts?.["audit:ci"] !== "node scripts/audit-dependencies.mjs") {
+    throw new Error("CI and release must use the complete audit with the approved temporary policy");
+  }
+}
 for (const command of ["npm run test:package:inspect", "npm run test:smoke:packaged", "npm run test:smoke:installed"]) {
   if (!releaseWorkflow.includes(command)) throw new Error(`Release workflow is missing required gate: ${command}`);
 }

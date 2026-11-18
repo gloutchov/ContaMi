@@ -44,7 +44,7 @@ npm run typecheck
 npm test
 npm run build
 node scripts/check-required-docs.mjs
-npm audit
+npm run audit:ci
 ```
 
 - Aggiungi unit test per logica finanziaria e integration test per filesystem/settings/workbook.
@@ -58,7 +58,8 @@ npm audit
 - Usa l'account GitHub privato `gloutchov` e l'email autore `gloutchov@gmail.com` per questo repository. Se l'email Git configurata è diversa, imposta `user.email` a `gloutchov@gmail.com` nella configurazione locale del repository prima di commit, push, PR, tag o release; questo riferimento esplicito vale anche in caso di discrepanza. Se l'account GitHub autenticato non è `gloutchov` o non può essere verificato, fermati e chiedi conferma.
 - Il proprietario ha autorizzato la progressione autonoma tra milestone. Alla chiusura di una milestone o patch, congela il branch sul commit finale locale e presenta hash, diff, test ed eventuali limiti: merge, tag, push, release e rimozione del branch richiedono il controllo personale di quel preciso commit e l'approvazione esplicita del proprietario. Una modifica successiva richiede un nuovo controllo e una nuova approvazione.
 - Aggiorna insieme codice, test, `PLAN.md`, manuali, `MAP.md` e `SECURITY_MODEL.md` quando pertinenti.
-- La CI e il packaging usano `npm audit --include=dev`, completo e bloccante, con soglia info, fetch timeout 120 secondi/zero retry e step CI di 3 minuti: nessuna eccezione, soglia ridotta o scadenza. `npm ci` usa `.npmrc` con `install-links=true` per impacchettare `vendor/temp` anziché escluderlo dall’audit come symlink. Conserva nome/versione upstream, licenza, provenienza e regressioni del componente; non modificare manualmente `node_modules`. `vendor/` conserva lo stile upstream ed è escluso dal lint, mentre i test verificano la copia realmente installata.
+- CI e packaging usano `npm run audit:ci`, che esegue e mostra l’intero `npm audit --include=dev --audit-level=info --fetch-timeout=120000 --fetch-retries=0 --json`, entro uno step di 3 minuti. Decisione esplicita del proprietario del 18/11/2026: unica eccezione temporanea `GHSA-fc5q-39xc-vjpf`, solo `picomatch` 4.0.7 originale e catene esclusivamente di sviluppo già esaminate, fino al 02/12/2026 ore 00:00 UTC. La policy in `scripts/dependency-audit-policy.json` non permette rinnovi automatici; nuovi advisory, pacchetti fuori perimetro, esposizione runtime, report incompleti, errori del registry e scadenza restano bloccanti. L’audit ordinario può continuare a uscire con codice 1: il gate dichiara l’accettazione del rischio, non un audit pulito. Rimuovere l’eccezione quando non serve più. Dettagli in `documents/dependency-maintenance.md`.
+- `npm ci` usa `.npmrc` con `install-links=true` per impacchettare `vendor/temp` anziché escluderlo dall’audit come symlink. Conserva nome/versione upstream, licenza, provenienza e regressioni del componente; non modificare manualmente `node_modules`. `vendor/` conserva lo stile upstream ed è escluso dal lint, mentre i test verificano la copia realmente installata.
 - Se pubblicare una GitHub release segue la regola unica della sezione Release dello standard HOME, dal 14/11/2026, senza eccezioni di progetto. Senza release la versione resta invariata e non si crea un tag `vX.Y.Z`. Il tag di checkpoint di una milestone chiusa è `milestone/C<numero>`.
 - Non pubblicare una release dovuta finché CI macOS/Windows, artifact e checksum non sono verificati.
 - Le build restano non firmate finché non esiste un processo documentato con credenziali fornite esplicitamente.

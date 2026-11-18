@@ -7,7 +7,7 @@ ContaMì/
 ├── .github/
 │   ├── dependabot.yml                 # aggiornamenti dipendenze / dependency updates
 │   └── workflows/
-│       ├── ci.yml                     # qualità macOS + Windows e audit completo senza eccezioni
+│       ├── ci.yml                     # qualità macOS + Windows e audit completo con policy temporanea approvata
 │       └── release.yml                # audit, pacchetti, smoke, checksum e release
 ├── .npmrc                              # impacchetta i file: locali per includerli nell’audit npm
 ├── assets/
@@ -22,13 +22,16 @@ ContaMì/
 │   ├── styles.css                     # layout editoriale e Novità responsive, chiaro/scuro e reduced motion
 │   └── .nojekyll                      # pubblicazione statica GitHub Pages da main + /docs
 ├── documents/
-│   ├── dependency-maintenance.md     # inventari C44–C46, compatibilità e audit completo senza eccezioni IT/EN
+│   ├── dependency-maintenance.md     # policy audit corrente e inventari storici C44–C46 IT/EN
 │   ├── import-template-spec.md        # contratti versionati degli otto template Excel
 │   ├── import-guide.md                # compilazione, anteprima, errori e recupero IT/EN
 │   ├── return-formulas.md             # formule, copertura e limiti dei rendimenti IT/EN
 │   ├── reference-analysis.md          # analisi priva di PII del Numbers sorgente
 │   └── landing-maintenance.md         # manutenzione e rigenerazione sicura dei media
 ├── scripts/
+│   ├── audit-dependencies.mjs         # audit completo e report visibile, con errore bloccante
+│   ├── audit-policy.mjs               # verifica advisory, catene dev, integrità e scadenza UTC
+│   ├── dependency-audit-policy.json   # unica eccezione GHSA-fc5q-39xc-vjpf fino al 02/12/2026 00:00 UTC
 │   ├── build-electron.mjs             # build separata main + preload
 │   ├── check-node-baseline.mjs         # coerenza baseline Node, dipendenze, CI e documentazione
 │   ├── validate-renderer-csp.mjs       # CSP prod, assenza style inline e verifica app.asar
@@ -195,7 +198,7 @@ ContaMì/
 │   ├── landing/
 │   │   └── landing.spec.ts             # IT/EN, temi, demo video, focus e mobile della landing
 │   ├── integration/
-│   │   ├── dependencyAuditGate.test.mjs # gate npm reale: audit pulito, moderato e errore su registry sintetico
+│   │   ├── dependencyAuditGate.test.mjs # gate npm reale: pulito, eccezione, nuovi avvisi, runtime, scadenza ed errori
 │   │   ├── legacyDependencyCompatibility.test.mjs # API archive, ExcelJS streaming, Universal e cleanup temp
 │   │   ├── modernDependencyCompatibility.test.mjs # filtri moderni, ASAR, ESLint, project service e advisory
 │   │   ├── sandboxedPreloadCompatibility.test.mjs # preload compilato senza shim Node rimossi da Electron 45
@@ -215,6 +218,7 @@ ContaMì/
 │   │   ├── recurringExpensesWorkbook.test.ts # round-trip v16 e migrazione v15 con backup e quote conservate
 │   │   └── workbook.test.ts            # round-trip e schema leggibile
 │   └── unit/
+│       ├── dependencyAuditPolicy.test.mjs # perimetro, provenienza, cicli, report malformati e scadenza
 │       ├── accounts.test.ts             # saldi Casse, trasferimenti interni e vincoli metodo
 │       ├── finance.test.ts              # comandi e KPI finanziari
 │       ├── detailFilters.test.tsx       # combinazione/reset dei filtri condivisi IT/EN

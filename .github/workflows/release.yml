@@ -32,7 +32,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npm audit --include=dev --audit-level=info --fetch-timeout=120000 --fetch-retries=0
+      - run: npm run audit:ci
         timeout-minutes: 3
       - run: npm run preflight
       - run: ${{ matrix.command }}
