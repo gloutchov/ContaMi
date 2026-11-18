@@ -1,6 +1,10 @@
 # ContaMì — Modello di sicurezza / Security model
 
-Versione del documento / Document version: 2026-11-12 · Applicazione / Application: 1.27.3
+Versione del documento / Document version: 2026-11-18 · Applicazione / Application: 1.27.3
+
+**Policy audit corrente — 18/11/2026:** il proprietario ha autorizzato l’accettazione temporanea del solo `GHSA-fc5q-39xc-vjpf`, fino al 02/12/2026 ore 00:00 UTC. `npm run audit:ci` conserva audit completo, soglia info e report integrale; valida che ogni finding derivi da quell’unico avviso, riguardi soltanto i 19 pacchetti di sviluppo approvati e mantenga `picomatch` 4.0.7 con origine e integrità upstream. Tutti gli altri finding, esposizione runtime, report incoerenti, errori e scadenza restano bloccanti. Le dichiarazioni di audit zero nelle sezioni storiche descrivono le verifiche di quelle date, non il rischio attualmente accettato. [Motivazione, limiti e rimozione](documents/dependency-maintenance.md).
+
+**Current audit policy — 18 November 2026:** the owner authorized temporary acceptance of `GHSA-fc5q-39xc-vjpf` only, until 2 December 2026, 00:00 UTC. `npm run audit:ci` retains the complete audit, info threshold and full report; it validates that every finding originates from that sole advisory, affects only the 19 approved development packages and retains upstream `picomatch` 4.0.7 origin and integrity. All other findings, runtime exposure, inconsistent reports, errors and expiry block the gate. Historical zero-audit statements describe checks at those dates, not the currently accepted risk. [Rationale, limits and removal](documents/dependency-maintenance.md).
 
 ## Italiano
 

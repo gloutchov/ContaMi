@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "temporaryException": {
+    "advisory": "GHSA-fc5q-39xc-vjpf",
+    "url": "https://github.com/advisories/GHSA-fc5q-39xc-vjpf",
+    "package": "picomatch",
+    "version": "4.0.7",
+    "node": "node_modules/picomatch",
+    "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.7.tgz",
+    "integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==",
+    "maximumSeverity": "high",
+    "approvedBy": "gloutchov",
+    "approvedAt": "2026-11-18T00:00:00.000Z",
+    "expiresAt": "2026-12-02T00:00:00.000Z",
+    "reason": {
+      "it": "Autorizzazione del proprietario del 18/11/2026: dipendenza solo di sviluppo, nessun ingresso individuato dai dati finanziari ai pattern; avviso revocato da Snyk ma ancora attivo su GitHub. Il rallentamento è riproducibile e il rischio residuo è accettato solo nel perimetro indicato fino alla scadenza.",
+      "en": "Owner authorization on 2026-11-18: development-only dependency, with no identified path from financial data to patterns; Snyk revoked the advisory while GitHub still lists it. Slow matching is reproducible and the residual risk is accepted only within the stated scope until expiry."
+    },
+    "allowedPackages": [
+      "@electron/rebuild",
+      "@typescript-eslint/eslint-plugin",
+      "@typescript-eslint/parser",
+      "@typescript-eslint/type-utils",
+      "@typescript-eslint/typescript-estree",
+      "@typescript-eslint/utils",
+      "@vitejs/plugin-react",
+      "@vitest/coverage-v8",
+      "app-builder-lib",
+      "dmg-builder",
+      "electron-builder",
+      "electron-builder-squirrel-windows",
+      "fdir",
+      "node-gyp",
+      "picomatch",
+      "tinyglobby",
+      "typescript-eslint",
+      "vite",
+      "vitest"
+    ]
+  }
+}

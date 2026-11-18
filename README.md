@@ -98,10 +98,12 @@ Verifiche locali / Local checks:
 ```bash
 npm run preflight
 npm run test:e2e
-npm audit
+npm run audit:ci
 ```
 
 Nel sorgente `1.27.1`, M45 porta **l’audit completo a zero vulnerabilità note**, comprese le dipendenze di sviluppo, e rimuove eccezioni e scadenza temporanea. CI e packaging eseguono `npm audit --include=dev` senza soglie ridotte. Lo schema workbook resta v16; la pubblicazione della patch richiede il controllo del commit e i gate dei pacchetti. [Inventario e verifiche](documents/dependency-maintenance.md). / In source `1.27.1`, M45 brings the **full audit to zero known vulnerabilities**, including development dependencies, and removes exceptions and their expiry. CI and packaging run `npm audit --include=dev` without a raised threshold. Workbook schema remains v16; patch publication requires commit review and package gates. See the [inventory and validation](documents/dependency-maintenance.md).
+
+Dal 18/11/2026 il gate `npm run audit:ci` esegue e mostra l’audit completo, accettando temporaneamente solo `GHSA-fc5q-39xc-vjpf` nel perimetro di sviluppo approvato, fino al **02/12/2026 ore 00:00 UTC**. Le 19 segnalazioni note restano visibili; un audit accettato non è un audit a zero. Tutti gli altri finding, gli errori e la scadenza bloccano il gate. / Since 18 November 2026, `npm run audit:ci` runs and displays the complete audit, temporarily accepting only `GHSA-fc5q-39xc-vjpf` within the approved development scope until **2 December 2026, 00:00 UTC**. The 19 known findings remain visible; acceptance does not mean a clean audit. All other findings, errors and expiry block the gate. [Policy e condizioni di rimozione / Policy and removal conditions](documents/dependency-maintenance.md).
 
 Build e pacchetti / Build and packages:
 

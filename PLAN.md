@@ -27,6 +27,10 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 
 **Current status:** source version `1.27.3`; tag and release `v1.27.3` on commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 is the last closed milestone, published as `v1.27.2`. Workbook schema v16. No new milestones are planned; closed sections remain historical.
 
+**Decisione operativa del 18/11/2026 — audit:** il proprietario ha autorizzato una sola eccezione temporanea per `GHSA-fc5q-39xc-vjpf`, fino al 02/12/2026 ore 00:00 UTC. Il gate continua a eseguire e mostrare l’audit completo e blocca tutti gli altri finding, ampliamenti del perimetro, errori e scadenza. La modifica locale è sul branch `patch/1.27.3-picomatch-audit-exception`; versione 1.27.3 e schema v16 invariati, nessuna release applicativa per la sola policy CI. Non introduce milestone future. Esiti delle verifiche e condizioni di rimozione in [manutenzione dipendenze](documents/dependency-maintenance.md).
+
+**Operational decision on 18 November 2026 — audit:** the owner authorized one temporary exception for `GHSA-fc5q-39xc-vjpf`, until 2 December 2026, 00:00 UTC. The gate still runs and displays the complete audit and blocks every other finding, scope expansion, error and expiry. The local change is on `patch/1.27.3-picomatch-audit-exception`; version 1.27.3 and schema v16 stay unchanged, with no application release for the CI policy alone. It introduces no future milestones. Validation outcomes and removal conditions are in [dependency maintenance](documents/dependency-maintenance.md).
+
 | Milestone | Branch previsto | Checkpoint di maturità | Stato |
 |---|---|---:|---|
 | M0 — Piano e analisi | `milestone/00-plan-and-discovery` | `0.0.0` | Completata |
