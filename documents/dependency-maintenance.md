@@ -433,10 +433,9 @@ Baseline: main `2178fbfc`. Source `1.27.4`; schema v16 and Electron 45.2.3 stay 
 The tag and the GitHub release were later published on commit `270254f1`. Status **C**.
 #153 (Electron) is not included. The audit stays at schemaVersion 1, with no exception.
 
-## M47 — Electron 45.4.1, PR #153
+## C47 — Electron 45.4.1, PR #153
 
-Base: main `270254f1`, release pubblicata `v1.27.4`. Sorgente `1.27.5`. Stato **M**.
-Il tag `milestone/C47` e la release `v1.27.5` non sono pubblicati. Il branch della PR #153 non è unito.
+Base: main `270254f1`, release pubblicata `v1.27.4`. Sorgente `1.27.5`. Stato **C**: il proprietario ha approvato la chiusura. Il branch è pubblicato nella PR #160; CI e packaging sono verdi. Il tag `milestone/C47` e la release `v1.27.5` non sono pubblicati. Il branch della PR #153 non è unito.
 
 | Dipendenza / Dependency | Prima / Before | Dopo / After | Motivo / Reason |
 |---|---|---|---|
@@ -448,11 +447,10 @@ Il tag `milestone/C47` e la release `v1.27.5` non sono pubblicati. Il branch del
 
 Runtime Electron: Node 24.22.2 → 24.22.3, Chromium 156.0.8078.80 → 156.0.8078.100.
 Le note 45.3.0, 45.3.1, 45.3.2, 45.3.3, 45.3.4 e 45.4.1 non dichiarano breaking change di API.
-La 45.3.1 revoca la fiducia negli intermedi RSA di eMudhra. La 45.4.1 importa correzioni upstream, fra cui sandbox del renderer su macOS e use-after-free. CSP, IPC e flag Electron restano invariati. L'audit resta a `schemaVersion` 1, senza eccezione.
+La 45.3.1 revoca la fiducia negli intermedi RSA di eMudhra. La 45.4.1 riporta: «Backported fixes from upstream ANGLE, Chromium, Dawn, FFmpeg, PDFium and V8» ([electron/electron#55907](https://github.com/electron/electron/pull/55907)). CSP, IPC e flag Electron restano invariati. L'audit resta a `schemaVersion` 1, senza eccezione.
 
-Baseline: main `270254f1`, published release `v1.27.4`. Source `1.27.5`. Status **M**.
-Tag `milestone/C47` and release `v1.27.5` are not published. PR #153's branch is not merged.
+Baseline: main `270254f1`, published release `v1.27.4`. Source `1.27.5`. Status **C**: the owner approved closure. The branch is published as PR #160; CI and packaging are green. Tag `milestone/C47` and release `v1.27.5` are not published. PR #153's branch is not merged.
 Electron's runtime moves from Node 24.22.2 / Chromium 156.0.8078.80 to Node 24.22.3 / Chromium 156.0.8078.100.
 Notes for 45.3.0 through 45.4.1 declare no API break. 45.3.1 distrusts eMudhra's revoked RSA intermediates.
-45.4.1 backports upstream fixes, including the macOS renderer sandbox and use-after-free fixes.
+45.4.1 reports: “Backported fixes from upstream ANGLE, Chromium, Dawn, FFmpeg, PDFium and V8” ([electron/electron#55907](https://github.com/electron/electron/pull/55907)).
 CSP, IPC, and Electron flags stay unchanged. The audit stays at schemaVersion 1, with no exception.
