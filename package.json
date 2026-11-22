@@ -1,7 +1,7 @@
 {
   "name": "contami",
   "productName": "ContaMì",
-  "version": "1.27.4",
+  "version": "1.27.5",
   "description": "Finanze personali local-first con un foglio di calcolo come fonte dati durevole.",
   "license": "Apache-2.0",
   "author": "ContaMì contributors",
@@ -130,7 +130,7 @@
     "@vitest/coverage-v8": "^5.1.0",
     "concurrently": "^10.0.7",
     "cross-env": "^10.1.0",
-    "electron": "^45.2.3",
+    "electron": "45.4.1",
     "electron-builder": "^26.18.0",
     "esbuild": "^0.28.1",
     "eslint": "^10.14.0",

@@ -417,7 +417,7 @@ no override, and no workbook schema changes.
 ## Patch 1.27.4 — dipendenze #150–#155 senza Electron / without Electron
 
 Base: main `2178fbfc`. Sorgente `1.27.4`; schema v16 e Electron 45.2.3 invariati.
-Il tag e la release non sono ancora pubblicati. Stato **C**.
+Il tag e la release sono stati poi pubblicati sul commit `270254f1`. Stato **C**.
 
 | PR | Dipendenza / Dependency | Prima / Before | Dopo / After |
 |---|---|---|---|
@@ -430,5 +430,29 @@ Il tag e la release non sono ancora pubblicati. Stato **C**.
 #153 (Electron) non è inclusa. L’audit resta a `schemaVersion` 1, senza eccezione.
 
 Baseline: main `2178fbfc`. Source `1.27.4`; schema v16 and Electron 45.2.3 stay unchanged.
-The tag and the GitHub release are not published yet. Status **C**.
+The tag and the GitHub release were later published on commit `270254f1`. Status **C**.
 #153 (Electron) is not included. The audit stays at schemaVersion 1, with no exception.
+
+## M47 — Electron 45.4.1, PR #153
+
+Base: main `270254f1`, release pubblicata `v1.27.4`. Sorgente `1.27.5`. Stato **M**.
+Il tag `milestone/C47` e la release `v1.27.5` non sono pubblicati. Il branch della PR #153 non è unito.
+
+| Dipendenza / Dependency | Prima / Before | Dopo / After | Motivo / Reason |
+|---|---|---|---|
+| electron | `^45.2.3` risolto `45.2.3` | `45.4.1` esatto | Scelta del proprietario al posto di `45.3.0`. Runtime, quindi `+0.0.1`. |
+| electron-builder | `^26.18.0` risolto `26.18.0` | invariato | Nessun peer che rifiuti 45.4.1; legge la versione installata. |
+| @electron/get | override `^5.1.0` | invariato | Copre già il requisito `^5.0.0` di Electron 45.4.1. |
+| @electron/asar, @electron/universal | override esistenti | invariati | Builder e audit, non l'ABI del runtime. |
+| @electron/rebuild | transitivo `4.2.1` | invariato | Nessun modulo nativo dell'app da ricostruire. |
+
+Runtime Electron: Node 24.22.2 → 24.22.3, Chromium 156.0.8078.80 → 156.0.8078.100.
+Le note 45.3.0, 45.3.1, 45.3.2, 45.3.3, 45.3.4 e 45.4.1 non dichiarano breaking change di API.
+La 45.3.1 revoca la fiducia negli intermedi RSA di eMudhra. La 45.4.1 importa correzioni upstream, fra cui sandbox del renderer su macOS e use-after-free. CSP, IPC e flag Electron restano invariati. L'audit resta a `schemaVersion` 1, senza eccezione.
+
+Baseline: main `270254f1`, published release `v1.27.4`. Source `1.27.5`. Status **M**.
+Tag `milestone/C47` and release `v1.27.5` are not published. PR #153's branch is not merged.
+Electron's runtime moves from Node 24.22.2 / Chromium 156.0.8078.80 to Node 24.22.3 / Chromium 156.0.8078.100.
+Notes for 45.3.0 through 45.4.1 declare no API break. 45.3.1 distrusts eMudhra's revoked RSA intermediates.
+45.4.1 backports upstream fixes, including the macOS renderer sandbox and use-after-free fixes.
+CSP, IPC, and Electron flags stay unchanged. The audit stays at schemaVersion 1, with no exception.
