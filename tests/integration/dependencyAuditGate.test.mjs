@@ -9,8 +9,8 @@ import { promisify } from "node:util";
 import { gunzipSync } from "node:zlib";
 
 const execute = promisify(execFile);
-const originalPolicy = JSON.parse(await readFile(new URL("../../scripts/dependency-audit-policy.json", import.meta.url), "utf8"));
 const manifest = JSON.parse(await readFile(new URL("../../package.json", import.meta.url), "utf8"));
+const withdrawnUrl = "https://github.com/advisories/GHSA-fc5q-39xc-vjpf";
 
 describe("workflow audit wiring", () => {
   it.each(["ci.yml", "release.yml"])("keeps the policy gate mandatory and bounded in %s", async file => {
@@ -33,9 +33,9 @@ async function removeFixture(root) {
 
 async function runGate(mode) {
   const root = await mkdtemp(path.join(os.tmpdir(), "contami-audit-gate-"));
-  const known = mode.startsWith("known");
-  const risk = known ? "picomatch" : "contami-synthetic-risk";
-  const version = known ? "4.0.7" : "1.0.0";
+  const withdrawn = mode === "picomatch";
+  const risk = withdrawn ? "picomatch" : "contami-synthetic-risk";
+  const version = withdrawn ? "4.0.7" : "1.0.0";
   let auditedDependency = false;
   const server = createServer(async (request, response) => {
     response.setHeader("content-type", "application/json");
@@ -49,14 +49,12 @@ async function runGate(mode) {
       const bytes = Buffer.concat(chunks);
       const body = JSON.parse((request.headers["content-encoding"] === "gzip" ? gunzipSync(bytes) : bytes).toString());
       auditedDependency = body[risk]?.includes(version) === true;
-      const findings = [];
-      if (auditedDependency && mode !== "clean") findings.push({
-        id: 999998, name: risk, title: "Synthetic advisory", severity: known ? "high" : mode,
-        vulnerable_versions: known ? "<=4.0.7" : "<2.0.0",
-        url: known ? originalPolicy.temporaryException.url : "https://example.invalid/synthetic-advisory",
+      const findings = auditedDependency && mode !== "clean" ? [{
+        id: 999998, name: risk, title: "Synthetic advisory", severity: withdrawn ? "high" : mode,
+        vulnerable_versions: withdrawn ? "<=4.0.7" : "<2.0.0",
+        url: withdrawn ? withdrawnUrl : "https://example.invalid/synthetic-advisory",
         cwe: [], cvss: { score: 7.5, vectorString: null },
-      });
-      if (mode === "known-plus-new") findings.push({ ...findings[0], id: 999999, url: "https://example.invalid/new-advisory" });
+      }] : [];
       response.end(JSON.stringify(findings.length ? { [risk]: findings } : {}));
     } else if (request.url === `/${risk}`) {
       response.end(JSON.stringify({ name: risk, "dist-tags": { latest: version }, versions: {
@@ -67,26 +65,17 @@ async function runGate(mode) {
   try {
     await new Promise((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolve); });
     const registry = `http://127.0.0.1:${server.address().port}`;
-    const production = mode === "known-production";
-    const dependencyKind = production ? "dependencies" : "devDependencies";
     await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "contami-audit-fixture", version: "1.0.0",
-      private: true, scripts: { "audit:ci": manifest.scripts["audit:ci"] }, [dependencyKind]: { [risk]: version } }));
+      private: true, scripts: { "audit:ci": manifest.scripts["audit:ci"] }, devDependencies: { [risk]: version } }));
     await writeFile(path.join(root, "package-lock.json"), JSON.stringify({ name: "contami-audit-fixture", version: "1.0.0",
       lockfileVersion: 3, requires: true, packages: {
-        "": { name: "contami-audit-fixture", version: "1.0.0", [dependencyKind]: { [risk]: version } },
-        [`node_modules/${risk}`]: { version, ...(!production ? { dev: true } : {}),
-          resolved: known ? originalPolicy.temporaryException.resolved : `${registry}/${risk}/-/package.tgz`,
-          ...(known ? { integrity: originalPolicy.temporaryException.integrity } : {}) },
+        "": { name: "contami-audit-fixture", version: "1.0.0", devDependencies: { [risk]: version } },
+        [`node_modules/${risk}`]: { version, dev: true, resolved: `${registry}/${risk}/-/package.tgz` },
       } }));
     await mkdir(path.join(root, "scripts"));
-    for (const file of ["audit-dependencies.mjs", "audit-policy.mjs"]) {
+    for (const file of ["audit-dependencies.mjs", "audit-policy.mjs", "dependency-audit-policy.json"]) {
       await copyFile(new URL(`../../scripts/${file}`, import.meta.url), path.join(root, "scripts", file));
     }
-    // Only synthetic fixtures get relative dates; the real policy has fixed approved dates.
-    const policy = structuredClone(originalPolicy);
-    policy.temporaryException.approvedAt = new Date(Date.now() - 60000).toISOString();
-    policy.temporaryException.expiresAt = new Date(Date.now() + (mode === "known-expired" ? -1 : 3600000)).toISOString();
-    await writeFile(path.join(root, "scripts/dependency-audit-policy.json"), JSON.stringify(policy));
     await writeFile(path.join(root, "user.npmrc"), "");
     await writeFile(path.join(root, "global.npmrc"), "");
     const env = Object.fromEntries(["PATH", "SystemRoot", "SYSTEMROOT", "ComSpec", "PATHEXT", "TEMP", "TMP"].filter(key => process.env[key])
@@ -115,17 +104,10 @@ describe("actual workflow command against a synthetic npm registry", () => {
     expect(result.auditedDependency).toBe(true);
     expect(result.code).toBe(0);
     expect(result.stdout).toContain("clean full audit");
+    expect(result.stdout).toContain("no temporary exception");
   }, 20000);
 
-  it("accepts the approved development advisory while keeping the raw report visible", async () => {
-    const result = await runGate("known");
-    expect(result.auditedDependency).toBe(true);
-    expect(result.code).toBe(0);
-    expect(result.stdout).toContain(originalPolicy.temporaryException.url);
-    expect(result.stdout).toContain("accepted 1 development findings");
-  }, 20000);
-
-  it.each(["info", "moderate", "known-plus-new", "known-production", "known-expired", "error"])("blocks %s", async mode => {
+  it.each(["info", "moderate", "high", "picomatch", "error"])("blocks %s", async mode => {
     const result = await runGate(mode);
     if (mode !== "error") expect(result.auditedDependency).toBe(true);
     expect(result.code).not.toBe(0);

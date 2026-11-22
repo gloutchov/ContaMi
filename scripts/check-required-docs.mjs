@@ -74,7 +74,7 @@ if (!readme.includes(`**${manifest.version} —`) || !securityModel.includes(`Ap
 const releaseWorkflow = workflowText[1];
 for (const text of workflowText) {
   if (!text.includes("- run: npm run audit:ci") || manifest.scripts?.["audit:ci"] !== "node scripts/audit-dependencies.mjs") {
-    throw new Error("CI and release must use the complete audit with the approved temporary policy");
+    throw new Error("CI and release must use the complete audit gate");
   }
 }
 for (const command of ["npm run test:package:inspect", "npm run test:smoke:packaged", "npm run test:smoke:installed"]) {

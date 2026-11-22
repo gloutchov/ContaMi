@@ -26,11 +26,10 @@ try {
   process.stdout.write(result.stdout);
   if (result.stderr) process.stderr.write(result.stderr);
   const decision = evaluateAuditReport({ report: JSON.parse(result.stdout), lockfile, policy, exitCode: result.exitCode });
-  if (decision.exceptionUsed) {
-    console.log(`AUDIT POLICY: accepted ${decision.acceptedPackages.length} development findings only for GHSA-fc5q-39xc-vjpf until ${decision.expiresAt}.`);
-  } else {
-    console.log("AUDIT POLICY: clean full audit; remove the unused temporary exception.");
+  if (decision.exceptionUsed || decision.acceptedPackages.length !== 0) {
+    throw new Error("Audit policy: temporary exceptions are not authorized");
   }
+  console.log("AUDIT POLICY: clean full audit; no temporary exception.");
 } catch (error) {
   console.error(`AUDIT POLICY BLOCKED: ${error.message}`);
   process.exitCode = 1;

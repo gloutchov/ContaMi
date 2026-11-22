@@ -7,7 +7,7 @@ ContaMì/
 ├── .github/
 │   ├── dependabot.yml                 # aggiornamenti dipendenze / dependency updates
 │   └── workflows/
-│       ├── ci.yml                     # qualità macOS + Windows e audit completo con policy temporanea approvata
+│       ├── ci.yml                     # qualità macOS + Windows e audit completo senza eccezioni
 │       └── release.yml                # audit, pacchetti, smoke, checksum e release
 ├── .npmrc                              # impacchetta i file: locali per includerli nell’audit npm
 ├── assets/
@@ -30,8 +30,8 @@ ContaMì/
 │   └── landing-maintenance.md         # manutenzione e rigenerazione sicura dei media
 ├── scripts/
 │   ├── audit-dependencies.mjs         # audit completo e report visibile, con errore bloccante
-│   ├── audit-policy.mjs               # verifica advisory, catene dev, integrità e scadenza UTC
-│   ├── dependency-audit-policy.json   # unica eccezione GHSA-fc5q-39xc-vjpf fino al 02/12/2026 00:00 UTC
+│   ├── audit-policy.mjs               # audit completo senza eccezioni: ogni advisory blocca
+│   ├── dependency-audit-policy.json   # schemaVersion 1, nessuna eccezione temporanea
 │   ├── build-electron.mjs             # build separata main + preload
 │   ├── check-node-baseline.mjs         # coerenza baseline Node, dipendenze, CI e documentazione
 │   ├── validate-renderer-csp.mjs       # CSP prod, assenza style inline e verifica app.asar
