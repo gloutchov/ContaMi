@@ -417,7 +417,7 @@ no override, and no workbook schema changes.
 ## Patch 1.27.4 — dipendenze #150–#155 senza Electron / without Electron
 
 Base: main `2178fbfc`. Sorgente `1.27.4`; schema v16 e Electron 45.2.3 invariati.
-Il tag e la release non fanno parte di questa preparazione. Stato **M**.
+Il tag e la release non sono ancora pubblicati. Stato **C**.
 
 | PR | Dipendenza / Dependency | Prima / Before | Dopo / After |
 |---|---|---|---|
@@ -430,5 +430,5 @@ Il tag e la release non fanno parte di questa preparazione. Stato **M**.
 #153 (Electron) non è inclusa. L’audit resta a `schemaVersion` 1, senza eccezione.
 
 Baseline: main `2178fbfc`. Source `1.27.4`; schema v16 and Electron 45.2.3 stay unchanged.
-This preparation does not create the tag or the GitHub release. Status **M**.
+The tag and the GitHub release are not published yet. Status **C**.
 #153 (Electron) is not included. The audit stays at schemaVersion 1, with no exception.

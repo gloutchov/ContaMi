@@ -371,4 +371,4 @@ Version **1.27.2** updates the runtime to Electron 45.1.0 and integrates the fiv
 
 Version **1.27.3** updates the source already on main after `v1.27.2`: Electron 45.2.3, Lucide 1.68.0, ESLint 10.14.0, globals 17.14.0, and Vitest 5.1.0, with `@vitest/coverage-v8` declared `^5.1.0`. Workflows, files, and schema v16 are unchanged. It is published as `v1.27.3`.
 
-Version **1.27.4** updates Lucide to 1.77.0 and some development and test tools. Electron stays 45.2.3. Workflows, files, and schema v16 are unchanged. Releases lists the distributed version until this patch is published.
+Version **1.27.4** updates Lucide to 1.77.0 and some development and test tools. Electron stays 45.2.3. Application flows, files, and schema v16 are unchanged. The release workflow pins `softprops/action-gh-release` to the v3.0.4 commit. Releases lists the distributed version until this patch is published.
