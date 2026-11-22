@@ -244,7 +244,7 @@ La spesa inserita diventa la prima occorrenza: non viene aggiunto un secondo pag
 
 Togliere la ricorrenza in una Transazione o Spesa condivisa scollega soltanto quella registrazione: non chiude il piano. Cambiare condivisione o quote sulla singola registrazione non cambia la serie; per le scadenze future modifica il piano. I collegamenti usano gli identificativi espliciti: una descrizione simile non ricollega automaticamente una spesa scollegata. Per esempio, una spesa sintetica di 100,01 € con quota personale 30 € mantiene 30 €/70,01 € come proporzione iniziale del piano.
 
-Lo **schema v16**, introdotto in 1.27.0 con backup, resta invariato nella patch sorgente **1.27.3**. La migrazione lascia le ricorrenze esistenti senza condivisione di serie e conserva le eventuali singole spese già condivise. Lo schema v16 richiede 1.27.0 o una versione successiva: conserva il backup se devi tornare a un'app precedente.
+Lo **schema v16**, introdotto in 1.27.0 con backup, resta invariato nella patch sorgente **1.27.4**. La migrazione lascia le ricorrenze esistenti senza condivisione di serie e conserva le eventuali singole spese già condivise. Lo schema v16 richiede 1.27.0 o una versione successiva: conserva il backup se devi tornare a un'app precedente.
 
 ## 11. Spese condivise
 
@@ -400,4 +400,6 @@ La manutenzione C42 prepara la release correttiva `1.26.1`, aggiornando React e 
 
 La versione **1.27.2** aggiorna il runtime a Electron 45.1.0 e integra le cinque proposte Dependabot #136–#140. Vitest e coverage sono allineati a 5.0.5. I flussi applicativi, i file e lo schema v16 restano invariati; l’audit completo mantiene i controlli senza eccezioni di C45. La versione distribuita è indicata in Releases.
 
-La versione **1.27.3** aggiorna la sorgente già presente su main dopo `v1.27.2`: Electron 45.2.3, Lucide 1.68.0, ESLint 10.14.0, globals 17.14.0 e Vitest 5.1.0, con `@vitest/coverage-v8` dichiarato `^5.1.0`. Non cambia flussi, file o schema v16. La pagina Releases indica la versione distribuita finché questa patch non è pubblicata.
+La versione **1.27.3** aggiorna la sorgente già presente su main dopo `v1.27.2`: Electron 45.2.3, Lucide 1.68.0, ESLint 10.14.0, globals 17.14.0 e Vitest 5.1.0, con `@vitest/coverage-v8` dichiarato `^5.1.0`. Non cambia flussi, file o schema v16. È pubblicata come `v1.27.3`.
+
+La versione **1.27.4** aggiorna Lucide a 1.77.0 e alcuni strumenti di sviluppo e di test. Electron resta 45.2.3. Non cambia flussi, file o schema v16. La pagina Releases indica la versione distribuita finché questa patch non è pubblicata.

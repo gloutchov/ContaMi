@@ -23,9 +23,9 @@ Le versioni pre-1.0 indicano un **checkpoint di maturità verificato**, non il n
 
 La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa ed estende i flussi applicativi prima dell’hardening finale; per maturità si colloca quindi tra M5 e M6. Il tag `v0.2.0` resta la **preview storica** precedente. La revisione applicativa ha confermato il codice completato fino a M8 come checkpoint funzionale `v0.8.0`; il lavoro successivo riparte dal gate di hardening `v0.9.0`.
 
-**Stato corrente:** versione sorgente `1.27.3`; tag e release `v1.27.3` sul commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 è l’ultima milestone chiusa, pubblicata come `v1.27.2`. Schema workbook v16. Nessuna nuova milestone pianificata; le sezioni chiuse restano storiche.
+**Stato corrente:** versione sorgente `1.27.4` sul branch `patch/1.27.4-deps`, in attesa di revisione. Tag e release pubblicati restano `v1.27.3` sul commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 è l’ultima milestone chiusa, pubblicata come `v1.27.2`. Schema workbook v16. Nessuna nuova milestone pianificata; Electron #153 resta fuori da questa patch.
 
-**Current status:** source version `1.27.3`; tag and release `v1.27.3` on commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 is the last closed milestone, published as `v1.27.2`. Workbook schema v16. No new milestones are planned; closed sections remain historical.
+**Current status:** source version `1.27.4` on branch `patch/1.27.4-deps`, awaiting review. The published tag and release remain `v1.27.3` on commit `892f614841d481f663a49f08de99c61fd04b3a35`. C46 is the last closed milestone, published as `v1.27.2`. Workbook schema v16. No new milestone is planned; Electron #153 stays out of this patch.
 
 **Decisione operativa del 18/11/2026 — audit, superata il 22/11/2026:** il proprietario ha autorizzato una sola eccezione temporanea per `GHSA-fc5q-39xc-vjpf`, fino al 02/12/2026 ore 00:00 UTC. Il gate continuava a eseguire e mostrare l’audit completo e bloccava tutti gli altri finding, ampliamenti del perimetro, errori e scadenza. La modifica locale era sul branch `patch/1.27.3-picomatch-audit-exception`; versione 1.27.3 e schema v16 invariati, nessuna release applicativa per la sola policy CI. Non introduceva milestone future. Il resoconto di quella autorizzazione resta in [manutenzione dipendenze](documents/dependency-maintenance.md).
 
@@ -95,7 +95,8 @@ La milestone M8 è stata aggiunta dopo la prima stesura del piano, ma completa e
 | C45 — Minimatch legacy e audit senza eccezioni | `milestone/45-legacy-minimatch-audit` | `milestone/C45`; `v1.27.1` | Completata e rilasciata; audit zero, pacchetti e checksum verificati |
 | C46 — Manutenzione Dependabot #136–#140 | `milestone/46-dependabot-maintenance` | `milestone/C46`; `v1.27.2` | Completata e rilasciata; cinque PR risolte, pacchetti e checksum verificati |
 | Patch dipendenze dopo v1.27.2 | `patch/1.27.3` | `v1.27.3` | Pubblicata sul merge `892f614` |
-| Patch rimozione eccezione audit picomatch | `patch/ci-audit-picomatch` | versione invariata `1.27.3`, nessuna release | [PR #158](https://github.com/gloutchov/ContaMi/pull/158) pubblicata, CI verde su macOS e Windows, in attesa del merge del proprietario / PR #158 published, CI green on macOS and Windows, waiting for the owner's merge |
+| Patch rimozione eccezione audit picomatch | `patch/ci-audit-picomatch` | versione invariata `1.27.3`, nessuna release | Unita in `main` `2178fbfc` con la [PR #158](https://github.com/gloutchov/ContaMi/pull/158); nessuna release / Merged into `main` `2178fbfc` with [PR #158](https://github.com/gloutchov/ContaMi/pull/158); no release |
+| Patch dipendenze #150 #151 #152 #154 #155 | `patch/1.27.4-deps` | `1.27.4`, release prevista, tag non creato | M — sorgente preparata, in attesa di revisione / M — source prepared, awaiting review |
 
 **Sequenza delle promozioni desktop completate:** `v0.2.0` preview storica → `v0.8.0` checkpoint funzionale → hardening `v0.9.0` → stabile `v1.0.0` → catalogo tasse `v1.1.0` → template Excel `v1.2.0` → importazione guidata `v1.3.0` → patch residenza/storico immobili `v1.3.1` → patch grafici immobili/menu release `v1.3.2` → patch limiti rate `v1.3.3` → filtri e azioni di dettaglio `v1.4.0` → sincronizzazione patrimoniale `v1.5.0` → correzione conti/flussi di cassa `v1.5.1` → casse e trasferimenti interni `v1.6.0` → competenza/incasso affitti `v1.7.0` → cambio tariffa `v1.8.0` → rate automobile `v1.9.0` → aggiornamento Node.js e toolchain `v1.10.0` → apertura workbook `v1.11.0` → conferma ricorrenze non-affitto `v1.11.1` → integrità salvataggi `v1.12.0` → spese condivise Immobili/Automobile `v1.12.1` → CSP rigorosa `v1.13.0` → saldi filtrati e totali odierni `v1.14.0` → trasparenza icona `v1.14.1` → report immobili per proprietari `v1.15.0` → riconciliazione capitale investito `v1.16.0` → rendimenti percentuali patrimoniali `v1.17.0` → inserimento assistito Automobile `v1.18.0` → ISIN opzionale `v1.19.0` → rendimenti e quantità di quote `v1.20.0` → correzione dello storico quote `v1.20.1` → manutenzione dipendenze e catena di rilascio `v1.21.0` → letture acqua delle residenze `v1.22.0` → compatibilità configurazione Vite `v1.22.1` → trasparenza costo/km Automobile `v1.22.2` → release Electron 44 `v1.23.0` → costo d’uso e costo complessivo/km `v1.24.0`. La landing segue la sequenza web separata `landing-v1.0.0` → `landing-v1.0.1` → `landing-v1.0.2` → `landing-v1.0.3` → `landing-v1.0.4`; la revisione `landing-v1.0.5` è in verifica locale.
 
@@ -2122,3 +2123,22 @@ Schema v16, logica finanziaria, IPC e rete restano invariati.
 **Chiusura 2026-11-12:** il tag annotato `v1.27.3` e la release sono stati pubblicati sul merge `892f614841d481f663a49f08de99c61fd04b3a35`. I paragrafi di preparazione qui sopra restano la nota storica, non lo stato attuale.
 
 **Closure 2026-11-12:** annotated tag `v1.27.3` and the GitHub release were published on merge `892f614841d481f663a49f08de99c61fd04b3a35`. The preparation paragraphs above stay historical and are not the current status.
+
+## M — Patch 1.27.4 — dipendenze #150, #151, #152, #154 e #155
+
+**Obiettivo:** assorbire gli aggiornamenti Dependabot ancora aperti, alle versioni upstream attuali, senza unire i branch del bot e senza toccare Electron.
+**Branch:** `patch/1.27.4-deps`, da main `2178fbfcda6809bf316fca4068f3e9c1cb419bb7`.
+**Incremento:** patch `+0.0.1`, `1.27.3`→`1.27.4`. La release è dovuta perché Lucide è una dipendenza di runtime.
+**Release:** non pubblicata. Nessun tag in questa preparazione.
+**Stato:** M. Sorgente preparata; in attesa della revisione del commit. Il passaggio a C segue l’approvazione del proprietario.
+
+- #150: `softprops/action-gh-release` 3.0.3→3.0.4, pin `8a0cd651e5b2365bd640854a3fa5dfc70e4875f3`, commit del tag `v3.0.4`.
+- #151: `@playwright/test` e `playwright` 1.64.1→1.65.1, con `playwright-core` 1.65.1.
+- #152: `lucide-react` 1.68.0→1.77.0.
+- #154: `@testing-library/user-event` 14.6.8→14.6.13.
+- #155: `concurrently` 10.0.6→10.0.7.
+- #153 Electron non entra in questa patch.
+
+Schema v16, logica finanziaria, IPC e rete restano invariati. L’audit resta senza eccezioni, `schemaVersion` 1.
+
+**M — Patch 1.27.4 — dependencies #150, #151, #152, #154 and #155.** Absorb the open Dependabot updates at current upstream versions without merging the bot branches and without touching Electron. Branch `patch/1.27.4-deps` from main `2178fbfc`. Source `1.27.3`→`1.27.4`. A release is due because Lucide is a runtime dependency; no tag or GitHub release is created in this preparation. Status **M**: source prepared, awaiting commit review. The move to C follows the owner's approval. #153 stays out. Schema v16, finance logic, IPC and network stay unchanged. The audit keeps no exception, schemaVersion 1.

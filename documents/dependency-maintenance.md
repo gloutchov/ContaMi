@@ -413,3 +413,22 @@ Verified base: tag `v1.27.2` at `a1f13ba`, main `e53a6dd`. Source version become
 not create the tag or the GitHub release. #146 leaves the resolved
 `coverage-v8-5.1.0` tarball in place. No production dependency other than Lucide,
 no override, and no workbook schema changes.
+
+## Patch 1.27.4 — dipendenze #150–#155 senza Electron / without Electron
+
+Base: main `2178fbfc`. Sorgente `1.27.4`; schema v16 e Electron 45.2.3 invariati.
+Il tag e la release non fanno parte di questa preparazione. Stato **M**.
+
+| PR | Dipendenza / Dependency | Prima / Before | Dopo / After |
+|---|---|---|---|
+| #150 | softprops/action-gh-release, pin SHA | 3.0.3 `efb35369` | 3.0.4 `8a0cd651` |
+| #151 | @playwright/test, playwright, playwright-core | 1.64.1 | 1.65.1 |
+| #152 | lucide-react | 1.68.0 | 1.77.0 |
+| #154 | @testing-library/user-event | 14.6.8 | 14.6.13 |
+| #155 | concurrently | 10.0.6 | 10.0.7 |
+
+#153 (Electron) non è inclusa. L’audit resta a `schemaVersion` 1, senza eccezione.
+
+Baseline: main `2178fbfc`. Source `1.27.4`; schema v16 and Electron 45.2.3 stay unchanged.
+This preparation does not create the tag or the GitHub release. Status **M**.
+#153 (Electron) is not included. The audit stays at schemaVersion 1, with no exception.
