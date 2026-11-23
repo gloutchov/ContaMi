@@ -9,12 +9,19 @@ const requireFromConsumer = createRequire(consumerEntry);
 
 if (mode === "minimatch") {
   const { Minimatch } = requireFromConsumer("minimatch");
-  // GHSA-g3hv-75wg-m249: **/.. splits must respect the expansion budget.
-  const matcher = new Minimatch(Array(8).fill("**/../a/b").join("/"), {
-    optimizationLevel: 2, braceExpandMax: 64,
-  });
+  // GHSA-g3hv-75wg-m249: **/.. splits must respect braceExpandMax.
+  // minimatch 11.0.8 throws once another split would pass the budget.
+  // Six groups compile to exactly 64; the same pattern at 63 is refused.
+  // Eight groups were truncated by 11.0.3 and now throw, so they are not the boundary.
+  const pattern = Array(6).fill("**/../a/b").join("/");
+  const matcher = new Minimatch(pattern, { optimizationLevel: 2, braceExpandMax: 64 });
   assert.equal(matcher.set.length, 64);
+  assert.throws(
+    () => new Minimatch(pattern, { optimizationLevel: 2, braceExpandMax: 63 }),
+    { name: "RangeError", message: /too many patterns from '\*\*\/\.\.'/ },
+  );
   const small = new Minimatch("**/../a/b/**/../c/d", { optimizationLevel: 2 });
+  assert.equal(small.set.length, 4);
   assert.equal(small.match("../a/b/../c/d"), true);
   assert.equal(small.match("x/a/b/y/c/d"), true);
 } else if (mode === "glob") {

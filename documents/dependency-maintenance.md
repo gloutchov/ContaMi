@@ -460,3 +460,28 @@ CSP, IPC, and Electron flags stay unchanged. The audit stays at schemaVersion 1,
 Il 23/11/2026 `.github/dependabot.yml` torna nel repository dopo la rimozione del 18/11/2026 (`7516bdb5`). Il file precedente, `70b2e335`, era settimanale. Quello nuovo è il modello mensile npm e GitHub Actions: gruppi `electron`, `runtime-minor-patch`, `dev-minor-patch` e `security`, cooldown, e major di Electron ignorate. `directory: "/"` non aggiunge una voce per `vendor/temp`. Versione `1.27.5` invariata; nessuna release. Gli alert e le security updates del repository non sono stati modificati.
 
 On 23 November 2026 `.github/dependabot.yml` returns after the 18 November 2026 removal (`7516bdb5`). The previous file, `70b2e335`, was weekly. The new file is the monthly npm and GitHub Actions model: groups `electron`, `runtime-minor-patch`, `dev-minor-patch` and `security`, cooldown, and Electron majors ignored. `directory: "/"` adds no entry for `vendor/temp`. Version `1.27.5` is unchanged; there is no release. Repository alerts and security updates were not changed.
+
+## Patch — dipendenze #162, con minimatch nel pacchetto / dependencies #162, with minimatch in the package
+
+Base: main `8b87016`. Non è solo sviluppo. minimatch 11.0.8 e `@isaacs/nonrecursive-glob-match` 1.1.0 sono nell’albero di produzione `exceljs` → `archiver` → `readdir-glob` (stessa copia anche da `archiver-utils` → `glob`) e finiscono nel pacchetto. Non sono su percorsi chiamati: `src/` e `src/main` non usano minimatch, glob né archiver; ExcelJS usa archiver solo in `workbook-writer`, senza `.glob`; `archiver.glob()` non è invocato. Il codice incluso cambia; il comportamento dell’app no. Proposta, riservata a Glauco: sorgente `1.27.5` invariata, nessuna release. Schema v16 invariato. Il branch del bot non è unito. Stato: locale, non pubblicata.
+
+| Dipendenza / Dependency | Prima / Before | Dopo / After |
+|---|---|---|
+| @electron/asar | 4.3.1 (`minimatch` ^10.0.1) | 4.3.2 (`minimatch` ^11.0.1, `glob` ^14.0.2) |
+| minimatch, copia unica / single copy | 11.0.3 | 11.0.8 |
+| @isaacs/nonrecursive-glob-match | 1.0.3 | 1.1.0 |
+| glob | 14.0.3 | 14.0.3 |
+| @vitejs/plugin-react | 6.1.1 | 6.3.0 |
+| vite | 8.3.5 | 8.3.8 |
+| vitest, @vitest/coverage-v8, mocker, spy | 5.1.0 | 5.1.1 |
+| eslint | 10.14.0 | 10.15.0 |
+| eslint-plugin-react-refresh | 0.5.7 | 0.5.8 |
+| typescript-eslint | 8.72.0 | 8.72.2 |
+| jsdom | 30.1.2 | 30.1.3 |
+| semver | 7.8.5 | 7.8.6 |
+
+La CI di #162 fallisce nel probe `bounds amplification`, non nella creazione ASAR. In locale, 11.0.3 tronca otto gruppi `**/..` a 64 e 11.0.8 lancia `RangeError`. Il [changelog 11.0.8](https://github.com/isaacs/minimatch/blob/v11.0.8/changelog.md) e il [test upstream](https://github.com/isaacs/minimatch/blob/v11.0.8/test/preprocess-limits.ts) descrivono il confine usato dal probe: sei gruppi e budget 64 producono 64 pattern, budget 63 lancia. La [nota di `@electron/asar` 4.3.2](https://github.com/electron/asar/releases/tag/v4.3.2) dice «release updated glob and minimatch dependencies». Electron resta 45.4.1. L’audit resta a `schemaVersion` 1, senza eccezione.
+
+Baseline: main `8b87016`. Not development-only. minimatch 11.0.8 and `@isaacs/nonrecursive-glob-match` 1.1.0 are in the production tree `exceljs` → `archiver` → `readdir-glob` (the same copy is also reached from `archiver-utils` → `glob`) and end up in the package. They are not on called paths: `src/` and `src/main` do not use minimatch, glob, or archiver; ExcelJS uses archiver only in `workbook-writer`, without `.glob`; `archiver.glob()` is never invoked. The included code changes; application behavior does not. Proposal, reserved for Glauco: source stays `1.27.5`, no release. Schema v16 stays unchanged. The bot branch is not merged. Status: local, not published.
+
+PR #162’s CI fails in the `bounds amplification` probe, not in ASAR creation. Locally, 11.0.3 truncates eight `**/..` groups to 64 and 11.0.8 throws `RangeError`. The [11.0.8 changelog](https://github.com/isaacs/minimatch/blob/v11.0.8/changelog.md) and the [upstream test](https://github.com/isaacs/minimatch/blob/v11.0.8/test/preprocess-limits.ts) describe the boundary the probe uses: six groups and a budget of 64 produce 64 patterns, and a budget of 63 throws. The [`@electron/asar` 4.3.2 note](https://github.com/electron/asar/releases/tag/v4.3.2) says “release updated glob and minimatch dependencies”. Electron stays 45.4.1. The audit stays at schemaVersion 1, with no exception.
