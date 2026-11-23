@@ -454,3 +454,9 @@ Electron's runtime moves from Node 24.22.2 / Chromium 156.0.8078.80 to Node 24.2
 Notes for 45.3.0 through 45.4.1 declare no API break. 45.3.1 distrusts eMudhra's revoked RSA intermediates.
 45.4.1 reports: “Backported fixes from upstream ANGLE, Chromium, Dawn, FFmpeg, PDFium and V8” ([electron/electron#55907](https://github.com/electron/electron/pull/55907)).
 CSP, IPC, and Electron flags stay unchanged. The audit stays at schemaVersion 1, with no exception.
+
+## Patch — Dependabot standard / standard Dependabot configuration
+
+Il 23/11/2026 `.github/dependabot.yml` torna nel repository dopo la rimozione del 18/11/2026 (`7516bdb5`). Il file precedente, `70b2e335`, era settimanale. Quello nuovo è il modello mensile npm e GitHub Actions: gruppi `electron`, `runtime-minor-patch`, `dev-minor-patch` e `security`, cooldown, e major di Electron ignorate. `directory: "/"` non aggiunge una voce per `vendor/temp`. Versione `1.27.5` invariata; nessuna release. Gli alert e le security updates del repository non sono stati modificati.
+
+On 23 November 2026 `.github/dependabot.yml` returns after the 18 November 2026 removal (`7516bdb5`). The previous file, `70b2e335`, was weekly. The new file is the monthly npm and GitHub Actions model: groups `electron`, `runtime-minor-patch`, `dev-minor-patch` and `security`, cooldown, and Electron majors ignored. `directory: "/"` adds no entry for `vendor/temp`. Version `1.27.5` is unchanged; there is no release. Repository alerts and security updates were not changed.

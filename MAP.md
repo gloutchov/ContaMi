@@ -5,7 +5,7 @@
 ```text
 ContaMì/
 ├── .github/
-│   ├── dependabot.yml                 # aggiornamenti dipendenze / dependency updates
+│   ├── dependabot.yml                 # npm e GitHub Actions, cadenza mensile / monthly npm and GitHub Actions
 │   └── workflows/
 │       ├── ci.yml                     # qualità macOS + Windows e audit completo senza eccezioni
 │       └── release.yml                # audit, pacchetti, smoke, checksum e release
