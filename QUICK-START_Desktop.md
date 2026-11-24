@@ -22,7 +22,7 @@ Scegli **Anno corrente** o **Intera storia**, poi **Stampa** o **Salva PDF**. La
 
 A fine anno usa **Chiudi anno** e scegli il nuovo file: il precedente resta intatto. I salvataggi usano backup in `.contami-backups` e bloccano modifiche esterne concorrenti. Per dettagli e recupero consulta [ISTRUZIONI.md](ISTRUZIONI.md).
 
-La patch sorgente **1.27.6** prepara una release cumulativa delle dipendenze già aggiornate, senza nuove funzioni o migrazioni del workbook v16. La versione distribuita resta `v1.27.5` fino alla pubblicazione approvata; la pagina Releases indica pacchetti e checksum disponibili.
+La versione **1.27.6** è [pubblicata](https://github.com/gloutchov/ContaMi/releases/tag/v1.27.6) e raccoglie gli aggiornamenti delle dipendenze già integrati, senza nuove funzioni o migrazioni del workbook v16. I pacchetti macOS/Windows e [SHA256SUMS.txt](https://github.com/gloutchov/ContaMi/releases/download/v1.27.6/SHA256SUMS.txt) sono disponibili nella release; verifica il checksum prima dell'installazione.
 
 ## English
 
@@ -46,7 +46,7 @@ Choose **Current year** or **Full history**, then **Print** or **Save PDF**. Gen
 
 At year-end, use **Close year** and select a new file: the old one remains intact. Saves keep backups in `.contami-backups` and block conflicting external edits. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for details and recovery.
 
-Source patch **1.27.6** prepares a cumulative release of the updated dependencies, without new features or workbook v16 migrations. The distributed version remains `v1.27.5` until approved publication; Releases lists available packages and checksums.
+Version **1.27.6** is [published](https://github.com/gloutchov/ContaMi/releases/tag/v1.27.6) and collects the dependency updates already integrated, without new features or workbook v16 migrations. The release provides macOS/Windows packages and [SHA256SUMS.txt](https://github.com/gloutchov/ContaMi/releases/download/v1.27.6/SHA256SUMS.txt); verify the checksum before installation.
 
 Versione / Version **1.27.4**: Lucide 1.77.0, Playwright 1.65.1, `@testing-library/user-event` 14.6.13 e concurrently 10.0.7; Electron resta 45.2.3. Dati e schema v16 invariati. Pubblicata come `v1.27.4`. / Lucide 1.77.0, Playwright 1.65.1, `@testing-library/user-event` 14.6.13, and concurrently 10.0.7; Electron stays 45.2.3. Data and schema v16 are unchanged. Published as `v1.27.4`.
 
