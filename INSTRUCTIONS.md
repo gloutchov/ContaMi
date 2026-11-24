@@ -373,4 +373,6 @@ Version **1.27.3** updates the source already on main after `v1.27.2`: Electron 
 
 Version **1.27.4** updates Lucide to 1.77.0 and some development and test tools. Electron stays 45.2.3. Application flows, files, and schema v16 are unchanged. The release workflow pins `softprops/action-gh-release` to the v3.0.4 commit. It is published as `v1.27.4`.
 
-Version **1.27.5** updates the runtime to Electron 45.4.1, pinned exactly, instead of the 45.3.0 proposed by Dependabot PR #153. The bot branch is not merged. Application flows, files, and schema v16 are unchanged. Releases lists the distributed version until this update is published.
+Version **1.27.5** updates the runtime to Electron 45.4.1, pinned exactly, instead of the 45.3.0 proposed by Dependabot PR #153. The bot branch is not merged. Application flows, files, and schema v16 are unchanged. It is published as `v1.27.5`.
+
+Source **1.27.6** prepares a maintenance release of the dependencies already updated on main. It adds no features and needs no workbook migration; Electron stays 45.4.1 and schema stays v16. Before updating, close the app, keep a workbook copy, and verify the official package checksum. The distributed version remains `v1.27.5` until the new release is published on the Releases page.

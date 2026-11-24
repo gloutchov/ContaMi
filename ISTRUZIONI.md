@@ -404,4 +404,6 @@ La versione **1.27.3** aggiorna la sorgente già presente su main dopo `v1.27.2`
 
 La versione **1.27.4** aggiorna Lucide a 1.77.0 e alcuni strumenti di sviluppo e di test. Electron resta 45.2.3. Non cambia flussi, file o schema v16. È pubblicata come `v1.27.4`.
 
-La versione **1.27.5** aggiorna il runtime a Electron 45.4.1, fissato senza intervallo, al posto della 45.3.0 proposta dalla PR Dependabot #153. Il branch del bot non viene unito. Non cambia flussi, file o schema v16. La pagina Releases indica la versione distribuita finché questo aggiornamento non è pubblicato.
+La versione **1.27.5** aggiorna il runtime a Electron 45.4.1, fissato senza intervallo, al posto della 45.3.0 proposta dalla PR Dependabot #153. Il branch del bot non viene unito. Non cambia flussi, file o schema v16. È pubblicata come `v1.27.5`.
+
+La sorgente **1.27.6** prepara una release di manutenzione delle dipendenze già aggiornate su main. Non aggiunge funzioni e non richiede migrazioni del workbook; conserva Electron 45.4.1 e schema v16. Prima dell'aggiornamento chiudi l'app, conserva una copia del workbook e verifica il checksum del pacchetto ufficiale. La versione distribuita resta `v1.27.5` finché la nuova release non è pubblicata nella pagina Releases.

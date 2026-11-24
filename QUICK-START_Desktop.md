@@ -22,7 +22,7 @@ Scegli **Anno corrente** o **Intera storia**, poi **Stampa** o **Salva PDF**. La
 
 A fine anno usa **Chiudi anno** e scegli il nuovo file: il precedente resta intatto. I salvataggi usano backup in `.contami-backups` e bloccano modifiche esterne concorrenti. Per dettagli e recupero consulta [ISTRUZIONI.md](ISTRUZIONI.md).
 
-La patch sorgente **1.27.1** aggiorna le dipendenze per ottenere un audit completo senza eccezioni; formato v16 e flussi restano invariati. La pagina Releases indica la versione distribuita.
+La patch sorgente **1.27.6** prepara una release cumulativa delle dipendenze già aggiornate, senza nuove funzioni o migrazioni del workbook v16. La versione distribuita resta `v1.27.5` fino alla pubblicazione approvata; la pagina Releases indica pacchetti e checksum disponibili.
 
 ## English
 
@@ -46,8 +46,8 @@ Choose **Current year** or **Full history**, then **Print** or **Save PDF**. Gen
 
 At year-end, use **Close year** and select a new file: the old one remains intact. Saves keep backups in `.contami-backups` and block conflicting external edits. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for details and recovery.
 
-Source patch **1.27.1** updates dependencies to obtain a fully clean audit without exceptions; format v16 and workflows are unchanged. Releases lists the distributed version.
+Source patch **1.27.6** prepares a cumulative release of the updated dependencies, without new features or workbook v16 migrations. The distributed version remains `v1.27.5` until approved publication; Releases lists available packages and checksums.
 
 Versione / Version **1.27.4**: Lucide 1.77.0, Playwright 1.65.1, `@testing-library/user-event` 14.6.13 e concurrently 10.0.7; Electron resta 45.2.3. Dati e schema v16 invariati. Pubblicata come `v1.27.4`. / Lucide 1.77.0, Playwright 1.65.1, `@testing-library/user-event` 14.6.13, and concurrently 10.0.7; Electron stays 45.2.3. Data and schema v16 are unchanged. Published as `v1.27.4`.
 
-Versione / Version **1.27.5**: Electron 45.4.1 fissato senza intervallo, al posto della 45.3.0 della PR #153. Il branch del bot non è unito. Dati e schema v16 invariati. La release distribuita resta `v1.27.4` finché `v1.27.5` non è pubblicata. / Electron 45.4.1 pinned with no range, instead of the 45.3.0 from PR #153. The bot branch is not merged. Data and schema v16 are unchanged. The distributed release remains `v1.27.4` until `v1.27.5` is published.
+Versione / Version **1.27.5**: Electron 45.4.1 fissato senza intervallo, al posto della 45.3.0 della PR #153. Il branch del bot non è unito. Dati e schema v16 invariati. Pubblicata come `v1.27.5`. / Electron 45.4.1 pinned with no range, instead of the 45.3.0 from PR #153. The bot branch is not merged. Data and schema v16 are unchanged. Published as `v1.27.5`.
